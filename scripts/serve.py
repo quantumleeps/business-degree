@@ -17,6 +17,7 @@ import json
 import pathlib
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 
+import build_index     # same directory; rebuild results.json after each attempt
 import record_attempt  # same directory; uv runs from repo via path below
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
@@ -26,6 +27,12 @@ PORT = 8753
 class Handler(SimpleHTTPRequestHandler):
     def __init__(self, *a, **kw):
         super().__init__(*a, directory=str(ROOT), **kw)
+
+    def end_headers(self):
+        # Never cache: lessons and results.json change as you study, and a
+        # stale cached results.json is the classic "no data yet" gotcha.
+        self.send_header("Cache-Control", "no-store, must-revalidate")
+        super().end_headers()
 
     def _cors(self):
         self.send_header("Access-Control-Allow-Origin", "*")
@@ -45,6 +52,7 @@ class Handler(SimpleHTTPRequestHandler):
         payload = json.loads(self.rfile.read(length) or b"{}")
         try:
             out = record_attempt.record(payload["address"], payload.get("answers", {}))
+            build_index.main()  # refresh results.json so the page is live on reload
             body = json.dumps(out).encode()
             self.send_response(200)
         except Exception as e:  # noqa: BLE001

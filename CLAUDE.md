@@ -68,6 +68,45 @@ SQLite at `db/progress.db`. Schema in `db/schema.sql`. It tracks lessons,
 quiz attempts, and per-question correctness over time so I can see where I'm
 weak. `scripts/` holds the helpers; never hand-edit the DB.
 
+## Study & quiz workflow (run order matters)
+
+Quiz grading is server-side and the results page reads a **static snapshot**,
+so order of operations matters. The reliable loop:
+
+1. **Start the recorder first:** `uv run scripts/serve.py`.
+2. Open lessons **through the server** — use the
+   `http://127.0.0.1:8753/lessons/index.html` URL, **not** a `file://` path.
+   (Open the file directly and the quiz can't POST; it falls back to
+   downloading a `<address>.attempt.json` to `~/Downloads/` instead.)
+3. Take the quiz and submit. The page POSTs to `/record`; `serve.py` grades
+   against the gated answer key, stores the attempt in `db/progress.db`, and
+   **auto-rebuilds `harness/results.json`**.
+4. View performance at `http://127.0.0.1:8753/harness/results.html` and just
+   reload — `serve.py` sends `Cache-Control: no-store`, so no stale data.
+
+If a quiz was taken offline (recorder wasn't running), import the downloaded
+file: `uv run scripts/record_attempt.py --import ~/Downloads/<address>.attempt.json`,
+then `uv run scripts/build_index.py` to refresh the results snapshot.
+
+Note: `record_attempt.py` and `build_index.py` write the DB / snapshot but the
+results page only refreshes automatically when attempts come through the
+running `serve.py`. After a manual import, run `build_index.py` yourself.
+
+## Commit cycle
+
+- **One commit per lesson.** After building and registering a lesson, commit
+  its artifacts together: the lesson HTML, its `*.answers.json`, and the
+  regenerated `lessons/index.html`. Message like `Add lesson 101.2 — The
+  balance sheet`.
+- **Keep tooling/curriculum/config changes in their own commits**, separate
+  from lesson content (e.g. `Tweak serve.py …`, `Expand Year-2 outline`).
+- **Progress data and generated snapshots are never committed** —
+  `db/progress.db`, `*.attempt.json`, `approvals/*.approved`, and
+  `harness/results.json` are all gitignored. Scores stay local;
+  `results.json` is regenerated from the DB by `build_index.py`.
+- Don't commit unless asked, per global convention; offer to after each
+  lesson and batch if the user prefers.
+
 ## Repository layout
 
 ```
