@@ -1,0 +1,64 @@
+{
+  "address": "101.1",
+  "title": "Why accounting exists: stakeholders & the accounting equation",
+  "questions": [
+    {
+      "qid": "q1",
+      "type": "mc",
+      "correct": "b",
+      "topic": "purpose of accounting",
+      "explanation": "Financial accounting exists to give external decision-makers a standardized, trustworthy view of a business they cannot observe directly."
+    },
+    {
+      "qid": "q2",
+      "type": "mc",
+      "correct": "c",
+      "topic": "stakeholders",
+      "explanation": "A bank is an external stakeholder relying on financial statements; the others are internal users served by managerial accounting."
+    },
+    {
+      "qid": "q3",
+      "type": "mc",
+      "correct": "c",
+      "topic": "accounting equation",
+      "explanation": "Assets = Liabilities + Equity. Resources controlled equal the claims against them (creditors + owners)."
+    },
+    {
+      "qid": "q4",
+      "type": "mc",
+      "correct": "b",
+      "topic": "equity",
+      "explanation": "Equity is the owners' residual claim: Equity = Assets − Liabilities, i.e. what remains after creditors are satisfied."
+    },
+    {
+      "qid": "q5",
+      "type": "num",
+      "correct": 65000,
+      "tolerance": 0,
+      "topic": "accounting equation",
+      "explanation": "Equity = Assets − Liabilities = 180,000 − 115,000 = 65,000."
+    },
+    {
+      "qid": "q6",
+      "type": "num",
+      "correct": 30000,
+      "tolerance": 0,
+      "topic": "transaction analysis",
+      "explanation": "Borrowing $30k cash raises assets (cash) by $30,000 and liabilities by $30,000; total assets change by +$30,000."
+    },
+    {
+      "qid": "q7",
+      "type": "text",
+      "correct": ["stakeholder", "stakeholders"],
+      "topic": "stakeholders",
+      "explanation": "A stakeholder is any person or group with an interest in the business's performance."
+    },
+    {
+      "qid": "q8",
+      "type": "mc",
+      "correct": "c",
+      "topic": "transaction analysis",
+      "explanation": "Paying cash for equipment swaps one asset for another: equipment +$20k, cash −$20k. Total assets and the equation are unchanged."
+    }
+  ]
+}
