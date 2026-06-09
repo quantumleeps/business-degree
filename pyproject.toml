@@ -1,0 +1,13 @@
+[project]
+name = "business-degree"
+version = "0.1.0"
+description = "Self-directed BBA curriculum with AI-built lesson artifacts"
+requires-python = ">=3.10"
+dependencies = []
+
+# Scripts are standalone (PEP 723 inline metadata) and run via:
+#   uv run scripts/<name>.py
+# This pyproject just marks the repo root for uv and tooling.
+
+[tool.uv]
+package = false

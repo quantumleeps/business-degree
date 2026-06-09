@@ -1,0 +1,4 @@
+# Monorepo workspace. Python tooling is driven by uv (see pyproject.toml);
+# TypeScript surfaces live here when/if we build a richer harness UI.
+packages:
+  - "harness/app"   # reserved: future TS results app (not yet created)
