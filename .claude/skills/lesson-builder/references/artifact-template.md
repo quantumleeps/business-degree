@@ -44,14 +44,19 @@ content sections with real teaching material for the specific topic.
   <!-- 1. WRITTEN / TEACHING SECTION -->
   <section id="learn">
     <h2>Learn</h2>
-    <!-- Multiple short subsections. Plain English first, then precise framing.
+    <!-- Multiple short subsections at college-course depth: mechanism,
+         formulas used (not just named), edge cases, and at least one fully
+         worked numeric example. Plain English first, then precise framing.
          Use an engineering/systems analogy where it genuinely clarifies. -->
   </section>
 
-  <!-- 2. VISUAL SECTION -->
-  <section id="see">
-    <h2>See it</h2>
-    <div class="visual" id="viz">
+  <!-- 2. VISUAL SECTION(S) — repeat this block, one per mechanism.
+       Number the ids (see-1/viz-1, see-2/viz-2, …) to keep them unique.
+       Keep the full college-level model; let the interaction (sliders,
+       drag handles, live readouts) carry the complexity. -->
+  <section id="see-1" class="see">
+    <h2>See it: {{MECHANISM_NAME}}</h2>
+    <div class="visual" id="viz-1">
       <!-- Inline interactive SVG/Canvas + vanilla JS that SHOWS the concept.
            e.g. draggable curves, animated balances, live-updating chart. -->
     </div>
@@ -135,4 +140,9 @@ content sections with real teaching material for the specific topic.
 - The page never knows the right answers. Only `record_attempt.py` does,
   and only when the approval token exists for that lesson.
 - Visuals are vanilla JS + SVG/Canvas. No D3/Chart.js/CDN.
+- Multiple "See it" sections are encouraged when the topic has more than one
+  mechanism worth isolating — one visual per mechanism beats one overloaded
+  visual. See "Depth calibration" in SKILL.md for examples.
+- Quiz difficulty mix (from SKILL.md): 1–2 recall, 2–3 application,
+  2–3 multi-step computation with realistic numbers.
 - Keep each lesson focused on the single topic in its address.

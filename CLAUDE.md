@@ -132,3 +132,9 @@ business-degree-project/
 Explain mechanisms, use analogies to engineering where they help, and don't
 dumb things down. When a business concept has a clean mathematical or
 systems framing, give me that framing.
+
+Lesson depth is **college course level** — lecture + textbook reading +
+problem set, not a blog summary. The "See it" visuals are where complexity
+gets cheap: keep the full model and let interactivity carry the load, with
+multiple visuals per lesson when more than one mechanism deserves its own.
+The lesson-builder skill holds the concrete calibration and examples.

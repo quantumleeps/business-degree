@@ -21,7 +21,7 @@ import os
 import re
 import sys
 
-ANSWERS_RE = re.compile(r"(?P<address>\d[\dA-Za-z]*\.\d+)\.answers\.json$")
+ANSWERS_RE = re.compile(r"(?P<address>\d[\dA-Za-z]*\.\d+)\.answers\.json\b")
 
 # Tools that read file content. Adjust if your toolset differs.
 READ_TOOLS = {"Read", "view"}
@@ -89,9 +89,8 @@ def main():
                     f"(approvals/{m.group('address')}.approved) and retry."
                 )
         # Also catch a glob-y read of all answer keys.
-        if "answers.json" in cmd and ("cat" in cmd or "less" in cmd
-                                      or "head" in cmd or "tail" in cmd
-                                      or "grep" in cmd or "open" in cmd):
+        if "answers.json" in cmd and re.search(
+                r"\b(cat|less|head|tail|grep|open)\b", cmd):
             deny(
                 "That command appears to read answer-key files in bulk, which "
                 "is blocked. Answer keys require per-lesson approval tokens in "
