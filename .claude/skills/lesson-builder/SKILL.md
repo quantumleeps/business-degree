@@ -34,8 +34,11 @@ in this order:
 
 1. **Header** — lesson address, title, and one-line "why this matters."
 2. **Written section ("Learn")** — the actual teaching. Multiple short
-   subsections, plain-English first, then the precise/technical framing. Use
-   an engineering or systems analogy where one genuinely clarifies.
+   subsections, plain-English first, then the precise/technical framing.
+   Teach in the discipline's own language and standard framings, as a
+   college course would — do **not** reach for engineering or systems
+   analogies (mass balances, rate-vs-state, signal/control metaphors);
+   they add a translation layer the user has asked to avoid.
 3. **Visual section(s) ("See it")** — one or **several** inline, interactive
    or animated SVG/Canvas/JS visuals that *show* the concept (e.g. a
    draggable supply/demand graph, an animated accounting-equation balance, a
@@ -45,7 +48,9 @@ in this order:
    short numeric/text). The quiz renders, accepts answers, and on submit
    POSTs results to the local recorder (see Step 4) OR, if offline, writes a
    results JSON the user can import. Never reveal correct answers in the page
-   or page source.
+   or page source. After grading, the page renders per-question ✓/✗ feedback
+   in place from the `/record` response (the template has the handler) —
+   right/wrong flags and explanations come only from the server, post-attempt.
 
 ## Depth calibration — college course level
 
@@ -95,6 +100,10 @@ an existing one later without an approval token. Because the key is not in
 the HTML, grading happens server-side via the recorder script, keeping you
 honest about my performance.
 
+Every question MUST carry an `explanation` that teaches the concept — it's
+shown in place under missed questions after grading, so write it to reteach,
+not just to state the right option.
+
 ## Step 4 — Register & wire up results
 
 Run, with uv:
@@ -109,11 +118,46 @@ regenerates `lessons/index.html`. The quiz submits attempts to
 `scripts/serve.py`), which grades against the answers file and stores each
 attempt in `db/progress.db`.
 
+Then verify the artifact per **"Verifying the artifact"** below — mock
+`/record`; never submit a real attempt.
+
 ## Step 5 — Tell the user how to view it
 
 Point them at `lessons/<address>-<slug>.html` and remind them they can run
 `uv run scripts/serve.py` to enable quiz recording, and open
-`harness/results.html` to see performance.
+`harness/results.html` to see performance. Offer to commit (one commit per
+lesson — see CLAUDE.md "Commit cycle"); stage with the pathspec
+`git add 'lessons/<address>'*` so the shell command never names the answer
+key (naming an unapproved key file in a command trips the guard hook).
+
+## Verifying the artifact — mock the recorder, never POST for real
+
+The quiz POSTs to `/record`, which **writes a real attempt into
+`db/progress.db`** and skews the user's scores and topic-mastery stats. A
+build-verification submit is indistinguishable from a real attempt, so:
+
+- **Never verify by submitting the quiz against the live recorder.**
+- Test the submit flow headlessly with a route mock instead — real page,
+  real server, fake grading, zero DB writes:
+
+```python
+# uv run --with playwright python - <<'EOF' ... (server running on 8753)
+def mock(route):
+    body = route.request.post_data_json
+    qids = list(body["answers"].keys())
+    route.fulfill(json={
+        "address": body["address"], "correct": 1, "total": len(qids),
+        "score_pct": 0, "weak_topics": ["t"],
+        "results": [{"qid": q, "topic": "t", "given": None,
+                     "is_correct": i % 2, "explanation": "mock"}
+                    for i, q in enumerate(qids)]})
+page.route("**/record", mock)
+```
+
+Then assert each `.q` gets `right`/`wrong` classes and a `.fb` feedback node.
+If a test attempt ever does land in the DB, do not delete it yourself
+(hand-editing the DB is forbidden) — tell the user the attempt id and let
+them remove it and rerun `build_index.py`.
 
 ## What NOT to do
 
@@ -122,5 +166,6 @@ Point them at `lessons/<address>-<slug>.html` and remind them they can run
   approval gate is for. If you need it, ask the user to approve.
 - Don't add external CDN dependencies to the lesson artifact.
 - Don't build lessons the user didn't request.
+- Don't POST test attempts to `/record` — see "Verifying the artifact" above.
 
 See the two reference files for exact templates.
