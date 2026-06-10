@@ -46,6 +46,12 @@
   .q .opts label { display:block; margin:4px 0; cursor:pointer; }
   .q input[type=number], .q input[type=text] { font-size:15px; padding:6px 8px;
         border:1px solid #d1d5db; border-radius:6px; width:160px; }
+  .q.right { border-color:var(--accent); background:#f0f7f4; }
+  .q.wrong { border-color:#b91c1c; background:#fef2f2; }
+  .q .fb { margin-top:10px; padding-top:8px; border-top:1px dashed #d1d5db;
+        font-size:14px; }
+  .q.right .fb b { color:var(--accent); }
+  .q.wrong .fb b { color:#b91c1c; }
   button { background:var(--accent); color:#fff; border:0; padding:10px 18px;
            border-radius:8px; font-size:15px; cursor:pointer; }
   button:hover { filter:brightness(1.07); }
@@ -369,9 +375,27 @@
         body: JSON.stringify(payload)
       });
       const data = await res.json();
+      if (data.error) {
+        document.getElementById("result").textContent = "Recorder error: " + data.error;
+        return;
+      }
       document.getElementById("result").textContent =
         `Score: ${data.correct}/${data.total}. ` +
         (data.weak_topics?.length ? `Review: ${data.weak_topics.join(", ")}` : "Nice work.");
+      // Per-question feedback from the graded response; the page never sees the key.
+      (data.results || []).forEach(r => {
+        const q = document.querySelector(`.q[data-qid="${r.qid}"]`);
+        if (!q) return;
+        q.classList.remove("right", "wrong");
+        q.classList.add(r.is_correct ? "right" : "wrong");
+        let fb = q.querySelector(".fb");
+        if (!fb) { fb = document.createElement("div"); fb.className = "fb"; q.appendChild(fb); }
+        fb.textContent = "";
+        const mark = document.createElement("b");
+        mark.textContent = r.is_correct ? "✓ Correct" : "✗ Incorrect";
+        fb.appendChild(mark);
+        if (!r.is_correct && r.explanation) fb.append(" — " + r.explanation);
+      });
     } catch (err) {
       const blob = new Blob([JSON.stringify(payload, null, 2)], {type:"application/json"});
       const a = document.createElement("a");

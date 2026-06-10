@@ -27,6 +27,12 @@ content sections with real teaching material for the specific topic.
   .q { margin:1.2em 0; padding:14px; border:1px solid #e5e7eb;
        border-radius:10px; }
   .q .opts label { display:block; margin:4px 0; cursor:pointer; }
+  .q.right { border-color:var(--accent); background:#f0f7f4; }
+  .q.wrong { border-color:#b91c1c; background:#fef2f2; }
+  .q .fb { margin-top:10px; padding-top:8px; border-top:1px dashed #d1d5db;
+       font-size:14px; }
+  .q.right .fb b { color:var(--accent); }
+  .q.wrong .fb b { color:#b91c1c; }
   button { background:var(--accent); color:#fff; border:0; padding:10px 18px;
            border-radius:8px; font-size:15px; cursor:pointer; }
   #result { margin-top:1em; font-weight:600; }
@@ -47,7 +53,8 @@ content sections with real teaching material for the specific topic.
     <!-- Multiple short subsections at college-course depth: mechanism,
          formulas used (not just named), edge cases, and at least one fully
          worked numeric example. Plain English first, then precise framing.
-         Use an engineering/systems analogy where it genuinely clarifies. -->
+         Teach in the discipline's own standard terms and framings;
+         no engineering/systems analogies. -->
   </section>
 
   <!-- 2. VISUAL SECTION(S) — repeat this block, one per mechanism.
@@ -115,9 +122,28 @@ content sections with real teaching material for the specific topic.
         body: JSON.stringify(payload)
       });
       const data = await res.json();
+      if (data.error) {
+        document.getElementById("result").textContent = "Recorder error: " + data.error;
+        return;
+      }
       document.getElementById("result").textContent =
         `Score: ${data.correct}/${data.total}. ` +
         (data.weak_topics?.length ? `Review: ${data.weak_topics.join(", ")}` : "Nice work.");
+      // Per-question feedback from the graded response. The page still never
+      // sees the key — only right/wrong flags and explanations, post-attempt.
+      (data.results || []).forEach(r => {
+        const q = document.querySelector(`.q[data-qid="${r.qid}"]`);
+        if (!q) return;
+        q.classList.remove("right", "wrong");
+        q.classList.add(r.is_correct ? "right" : "wrong");
+        let fb = q.querySelector(".fb");
+        if (!fb) { fb = document.createElement("div"); fb.className = "fb"; q.appendChild(fb); }
+        fb.textContent = "";
+        const mark = document.createElement("b");
+        mark.textContent = r.is_correct ? "✓ Correct" : "✗ Incorrect";
+        fb.appendChild(mark);
+        if (!r.is_correct && r.explanation) fb.append(" — " + r.explanation);
+      });
     } catch (err) {
       // Offline fallback: stash the attempt for later import.
       const blob = new Blob([JSON.stringify(payload, null, 2)],
@@ -139,6 +165,11 @@ content sections with real teaching material for the specific topic.
 
 - The page never knows the right answers. Only `record_attempt.py` does,
   and only when the approval token exists for that lesson.
+- Per-question right/wrong feedback renders in place after submit, sourced
+  exclusively from the graded `/record` response (`data.results[]`). Write an
+  `explanation` for every question in the answer key — it's shown when the
+  question is missed. Explanations must teach the concept, not just state
+  the correct option.
 - Visuals are vanilla JS + SVG/Canvas. No D3/Chart.js/CDN.
 - Multiple "See it" sections are encouraged when the topic has more than one
   mechanism worth isolating — one visual per mechanism beats one overloaded
