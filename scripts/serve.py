@@ -22,6 +22,7 @@ import record_attempt  # same directory; uv runs from repo via path below
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 PORT = 8753
+HOST = "0.0.0.0"  # all interfaces, so other devices on the LAN (iPad) can study
 
 
 class Handler(SimpleHTTPRequestHandler):
@@ -33,6 +34,23 @@ class Handler(SimpleHTTPRequestHandler):
         # stale cached results.json is the classic "no data yet" gotcha.
         self.send_header("Cache-Control", "no-store, must-revalidate")
         super().end_headers()
+
+    def _blocked(self) -> bool:
+        # Never serve answer keys or the DB over HTTP; grading reads them
+        # from disk server-side. Matters once we listen beyond loopback.
+        return ".answers.json" in self.path or self.path.startswith("/db/")
+
+    def do_GET(self):
+        if self._blocked():
+            self.send_error(403, "Not served")
+            return
+        super().do_GET()
+
+    def do_HEAD(self):
+        if self._blocked():
+            self.send_error(403, "Not served")
+            return
+        super().do_HEAD()
 
     def _cors(self):
         self.send_header("Access-Control-Allow-Origin", "*")
@@ -64,11 +82,26 @@ class Handler(SimpleHTTPRequestHandler):
         self.wfile.write(body)
 
 
+def _lan_ip() -> str | None:
+    import socket
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+        s.connect(("192.0.2.1", 80))  # never sends traffic; just picks the route
+        return s.getsockname()[0]
+    except OSError:
+        return None
+    finally:
+        s.close()
+
+
 def main() -> None:
     print(f"Serving {ROOT} at http://127.0.0.1:{PORT}")
     print(f"Lessons index: http://127.0.0.1:{PORT}/lessons/index.html")
     print(f"Results:       http://127.0.0.1:{PORT}/harness/results.html")
-    ThreadingHTTPServer(("127.0.0.1", PORT), Handler).serve_forever()
+    ip = _lan_ip()
+    if ip:
+        print(f"On your LAN (iPad etc.): http://{ip}:{PORT}/lessons/index.html")
+    ThreadingHTTPServer((HOST, PORT), Handler).serve_forever()
 
 
 if __name__ == "__main__":
