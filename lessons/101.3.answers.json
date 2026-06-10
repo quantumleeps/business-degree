@@ -1,0 +1,65 @@
+{
+  "address": "101.3",
+  "title": "The income statement: revenue, expenses, net income",
+  "questions": [
+    {
+      "qid": "q1",
+      "type": "mc",
+      "correct": "b",
+      "topic": "flow vs stock",
+      "explanation": "'For the year ended' marks a flow statement: revenues and expenses accumulated over the period. Assets/liabilities/equity as of a date is the balance sheet (a stock), and the change in cash is the cash flow statement's job."
+    },
+    {
+      "qid": "q2",
+      "type": "text",
+      "correct": ["matching", "matching principle", "the matching principle", "expense recognition", "expense recognition principle"],
+      "topic": "matching principle",
+      "explanation": "The matching (expense recognition) principle: expenses are reported in the same period as the revenues they helped generate, regardless of when the cash is paid."
+    },
+    {
+      "qid": "q3",
+      "type": "mc",
+      "correct": "c",
+      "topic": "revenue recognition",
+      "explanation": "Revenue is recognized when earned — when the service is performed in April. The March payment creates deferred revenue, a liability, until delivery."
+    },
+    {
+      "qid": "q4",
+      "type": "mc",
+      "correct": "b",
+      "topic": "non-cash expenses",
+      "explanation": "Depreciation is the matching principle applied to long-lived assets: the $90,000 cost is allocated across the 10 years the machine helps generate revenue. It is not a market-value estimate, a cash reserve, or a tax payment."
+    },
+    {
+      "qid": "q5",
+      "type": "mc",
+      "correct": "d",
+      "topic": "operating vs non-operating",
+      "explanation": "For a retailer, interest expense reflects financing, not core operations, so it sits below operating income. Store wages, fixture depreciation, and COGS are all part of operating the retail business."
+    },
+    {
+      "qid": "q6",
+      "type": "num",
+      "correct": 78400,
+      "tolerance": 1,
+      "topic": "multi-step structure",
+      "explanation": "Gross profit = 840,000 − 504,000 = 336,000. Operating income = 336,000 − 168,000 − 42,000 = 126,000. Pre-tax = 126,000 − 14,000 = 112,000. Tax = 0.30 × 112,000 = 33,600. Net income = 78,400."
+    },
+    {
+      "qid": "q7",
+      "type": "num",
+      "correct": 9.33,
+      "tolerance": 0.15,
+      "topic": "margins",
+      "explanation": "Net margin = net income ÷ revenue = 78,400 ÷ 840,000 = 9.33%."
+    },
+    {
+      "qid": "q8",
+      "type": "num",
+      "correct": 298400,
+      "tolerance": 1,
+      "topic": "articulation",
+      "explanation": "Ending RE = beginning RE + net income − dividends = 250,000 + 78,400 − 30,000 = 298,400. This is the hinge connecting the income statement to balance-sheet equity."
+    }
+  ]
+}

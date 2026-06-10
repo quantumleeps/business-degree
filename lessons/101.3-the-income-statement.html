@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>101.3 — The income statement: revenue, expenses, net income</title>
+<style>
+  :root { --ink:#1a1a2e; --paper:#fdfdfb; --accent:#2d6a4f; --accent2:#1d4ed8;
+          --muted:#6b7280; --warn:#b45309; --down:#b91c1c; }
+  body { margin:0; font:16px/1.6 system-ui,sans-serif; color:var(--ink);
+         background:var(--paper); }
+  .wrap { max-width:820px; margin:0 auto; padding:32px 20px 80px; }
+  header .addr { font:600 13px ui-monospace,monospace; color:var(--accent);
+                 letter-spacing:.05em; }
+  h1 { font-size:30px; margin:.2em 0 .1em; line-height:1.2; }
+  .why { color:var(--muted); font-style:italic; margin-bottom:2em; }
+  section { margin:2.5em 0; }
+  h2 { border-bottom:2px solid var(--accent); padding-bottom:4px; }
+  h3 { margin:1.6em 0 .3em; font-size:18px; }
+  .lead { font-size:17px; }
+  .analogy { background:#f0f7f4; border-left:4px solid var(--accent);
+             padding:12px 16px; border-radius:0 8px 8px 0; margin:1.2em 0; }
+  .eq { font:600 17px ui-monospace,monospace; text-align:center;
+        background:#fff; border:1px solid #e5e7eb; border-radius:10px;
+        padding:14px; margin:1.2em 0; }
+  table.book { border-collapse:collapse; width:100%; margin:1em 0; font-size:15px; }
+  table.book th, table.book td { border:1px solid #e5e7eb; padding:7px 10px;
+        text-align:left; }
+  table.book th { background:#f9fafb; }
+  table.book td.num { text-align:right; font-family:ui-monospace,monospace; }
+  table.book tr.sub td { font-weight:700; background:#f6faf8; }
+  table.book td.ind { padding-left:26px; }
+  .visual { border:1px solid #e5e7eb; border-radius:12px; padding:16px;
+            background:#fff; }
+  .sliders { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+             gap:6px 18px; margin-bottom:10px; }
+  .sl label { display:flex; justify-content:space-between; font-size:13px;
+              color:var(--muted); }
+  .sl label b { color:var(--ink); font-family:ui-monospace,monospace; }
+  .sl input[type=range] { width:100%; accent-color:var(--accent); }
+  .metrics { display:flex; flex-wrap:wrap; gap:10px; margin-top:12px; font-size:14px; }
+  .metrics .m { border:1px solid #e5e7eb; border-radius:8px; padding:8px 12px;
+        background:#fff; }
+  .metrics .m b { display:block; font-size:18px; font-family:ui-monospace,monospace; }
+  .modebtns { display:flex; gap:6px; margin-bottom:10px; }
+  .modebtns button { background:#e5e7eb; color:#374151; font-size:13px;
+        padding:7px 12px; }
+  .modebtns button.on { background:var(--accent2); color:#fff; }
+  .caption { font-size:13.5px; background:#eef6ff; border-left:3px solid
+        var(--accent2); padding:8px 12px; border-radius:0 8px 8px 0;
+        margin:10px 0 0; }
+  .bsheet { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:8px; }
+  .bsheet .side { border:1px solid #e5e7eb; border-radius:8px; overflow:hidden; }
+  .bsheet .side h4 { margin:0; padding:8px 10px; background:#f9fafb;
+        font-size:14px; border-bottom:1px solid #e5e7eb; }
+  .bsheet .row { display:flex; justify-content:space-between; padding:5px 10px;
+        font-size:14px; font-family:ui-monospace,monospace; }
+  .bsheet .tot { border-top:1px solid #e5e7eb; font-weight:700; }
+  .row.chg { animation:flash 1.4s ease-out; }
+  @keyframes flash { from { background:#fef9c3; } to { background:transparent; } }
+  .balstate { text-align:center; font:600 14px ui-monospace,monospace;
+              margin-top:10px; color:var(--accent); }
+  .log { max-height:150px; overflow:auto; font:12px ui-monospace,monospace;
+        border:1px solid #e5e7eb; border-radius:8px; padding:8px 10px;
+        margin-top:10px; }
+  .log div { padding:2px 0; border-bottom:1px dashed #f3f4f6; }
+  .pcard { border:1px solid #e5e7eb; border-radius:8px; padding:10px 12px; }
+  .pcard h4 { margin:0 0 6px; font-size:14px; }
+  .pcard .row { display:flex; justify-content:space-between; padding:3px 0;
+        font-size:14px; font-family:ui-monospace,monospace; }
+  .pcard .row.ni { border-top:1px solid #e5e7eb; font-weight:700; }
+  .artgrid { display:grid; grid-template-columns:300px 1fr; gap:14px; }
+  @media (max-width:680px){ .artgrid { grid-template-columns:1fr; } }
+  .flychip { position:fixed; z-index:50; background:var(--accent); color:#fff;
+        font:600 12px ui-monospace,monospace; padding:3px 9px;
+        border-radius:999px; pointer-events:none;
+        transition:transform .9s ease-in-out, opacity .9s; }
+  .q { margin:1.2em 0; padding:14px; border:1px solid #e5e7eb; border-radius:10px; }
+  .q .opts label { display:block; margin:4px 0; cursor:pointer; }
+  .q input[type=number], .q input[type=text] { font-size:15px; padding:6px 8px;
+        border:1px solid #d1d5db; border-radius:6px; width:180px; }
+  .q.right { border-color:var(--accent); background:#f0f7f4; }
+  .q.wrong { border-color:#b91c1c; background:#fef2f2; }
+  .q .fb { margin-top:10px; padding-top:8px; border-top:1px dashed #d1d5db;
+        font-size:14px; }
+  .q.right .fb b { color:var(--accent); }
+  .q.wrong .fb b { color:#b91c1c; }
+  button { background:var(--accent); color:#fff; border:0; padding:10px 18px;
+           border-radius:8px; font-size:15px; cursor:pointer; }
+  button:hover { filter:brightness(1.07); }
+  button:disabled { background:#e5e7eb; color:#9ca3af; cursor:not-allowed; }
+  button.util { background:var(--muted); font-size:13px; padding:7px 12px; }
+  #result { margin-top:1em; font-weight:600; }
+  .hint { font-size:13px; color:var(--muted); }
+  ul.tight li { margin:.2em 0; }
+  svg text { font-family:system-ui,sans-serif; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="addr">101.3</div>
+    <h1>The income statement: revenue, expenses, net income</h1>
+    <p class="why">The balance sheet is the photograph; the income statement is the flow meter — it measures how fast the business created (or destroyed) owner value over a stretch of time.</p>
+  </header>
+
+  <!-- 1. WRITTEN / TEACHING SECTION -->
+  <section id="learn">
+    <h2>Learn</h2>
+
+    <p class="lead">In 101.2 you saw the balance sheet: a <em>stock</em>, a state
+    dump as of one date. The <strong>income statement</strong> (also called the
+    <em>P&amp;L</em>, profit-and-loss statement, or statement of operations) is
+    its complement: a <strong>flow</strong> statement. Its heading always reads
+    "<em>for the period ended…</em>" — a quarter, a year — and it answers:
+    <em>over that stretch, how much value did operations generate for the
+    owners?</em> The answer is <strong>net income</strong>: revenues minus
+    expenses.</p>
+
+    <h3>Rate vs. state</h3>
+    <p>An engineer's framing: if equity is the level in a tank, net income is
+    the net inflow rate integrated over the period. Revenue is flow in, expenses
+    are flow out, and the period's accumulated difference gets dumped into the
+    <strong>retained earnings</strong> register on the balance sheet when the
+    period closes. That's why the two statements can never disagree — the flow
+    literally integrates into the stock:</p>
+
+    <div class="eq">Ending RE&nbsp; = &nbsp;Beginning RE&nbsp; + &nbsp;Net income&nbsp; − &nbsp;Dividends</div>
+
+    <div class="analogy">
+      <b>Systems analogy — the derivative of equity.</b> If the balance sheet is
+      the system state at clock ticks <i>t₀</i> and <i>t₁</i>, the income
+      statement is (most of) the diff between them, attributed to operations.
+      Equity can also change from owner transactions — paid-in capital and
+      dividends — so the income statement isolates the part of Δequity the
+      business <em>earned</em>, as opposed to the part the owners moved in or
+      out themselves. Mixing those two up is how bad dashboards get built.
+    </div>
+
+    <h3>The multi-step structure</h3>
+    <p>GAAP income statements for most real companies use the
+    <strong>multi-step</strong> format: a cascade of subtotals that separates
+    <em>how good the product economics are</em> from <em>how expensive the
+    organization is</em> from <em>how the company is financed and taxed</em>.
+    Read it top to bottom:</p>
+
+    <table class="book">
+      <tr><th>Line</th><th>What it is</th></tr>
+      <tr><td><b>Revenue</b> (the "top line")</td><td>Value of goods/services <em>delivered</em> in the period — not cash collected. Also called sales or turnover.</td></tr>
+      <tr><td class="ind">− Cost of goods sold (COGS)</td><td>The direct cost of the units actually sold: materials, direct labor, factory overhead. Inventory still on the shelf is an asset, not COGS.</td></tr>
+      <tr class="sub"><td>= Gross profit</td><td>What the product itself earns before running the company. Tests the unit economics.</td></tr>
+      <tr><td class="ind">− Operating expenses</td><td>SG&amp;A (selling, general &amp; administrative: salaries, rent, marketing), R&amp;D, and depreciation &amp; amortization (D&amp;A) on operating assets.</td></tr>
+      <tr class="sub"><td>= Operating income (EBIT)</td><td>Earnings before interest and taxes: profit from the core business, ignoring how it's financed.</td></tr>
+      <tr><td class="ind">± Non-operating items</td><td>Interest expense/income, gains or losses on selling assets — things outside the core business.</td></tr>
+      <tr class="sub"><td>= Pre-tax income (EBT)</td><td>What the tax authority gets to look at.</td></tr>
+      <tr><td class="ind">− Income tax expense</td><td>Roughly pre-tax income × effective tax rate.</td></tr>
+      <tr class="sub"><td>= Net income (the "bottom line")</td><td>What's left for the owners. This is the number that flows to retained earnings.</td></tr>
+    </table>
+
+    <p>Each subtotal earns its keep as a <strong>margin</strong> — the subtotal
+    divided by revenue, so businesses of different sizes become comparable:</p>
+
+    <div class="eq">Gross margin = GP ÷ Revenue &nbsp;·&nbsp; Operating margin = EBIT ÷ Revenue &nbsp;·&nbsp; Net margin = NI ÷ Revenue</div>
+
+    <p>Margins localize problems the way subtotals localize bugs: a falling
+    gross margin points at pricing or production cost; a healthy gross margin
+    with a sagging operating margin points at overhead (SG&amp;A bloat); a gap
+    between operating and net margin points at debt load or taxes.</p>
+
+    <h3>What counts, and when: the accrual rules</h3>
+    <p>The single most important — and least intuitive — fact about the income
+    statement: <strong>revenue is not cash received, and expense is not cash
+    paid.</strong> GAAP uses <em>accrual</em> accounting, governed by two
+    principles (we'll go deep in 101.7; here's the core):</p>
+    <ul class="tight">
+      <li><b>Revenue recognition principle</b> — record revenue in the period
+        you <em>earn</em> it, i.e. when you deliver the good or perform the
+        service, regardless of when cash moves. A customer prepayment is not
+        revenue yet (it's a liability, <em>deferred revenue</em> — you owe them
+        delivery). A delivery not yet paid for <em>is</em> revenue (and an
+        asset, <em>accounts receivable</em>).</li>
+      <li><b>Matching (expense recognition) principle</b> — record expenses in
+        the same period as the revenues they helped generate. COGS hits when
+        the unit <em>sells</em>, not when you bought the materials. Wages
+        earned by employees in December are December's expense even if payday
+        is in January.</li>
+    </ul>
+    <p>Why bother? Because the income statement is trying to measure
+    <em>economic performance per period</em>, and cash timing is noisy —
+    customers pay late, suppliers get paid early, machines are bought once and
+    used for a decade. Accrual accounting filters the cash-timing noise out of
+    the performance signal. (The cash-timing truth still matters — that's the
+    statement of cash flows, lesson 101.4.)</p>
+
+    <h3>Depreciation: an expense with no cash attached</h3>
+    <p>The matching principle's most famous consequence. Buy a $200,000 machine
+    that will help produce revenue for 10 years: expensing $200,000 in year one
+    would crater that year's income and flatter the next nine. Instead the cost
+    is <em>capitalized</em> (recorded as an asset) and then <strong>depreciated</strong>
+    — allocated as an expense across the periods it serves. Straight-line:
+    $200,000 ÷ 10 = $20,000/year of depreciation expense, even though the cash
+    left long ago. Amortization is the same idea for intangibles. This is why
+    analysts compute <strong>EBITDA</strong> (EBIT + D&amp;A) — a non-GAAP
+    measure that strips out these non-cash, financing-and-history-laden charges
+    to approximate operating cash generation. Useful, but treat it with
+    suspicion: machines really do wear out, and EBITDA pretends they don't.</p>
+
+    <h3>Worked example: Cedar &amp; Bolt Co., year ended Dec 31</h3>
+    <p>Cedar &amp; Bolt machines and sells desk hardware. Raw facts for the
+    year:</p>
+    <ul class="tight">
+      <li>Delivered 10,000 units at $50 each. Collected $420,000 in cash;
+        the remaining $80,000 is still owed by customers.</li>
+      <li>Also received a $15,000 customer deposit for units to be delivered
+        <em>next</em> year.</li>
+      <li>Each unit sold cost $30 to produce. Also bought $40,000 of extra
+        materials still sitting in inventory at year end.</li>
+      <li>Paid salaries, rent, and marketing of $78,000 in cash; employees
+        earned another $2,000 of wages in December, payable in January.</li>
+      <li>Owns one machine, bought earlier for $200,000, straight-line over
+        10 years, no salvage value.</li>
+      <li>Owes 10% interest on a $100,000 bank loan; effective tax rate 25%;
+        50,000 common shares outstanding.</li>
+    </ul>
+    <p>Apply the recognition rules before touching the statement:
+    revenue = 10,000 × $50 = <b>$500,000</b> (delivery happened; the uncollected
+    $80,000 doesn't reduce it, and the $15,000 deposit doesn't increase it —
+    nothing was delivered for it). COGS = 10,000 × $30 = <b>$300,000</b> (the
+    $40,000 of unsold materials stays on the balance sheet as inventory).
+    SG&amp;A = $78,000 + $2,000 accrued = <b>$80,000</b> (matching: December
+    wages belong to December). Depreciation = $200,000 ÷ 10 = <b>$20,000</b>
+    (no cash this year). Interest = <b>$10,000</b>.</p>
+
+    <table class="book">
+      <tr><th>Cedar &amp; Bolt Co. — Income statement, year ended Dec 31</th><th class="num">$</th></tr>
+      <tr><td>Revenue</td><td class="num">500,000</td></tr>
+      <tr><td class="ind">Cost of goods sold</td><td class="num">(300,000)</td></tr>
+      <tr class="sub"><td>Gross profit</td><td class="num">200,000</td></tr>
+      <tr><td class="ind">SG&amp;A</td><td class="num">(80,000)</td></tr>
+      <tr><td class="ind">Depreciation</td><td class="num">(20,000)</td></tr>
+      <tr class="sub"><td>Operating income (EBIT)</td><td class="num">100,000</td></tr>
+      <tr><td class="ind">Interest expense</td><td class="num">(10,000)</td></tr>
+      <tr class="sub"><td>Pre-tax income</td><td class="num">90,000</td></tr>
+      <tr><td class="ind">Income tax (25%)</td><td class="num">(22,500)</td></tr>
+      <tr class="sub"><td>Net income</td><td class="num">67,500</td></tr>
+    </table>
+
+    <p class="hint">Margins: gross 200/500 = <b>40%</b>; operating 100/500 =
+    <b>20%</b>; net 67.5/500 = <b>13.5%</b>. EBITDA = 100,000 + 20,000 =
+    $120,000. Basic EPS = 67,500 ÷ 50,000 shares = <b>$1.35</b>. And notice the
+    accrual gap: cash in from customers was 420,000 + 15,000 = $435,000, yet
+    revenue is $500,000 — the difference lives on the balance sheet as
+    receivables and deferred revenue.</p>
+
+    <h3>Articulation: closing into the balance sheet</h3>
+    <p>At period end, net income doesn't vanish — it <strong>closes into
+    retained earnings</strong>, the equity account from 101.2. If Cedar &amp;
+    Bolt started the year with retained earnings of $50,000 and paid $17,500 of
+    dividends, ending RE = 50,000 + 67,500 − 17,500 = <b>$100,000</b>. The asset
+    side moved in lockstep along the way (cash, receivables, inventory,
+    accumulated depreciation), so A = L + E still holds. Accountants call this
+    linkage <em>articulation</em>: the statements are views of one consistent
+    underlying state machine, not independent reports.</p>
+
+    <h3>Edge cases and vocabulary worth keeping</h3>
+    <ul class="tight">
+      <li><b>Single-step vs. multi-step.</b> A single-step statement just
+        lumps all revenues and gains, subtracts all expenses and losses, and
+        reports net income — legal under GAAP, common for simple firms, but it
+        hides gross and operating margin. Multi-step adds the subtotals.</li>
+      <li><b>Operating vs. non-operating is about the business, not the
+        item.</b> Interest expense is non-operating for a retailer but
+        <em>operating revenue</em> for a bank — lending is a bank's core
+        business. Classify by relationship to the core operations.</li>
+      <li><b>Earnings per share (EPS).</b> Basic EPS = (net income − preferred
+        dividends) ÷ weighted-average common shares outstanding. Required on
+        the face of public-company income statements; it's net income restated
+        per unit of ownership.</li>
+      <li><b>Revenue ≠ quality.</b> Two firms with identical net income can
+        have wildly different mixes (high-margin shrinking core vs. low-margin
+        growth). The cascade exists precisely so you can see the mix.</li>
+      <li><b>Watch the period.</b> Comparing a quarterly P&amp;L to an annual
+        one, or a flow (net income) to a stock (cash balance), is a unit
+        error — like comparing watts to joules.</li>
+    </ul>
+  </section>
+
+  <!-- 2. VISUAL SECTIONS -->
+  <section id="see-1" class="see">
+    <h2>See it: from revenue to net income (the waterfall)</h2>
+    <p>The multi-step cascade, live. Drag any line item and watch every
+    subtotal and margin recompute. Defaults match Cedar &amp; Bolt. Try:
+    push COGS up until gross profit dies; add R&amp;D and watch operating
+    margin compress while gross margin doesn't move; crank interest and see
+    the gap open between operating and net margin.</p>
+    <div class="visual" id="viz-1">
+      <div class="sliders" id="wf-controls"></div>
+      <svg id="wf-svg" viewBox="0 0 760 330" width="100%" role="img"
+           aria-label="Income statement waterfall chart"></svg>
+      <div class="metrics">
+        <div class="m">Gross margin<b id="wf-gm">–</b></div>
+        <div class="m">Operating margin<b id="wf-om">–</b></div>
+        <div class="m">Net margin<b id="wf-nm">–</b></div>
+        <div class="m">EBITDA<b id="wf-ebitda">–</b></div>
+        <div class="m">EPS (50k shares)<b id="wf-eps">–</b></div>
+      </div>
+      <div class="caption" id="wf-note"></div>
+    </div>
+  </section>
+
+  <section id="see-2" class="see">
+    <h2>See it: when revenue counts — accrual timing</h2>
+    <p>Slide the two events independently: when the <em>cash</em> moves, and
+    when the good is <em>delivered</em> (or, in expense mode, the benefit is
+    consumed). The income statement only ever cares about the second one — and
+    whenever the two dates differ, a balance-sheet account bridges the gap.</p>
+    <div class="visual" id="viz-2">
+      <div class="modebtns" id="ac-modes">
+        <button type="button" data-mode="rev" class="on">Revenue side</button>
+        <button type="button" data-mode="exp">Expense side</button>
+      </div>
+      <div class="sliders">
+        <div class="sl">
+          <label><span id="ac-cash-label">Quarter the cash is received</span><b id="ac-cash-v">Q1</b></label>
+          <input type="range" min="1" max="4" step="1" value="1" id="ac-cash" />
+        </div>
+        <div class="sl">
+          <label><span id="ac-event-label">Quarter the good is delivered</span><b id="ac-event-v">Q3</b></label>
+          <input type="range" min="1" max="4" step="1" value="3" id="ac-event" />
+        </div>
+      </div>
+      <svg id="ac-svg" viewBox="0 0 760 240" width="100%" role="img"
+           aria-label="Accrual timing diagram"></svg>
+      <div class="caption" id="ac-note"></div>
+    </div>
+  </section>
+
+  <section id="see-3" class="see">
+    <h2>See it: closing the period into retained earnings</h2>
+    <p>One mini balance sheet, repeated periods. Set the period's revenue,
+    expenses, and dividend, then close the books and watch net income fly into
+    retained earnings while A = L + E never breaks. (Toy simplification: this
+    period's revenue and expenses are all-cash, so the asset side moves through
+    cash alone — 101.4 and 101.7 relax that.)</p>
+    <div class="visual" id="viz-3">
+      <div class="artgrid">
+        <div class="pcard">
+          <h4>This period's income statement</h4>
+          <div class="sliders" style="grid-template-columns:1fr;">
+            <div class="sl">
+              <label><span>Revenue (cash)</span><b id="ar-rev-v"></b></label>
+              <input type="range" min="0" max="100000" step="1000" value="40000" id="ar-rev" />
+            </div>
+            <div class="sl">
+              <label><span>Expenses (cash)</span><b id="ar-exp-v"></b></label>
+              <input type="range" min="0" max="100000" step="1000" value="28000" id="ar-exp" />
+            </div>
+            <div class="sl">
+              <label><span>Dividends declared</span><b id="ar-div-v"></b></label>
+              <input type="range" min="0" max="30000" step="1000" value="5000" id="ar-div" />
+            </div>
+          </div>
+          <div class="row"><span>Revenue</span><span id="ar-line-rev"></span></div>
+          <div class="row"><span>Expenses</span><span id="ar-line-exp"></span></div>
+          <div class="row ni"><span>Net income</span><span id="ar-line-ni"></span></div>
+          <div style="margin-top:10px; display:flex; gap:6px;">
+            <button type="button" id="ar-close">Close the period →</button>
+            <button type="button" class="util" id="ar-reset">Reset</button>
+          </div>
+        </div>
+        <div>
+          <div class="bsheet">
+            <div class="side">
+              <h4>Assets</h4>
+              <div class="row" id="ar-row-cash"><span>Cash</span><span id="ar-cash"></span></div>
+              <div class="row"><span>Other assets</span><span id="ar-other"></span></div>
+              <div class="row tot"><span>Total assets</span><span id="ar-tota"></span></div>
+            </div>
+            <div class="side">
+              <h4>Liabilities &amp; Equity</h4>
+              <div class="row"><span>Liabilities</span><span id="ar-liab"></span></div>
+              <div class="row"><span>Common stock</span><span id="ar-stock"></span></div>
+              <div class="row" id="ar-row-re"><span>Retained earnings</span><span id="ar-re"></span></div>
+              <div class="row tot"><span>Total L &amp; E</span><span id="ar-totc"></span></div>
+            </div>
+          </div>
+          <div class="balstate" id="ar-bal"></div>
+          <div class="log" id="ar-log"><div class="hint">Closed periods will appear here: RE<sub>end</sub> = RE<sub>beg</sub> + NI − Div.</div></div>
+        </div>
+      </div>
+      <div class="caption" id="ar-note"></div>
+    </div>
+  </section>
+
+  <!-- 3. QUIZ -->
+  <section id="quiz">
+    <h2>Check yourself</h2>
+    <form id="quizForm">
+
+      <div class="q" data-qid="q1" data-type="mc">
+        <p><strong>1.</strong> An income statement headed "For the year ended December 31, 2025" reports:</p>
+        <div class="opts">
+          <label><input type="radio" name="q1" value="a"> The company's assets, liabilities, and equity as of December 31, 2025.</label>
+          <label><input type="radio" name="q1" value="b"> Revenues and expenses accumulated across the whole year — a flow over a period.</label>
+          <label><input type="radio" name="q1" value="c"> A forecast of the company's performance for 2026.</label>
+          <label><input type="radio" name="q1" value="d"> The change in the company's cash balance during the year.</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q2" data-type="text">
+        <p><strong>2.</strong> The accrual principle that says expenses must be reported in the same period as the revenues they helped generate is the ____ principle. (One or two words.)</p>
+        <input type="text" name="q2" placeholder="principle name" />
+      </div>
+
+      <div class="q" data-qid="q3" data-type="mc">
+        <p><strong>3.</strong> A customer pays you $9,000 in March for consulting work you will perform entirely in April. Under accrual accounting, when is the $9,000 recognized as revenue?</p>
+        <div class="opts">
+          <label><input type="radio" name="q3" value="a"> In March, when the cash is received.</label>
+          <label><input type="radio" name="q3" value="b"> Half in March and half in April.</label>
+          <label><input type="radio" name="q3" value="c"> In April, when the service is performed.</label>
+          <label><input type="radio" name="q3" value="d"> Whenever the invoice is formally issued.</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q4" data-type="mc">
+        <p><strong>4.</strong> A machine bought three years ago for $90,000 is depreciated straight-line over 10 years. Why does this year's income statement include a $9,000 depreciation expense even though no cash left the company this year?</p>
+        <div class="opts">
+          <label><input type="radio" name="q4" value="a"> Because the machine loses exactly $9,000 of resale value every year.</label>
+          <label><input type="radio" name="q4" value="b"> Because the matching principle allocates the machine's cost across the periods in which it helps generate revenue.</label>
+          <label><input type="radio" name="q4" value="c"> Because the company is required to set aside $9,000 of cash each year to replace it.</label>
+          <label><input type="radio" name="q4" value="d"> Because depreciation is a tax payment made directly to the government.</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q5" data-type="mc">
+        <p><strong>5.</strong> Marlowe Outfitters is a retail chain. On its multi-step income statement, which of these belongs <em>below</em> operating income, as a non-operating item?</p>
+        <div class="opts">
+          <label><input type="radio" name="q5" value="a"> Wages for store staff.</label>
+          <label><input type="radio" name="q5" value="b"> Depreciation on store fixtures.</label>
+          <label><input type="radio" name="q5" value="c"> Cost of goods sold.</label>
+          <label><input type="radio" name="q5" value="d"> Interest expense on its term loan.</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q6" data-type="num">
+        <p><strong>6.</strong> Marlowe Outfitters, for the year: revenue $840,000; COGS $504,000; SG&amp;A $168,000; depreciation $42,000; interest expense $14,000; effective tax rate 30%. Build the multi-step statement and compute <em>net income</em>, in dollars.</p>
+        <input type="number" name="q6" step="any" placeholder="dollars" />
+      </div>
+
+      <div class="q" data-qid="q7" data-type="num">
+        <p><strong>7.</strong> For the same Marlowe Outfitters year (question 6), what is the <em>net profit margin</em>, as a percentage? (Give the number, e.g. 12.5.)</p>
+        <input type="number" name="q7" step="any" placeholder="percent" />
+      </div>
+
+      <div class="q" data-qid="q8" data-type="num">
+        <p><strong>8.</strong> A company begins the year with retained earnings of $250,000, earns net income of $78,400, and declares $30,000 of dividends. What is ending retained earnings, in dollars?</p>
+        <input type="number" name="q8" step="any" placeholder="dollars" />
+      </div>
+
+      <button type="submit">Submit answers</button>
+    </form>
+    <div id="result"></div>
+  </section>
+
+</div>
+
+<script>
+  const LESSON_ADDRESS = "101.3";
+  const fmt$ = n => (n < 0 ? "−$" : "$") + Math.round(Math.abs(n)).toLocaleString("en-US");
+
+  /* ---------- Visual 1: multi-step waterfall ---------- */
+  (function () {
+    const S = { rev:500000, cogs:300000, sga:80000, rd:0, da:20000, int:10000, tax:25 };
+    const CTRLS = [
+      { k:"rev",  label:"Revenue",          max:1000000, step:10000 },
+      { k:"cogs", label:"COGS",             max:800000,  step:10000 },
+      { k:"sga",  label:"SG&amp;A",         max:300000,  step:5000  },
+      { k:"rd",   label:"R&amp;D",          max:200000,  step:5000  },
+      { k:"da",   label:"D&amp;A",          max:150000,  step:5000  },
+      { k:"int",  label:"Interest expense", max:100000,  step:2500  },
+      { k:"tax",  label:"Tax rate",         max:50,      step:1, pct:true },
+    ];
+    const fmtK = v => (v < 0 ? "−" : "") + "$" +
+      (Math.abs(v) >= 999.5 ? (Math.round(Math.abs(v) / 100) / 10) + "k"
+                            : Math.round(Math.abs(v)));
+
+    const box = document.getElementById("wf-controls");
+    CTRLS.forEach(c => {
+      const d = document.createElement("div");
+      d.className = "sl";
+      d.innerHTML = `<label><span>${c.label}</span><b id="wf-v-${c.k}"></b></label>` +
+        `<input type="range" min="0" max="${c.max}" step="${c.step}" value="${S[c.k]}" id="wf-i-${c.k}" />`;
+      box.appendChild(d);
+      d.querySelector("input").addEventListener("input", e => {
+        S[c.k] = +e.target.value;
+        render();
+      });
+    });
+
+    function calc() {
+      const gp = S.rev - S.cogs;
+      const ebit = gp - S.sga - S.rd - S.da;
+      const pretax = ebit - S.int;
+      const tax = Math.max(0, pretax) * S.tax / 100;
+      const ni = pretax - tax;
+      return { gp, ebit, pretax, tax, ni, ebitda: ebit + S.da };
+    }
+
+    function render() {
+      CTRLS.forEach(c => {
+        document.getElementById("wf-v-" + c.k).textContent =
+          c.pct ? S[c.k] + "%" : fmt$(S[c.k]);
+      });
+      const r = calc();
+
+      const steps = [
+        { lab:"Rev",  full:"Revenue",          type:"total", val:S.rev  },
+        { lab:"COGS", full:"Cost of goods sold", type:"down", val:S.cogs },
+        { lab:"GP",   full:"Gross profit",     type:"sub",   val:r.gp   },
+        { lab:"SG&amp;A", full:"SG&amp;A",     type:"down",  val:S.sga  },
+        { lab:"R&amp;D",  full:"R&amp;D",      type:"down",  val:S.rd   },
+        { lab:"D&amp;A",  full:"Depreciation &amp; amortization", type:"down", val:S.da },
+        { lab:"EBIT", full:"Operating income", type:"sub",   val:r.ebit },
+        { lab:"Int",  full:"Interest expense", type:"down",  val:S.int  },
+        { lab:"EBT",  full:"Pre-tax income",   type:"sub",   val:r.pretax },
+        { lab:"Tax",  full:"Income tax",       type:"down",  val:r.tax  },
+        { lab:"NI",   full:"Net income",       type:"sub",   val:r.ni   },
+      ];
+
+      // running level after each step; bars for down-steps float
+      let run = 0;
+      const segs = steps.map(s => {
+        let y1, y2;
+        if (s.type === "total") { y1 = 0; y2 = s.val; run = s.val; }
+        else if (s.type === "down") { y1 = run; y2 = run - s.val; run = y2; }
+        else { y1 = 0; y2 = run; }            // subtotal bar from axis
+        return { ...s, y1, y2, level: run };
+      });
+
+      const levels = segs.flatMap(s => [s.y1, s.y2]).concat([0]);
+      const lo = Math.min(...levels), hi = Math.max(...levels, 1);
+      const span = (hi - lo) || 1;
+      const TOP = 20, BOT = 292, H = BOT - TOP;
+      const y = v => BOT - (v - lo) / span * H;
+
+      const colW = 740 / segs.length, barW = Math.min(48, colW - 14);
+      const colors = { total:"#2d6a4f", sub:"#1d4ed8", down:"#b45309" };
+
+      let svg = "";
+      // zero axis
+      svg += `<line x1="10" x2="750" y1="${y(0)}" y2="${y(0)}" stroke="#9ca3af" stroke-width="1"/>`;
+      segs.forEach((s, i) => {
+        const x = 10 + i * colW + (colW - barW) / 2;
+        const py1 = y(s.y1), py2 = y(s.y2);
+        const top = Math.min(py1, py2), h = Math.max(1, Math.abs(py1 - py2));
+        svg += `<rect x="${x.toFixed(1)}" y="${top.toFixed(1)}" width="${barW.toFixed(1)}" height="${h.toFixed(1)}"`
+             + ` rx="2" fill="${colors[s.type]}"><title>${s.full}: ${fmt$(s.type === "down" ? -s.val : s.val)}</title></rect>`;
+        // connector to next column at the running level
+        if (i < segs.length - 1) {
+          const ly = y(s.level);
+          svg += `<line x1="${(x + barW).toFixed(1)}" x2="${(x + colW).toFixed(1)}"`
+               + ` y1="${ly.toFixed(1)}" y2="${ly.toFixed(1)}" stroke="#9ca3af" stroke-dasharray="3 3"/>`;
+        }
+        // value label
+        const vlab = s.type === "down" ? (s.val ? "−" + fmtK(s.val) : "0") : fmtK(s.val);
+        svg += `<text x="${(x + barW / 2).toFixed(1)}" y="${(top - 5).toFixed(1)}"`
+             + ` text-anchor="middle" font-size="10.5" fill="#374151">${vlab}</text>`;
+        // x label
+        svg += `<text x="${(x + barW / 2).toFixed(1)}" y="312" text-anchor="middle"`
+             + ` font-size="11" font-weight="${s.type === "down" ? 400 : 700}" fill="#1a1a2e">${s.lab}</text>`;
+      });
+      document.getElementById("wf-svg").innerHTML = svg;
+
+      const pct = v => S.rev > 0 ? (v / S.rev * 100).toFixed(1) + "%" : "–";
+      document.getElementById("wf-gm").textContent = pct(r.gp);
+      document.getElementById("wf-om").textContent = pct(r.ebit);
+      document.getElementById("wf-nm").textContent = pct(r.ni);
+      document.getElementById("wf-ebitda").textContent = fmt$(r.ebitda);
+      document.getElementById("wf-eps").textContent =
+        (r.ni < 0 ? "−$" : "$") + Math.abs(r.ni / 50000).toFixed(2);
+
+      document.getElementById("wf-note").innerHTML =
+        `<b>Reading the cascade:</b> green = top line, blue = subtotals, orange = deductions. ` +
+        `Gross profit ${fmt$(r.gp)} → operating income ${fmt$(r.ebit)} → pre-tax ${fmt$(r.pretax)} → net income ${fmt$(r.ni)}.` +
+        (r.pretax < 0 ? ` Pre-tax income is negative, so this toy model charges no tax (real tax-loss rules are messier).` : ``) +
+        (r.gp < 0 ? ` Negative gross profit: every unit sold destroys value — no amount of overhead trimming below this line can save it.` : ``);
+    }
+    render();
+  })();
+
+  /* ---------- Visual 2: accrual timing ---------- */
+  (function () {
+    const AMT = 12000;
+    let mode = "rev", cashQ = 1, eventQ = 3;
+
+    const modeBox = document.getElementById("ac-modes");
+    modeBox.querySelectorAll("button").forEach(b => {
+      b.addEventListener("click", () => {
+        mode = b.dataset.mode;
+        modeBox.querySelectorAll("button").forEach(x =>
+          x.classList.toggle("on", x === b));
+        render();
+      });
+    });
+    document.getElementById("ac-cash").addEventListener("input", e => {
+      cashQ = +e.target.value; render();
+    });
+    document.getElementById("ac-event").addEventListener("input", e => {
+      eventQ = +e.target.value; render();
+    });
+
+    function render() {
+      const isRev = mode === "rev";
+      document.getElementById("ac-cash-label").textContent =
+        isRev ? "Quarter the cash is received" : "Quarter the cash is paid";
+      document.getElementById("ac-event-label").textContent =
+        isRev ? "Quarter the good is delivered" : "Quarter the benefit is consumed";
+      document.getElementById("ac-cash-v").textContent = "Q" + cashQ;
+      document.getElementById("ac-event-v").textContent = "Q" + eventQ;
+
+      let bridge = null;
+      if (cashQ < eventQ) {
+        bridge = isRev
+          ? { name:"Deferred revenue", kind:"liability", why:"you've been paid but still owe delivery" }
+          : { name:"Prepaid expense",  kind:"asset",     why:"you've paid for a benefit you haven't used yet" };
+      } else if (cashQ > eventQ) {
+        bridge = isRev
+          ? { name:"Accounts receivable", kind:"asset",     why:"you've delivered and are owed the cash" }
+          : { name:"Accrued liability",   kind:"liability", why:"you've consumed the benefit and still owe the cash" };
+      }
+
+      const GUT = 110, QW = (745 - GUT) / 4;
+      const qx = q => GUT + (q - 1) * QW;
+      const qc = q => qx(q) + QW / 2;
+      const LANES = [
+        { y:42,  h:48, name:"Cash" },
+        { y:100, h:48, name:"Income stmt" },
+        { y:158, h:48, name:"Balance sheet" },
+      ];
+
+      let svg = "";
+      // quarter columns
+      for (let q = 1; q <= 4; q++) {
+        svg += `<rect x="${qx(q)}" y="30" width="${QW - 6}" height="182" rx="6"`
+             + ` fill="${q === eventQ ? "#e9f5ee" : "#f9fafb"}"`
+             + ` stroke="${q === eventQ ? "#2d6a4f" : "#e5e7eb"}"/>`;
+        svg += `<text x="${qc(q) - 3}" y="22" text-anchor="middle" font-size="13"`
+             + ` font-weight="700" fill="#1a1a2e">Q${q}</text>`;
+      }
+      // lane labels
+      LANES.forEach(l => {
+        svg += `<text x="8" y="${l.y + l.h / 2 + 4}" font-size="12" fill="#6b7280">${l.name}</text>`;
+      });
+
+      // cash marker (lane 1)
+      const cy1 = LANES[0].y + LANES[0].h / 2;
+      svg += `<circle cx="${qc(cashQ) - 3}" cy="${cy1 - 6}" r="13" fill="#f59e0b"/>`
+           + `<text x="${qc(cashQ) - 3}" y="${cy1 - 1}" text-anchor="middle" font-size="13"`
+           + ` font-weight="700" fill="#fff">$</text>`
+           + `<text x="${qc(cashQ) - 3}" y="${cy1 + 26}" text-anchor="middle" font-size="10.5" fill="#374151">`
+           + `${fmt$(AMT)} ${isRev ? "in" : "out"}</text>`;
+
+      // recognition block (lane 2) — always in eventQ
+      const l2 = LANES[1];
+      svg += `<rect x="${qx(eventQ) + 8}" y="${l2.y + 6}" width="${QW - 22}" height="${l2.h - 12}"`
+           + ` rx="6" fill="#2d6a4f"/>`
+           + `<text x="${qc(eventQ) - 3}" y="${l2.y + l2.h / 2 - 2}" text-anchor="middle"`
+           + ` font-size="11.5" font-weight="700" fill="#fff">${isRev ? "+" : "−"}${fmt$(AMT)}</text>`
+           + `<text x="${qc(eventQ) - 3}" y="${l2.y + l2.h / 2 + 12}" text-anchor="middle"`
+           + ` font-size="10" fill="#d1fae5">${isRev ? "revenue" : "expense"} recognized</text>`;
+
+      // bridge band (lane 3)
+      const l3 = LANES[2];
+      if (bridge) {
+        const a = Math.min(cashQ, eventQ), b = Math.max(cashQ, eventQ);
+        const x1 = qc(a) - 3 - QW / 2 + 14, x2 = qc(b) - 3 + QW / 2 - 14;
+        const col = bridge.kind === "asset" ? "#1d4ed8" : "#b45309";
+        svg += `<rect x="${x1}" y="${l3.y + 8}" width="${x2 - x1}" height="${l3.h - 16}"`
+             + ` rx="12" fill="${col}" opacity="0.88"/>`
+             + `<text x="${(x1 + x2) / 2}" y="${l3.y + l3.h / 2 - 1}" text-anchor="middle"`
+             + ` font-size="11.5" font-weight="700" fill="#fff">${bridge.name}</text>`
+             + `<text x="${(x1 + x2) / 2}" y="${l3.y + l3.h / 2 + 13}" text-anchor="middle"`
+             + ` font-size="10" fill="#fff">(${bridge.kind}, on the books Q${a}→Q${b})</text>`;
+      } else {
+        svg += `<text x="${qc(cashQ) - 3}" y="${l3.y + l3.h / 2 + 4}" text-anchor="middle"`
+             + ` font-size="10.5" fill="#6b7280">no bridging account needed</text>`;
+      }
+      document.getElementById("ac-svg").innerHTML = svg;
+
+      const note = document.getElementById("ac-note");
+      if (!bridge) {
+        note.innerHTML = `<b>Cash and ${isRev ? "delivery" : "consumption"} land in the same quarter.</b> ` +
+          `Accrual and cash accounting agree: the ${isRev ? "revenue" : "expense"} hits Q${eventQ} either way.`;
+      } else if (cashQ < eventQ) {
+        note.innerHTML = isRev
+          ? `<b>Paid before you deliver.</b> Q${cashQ} cash arrives, but nothing has been earned — the income statement stays silent. ` +
+            `<b>Deferred revenue</b> (a liability: ${bridge.why}) sits on the balance sheet until Q${eventQ}, when delivery converts it into recognized revenue.`
+          : `<b>Paid before you consume.</b> Q${cashQ} cash leaves, but no benefit has been used — no expense yet. ` +
+            `<b>Prepaid expense</b> (an asset: ${bridge.why}) carries the cost until Q${eventQ}, when consumption converts it into a recognized expense.`;
+      } else {
+        note.innerHTML = isRev
+          ? `<b>Deliver before you're paid.</b> Q${eventQ} is when the revenue is earned, so it's recognized there — cash be damned. ` +
+            `<b>Accounts receivable</b> (an asset: ${bridge.why}) bridges until the cash lands in Q${cashQ}.`
+          : `<b>Consume before you pay.</b> The expense belongs to Q${eventQ}, when the benefit was used (matching). ` +
+            `<b>An accrued liability</b> (${bridge.why}) bridges until the cash goes out in Q${cashQ}.`;
+      }
+    }
+    render();
+  })();
+
+  /* ---------- Visual 3: articulation into retained earnings ---------- */
+  (function () {
+    const INIT = { cash:60000, other:90000, liab:50000, stock:40000, re:60000 };
+    let B = { ...INIT };
+    let P = { rev:40000, exp:28000, div:5000 };
+    let periods = [];
+
+    ["rev", "exp", "div"].forEach(k => {
+      document.getElementById("ar-" + k).addEventListener("input", e => {
+        P[k] = +e.target.value; render(false);
+      });
+    });
+    document.getElementById("ar-close").addEventListener("click", close);
+    document.getElementById("ar-reset").addEventListener("click", () => {
+      B = { ...INIT }; periods = []; render(false);
+      document.getElementById("ar-log").innerHTML =
+        `<div class="hint">Closed periods will appear here: RE<sub>end</sub> = RE<sub>beg</sub> + NI − Div.</div>`;
+    });
+
+    function fly(fromId, toId, text) {
+      const f = document.getElementById(fromId).getBoundingClientRect();
+      const t = document.getElementById(toId).getBoundingClientRect();
+      const chip = document.createElement("div");
+      chip.className = "flychip";
+      chip.textContent = text;
+      chip.style.left = f.left + "px";
+      chip.style.top = f.top + "px";
+      document.body.appendChild(chip);
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        chip.style.transform =
+          `translate(${(t.left - f.left).toFixed(0)}px, ${(t.top - f.top).toFixed(0)}px)`;
+        chip.style.opacity = "0.15";
+      }));
+      setTimeout(() => chip.remove(), 1000);
+    }
+
+    function close() {
+      const ni = P.rev - P.exp;
+      const reBeg = B.re;
+      B.cash += P.rev - P.exp - P.div;
+      B.re += ni - P.div;
+      periods.push({ n: periods.length + 1, ni, div: P.div, reBeg, reEnd: B.re });
+
+      fly("ar-line-ni", "ar-re", "NI " + fmt$(ni));
+      render(true);
+
+      const log = document.getElementById("ar-log");
+      if (periods.length === 1) log.innerHTML = "";
+      const p = periods[periods.length - 1];
+      const d = document.createElement("div");
+      d.textContent = `P${p.n}: RE ${fmt$(p.reBeg)} + NI ${fmt$(p.ni)} − Div ${fmt$(p.div)} = ${fmt$(p.reEnd)}`;
+      log.prepend(d);
+    }
+
+    function render(flash) {
+      const ni = P.rev - P.exp;
+      document.getElementById("ar-rev-v").textContent = fmt$(P.rev);
+      document.getElementById("ar-exp-v").textContent = fmt$(P.exp);
+      document.getElementById("ar-div-v").textContent = fmt$(P.div);
+      document.getElementById("ar-line-rev").textContent = fmt$(P.rev);
+      document.getElementById("ar-line-exp").textContent = "(" + fmt$(P.exp) + ")";
+      document.getElementById("ar-line-ni").textContent = fmt$(ni);
+
+      document.getElementById("ar-cash").textContent = fmt$(B.cash);
+      document.getElementById("ar-other").textContent = fmt$(B.other);
+      document.getElementById("ar-liab").textContent = fmt$(B.liab);
+      document.getElementById("ar-stock").textContent = fmt$(B.stock);
+      document.getElementById("ar-re").textContent = fmt$(B.re);
+      const totA = B.cash + B.other, totC = B.liab + B.stock + B.re;
+      document.getElementById("ar-tota").textContent = fmt$(totA);
+      document.getElementById("ar-totc").textContent = fmt$(totC);
+      document.getElementById("ar-bal").textContent =
+        `Balanced ✓  ${fmt$(totA)} = ${fmt$(totC)}` +
+        (periods.length ? `  (${periods.length} period${periods.length > 1 ? "s" : ""} closed)` : "");
+
+      const btn = document.getElementById("ar-close");
+      const wouldCash = B.cash + P.rev - P.exp - P.div;
+      btn.disabled = wouldCash < 0;
+      btn.title = btn.disabled ? "Blocked: cash would go negative." : "";
+
+      document.getElementById("ar-note").innerHTML =
+        `Pending close: cash ${wouldCash >= B.cash ? "rises" : "falls"} to ${fmt$(wouldCash)} on the asset side; ` +
+        `retained earnings ${ni - P.div >= 0 ? "rises" : "falls"} to ${fmt$(B.re + ni - P.div)} on the claims side — ` +
+        `identical moves, so the equation can't break. Dividends bypass the income statement entirely: ` +
+        `they reduce RE directly, which is why NI ≠ ΔRE whenever dividends are paid.`;
+
+      if (flash) {
+        ["ar-row-cash", "ar-row-re"].forEach(id => {
+          const el = document.getElementById(id);
+          el.classList.remove("chg");
+          void el.offsetWidth;
+          el.classList.add("chg");
+        });
+      }
+    }
+    render(false);
+  })();
+
+  /* ---------- Quiz: collect answers, grade server-side ---------- */
+  document.getElementById("quizForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const fd = new FormData(e.target);
+    const answers = {};
+    document.querySelectorAll(".q").forEach(q => {
+      answers[q.dataset.qid] = fd.get(q.dataset.qid);
+    });
+    const payload = { address: LESSON_ADDRESS, answers, ts: Date.now() };
+
+    try {
+      const res = await fetch("http://127.0.0.1:8753/record", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (data.error) {
+        document.getElementById("result").textContent = "Recorder error: " + data.error;
+        return;
+      }
+      document.getElementById("result").textContent =
+        `Score: ${data.correct}/${data.total}. ` +
+        (data.weak_topics?.length ? `Review: ${data.weak_topics.join(", ")}` : "Nice work.");
+      // Per-question feedback from the graded response; the page never sees the key.
+      (data.results || []).forEach(r => {
+        const q = document.querySelector(`.q[data-qid="${r.qid}"]`);
+        if (!q) return;
+        q.classList.remove("right", "wrong");
+        q.classList.add(r.is_correct ? "right" : "wrong");
+        let fb = q.querySelector(".fb");
+        if (!fb) { fb = document.createElement("div"); fb.className = "fb"; q.appendChild(fb); }
+        fb.textContent = "";
+        const mark = document.createElement("b");
+        mark.textContent = r.is_correct ? "✓ Correct" : "✗ Incorrect";
+        fb.appendChild(mark);
+        if (!r.is_correct && r.explanation) fb.append(" — " + r.explanation);
+      });
+    } catch (err) {
+      const blob = new Blob([JSON.stringify(payload, null, 2)], {type:"application/json"});
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = `${LESSON_ADDRESS}.attempt.json`;
+      a.click();
+      document.getElementById("result").textContent =
+        "Recorder offline — downloaded attempt JSON. Run scripts/serve.py and import it.";
+    }
+  });
+</script>
+</body>
+</html>
