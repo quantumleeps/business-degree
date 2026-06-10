@@ -95,6 +95,10 @@
   #result { margin-top:1em; font-weight:600; }
   .hint { font-size:13px; color:var(--muted); }
   ul.tight li { margin:.2em 0; }
+  .lesson-nav { display:flex; justify-content:space-between; margin-top:3em;
+       padding-top:1em; border-top:1px solid #e5e7eb; }
+  .lesson-nav a { color:var(--accent); font-weight:600; text-decoration:none; }
+  .lesson-nav a:hover { text-decoration:underline; }
 </style>
 </head>
 <body>
@@ -110,8 +114,8 @@
   <section id="learn">
     <h2>Learn</h2>
 
-    <p class="lead">In 101.1 you met the invariant: <strong>Assets = Liabilities
-    + Equity</strong>. The <strong>balance sheet</strong> (also called the
+    <p class="lead">In 101.1 you met the fundamental identity: <strong>Assets =
+    Liabilities + Equity</strong>. The <strong>balance sheet</strong> (also called the
     <em>statement of financial position</em>) is simply that equation written
     out in full, line by line, <strong>as of one specific date</strong>. It
     answers: <em>at this instant, what does the business control, what does it
@@ -125,12 +129,14 @@
     they're flows. Mixing these up is the most common beginner error.</p>
 
     <div class="analogy">
-      <b>Systems analogy — state vs. events.</b> Think of the business as a
-      stateful system. The balance sheet is a <strong>state dump</strong>: the
-      exact contents of every register at one clock tick. The income statement
-      is the <strong>event log</strong> of what happened between two ticks. You
-      reconstruct the new state by replaying the events onto the old state —
-      which is exactly how retained earnings link the two statements.
+      <b>A snapshot and a story.</b> The balance sheet is the company's
+      financial position frozen at one date — change the date and you get a
+      different balance sheet — while the income statement narrates what
+      happened between two of those dates. The two reconcile through
+      retained earnings: start from last year's balance sheet, add the
+      period's net income, subtract dividends, and you arrive at this year's.
+      Accountants call that fit <em>articulation</em>, and checking it is the
+      first thing a careful reader does (101.9 builds the bridge formally).
     </div>
 
     <h3>The three blocks — and the ordering rule</h3>
@@ -319,6 +325,11 @@
     </form>
     <div id="result"></div>
   </section>
+
+  <nav class="lesson-nav">
+    <a href="index.html">← All lessons</a>
+    <a href="../harness/results.html">Results &amp; mastery →</a>
+  </nav>
 
 </div>
 

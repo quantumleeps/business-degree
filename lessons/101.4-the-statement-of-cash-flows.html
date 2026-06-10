@@ -116,6 +116,10 @@
     .txgrid { grid-template-columns:1fr; }
     .seccols { grid-template-columns:1fr 1fr; }
   }
+  .lesson-nav { display:flex; justify-content:space-between; margin-top:3em;
+       padding-top:1em; border-top:1px solid #e5e7eb; }
+  .lesson-nav a { color:var(--accent); font-weight:600; text-decoration:none; }
+  .lesson-nav a:hover { text-decoration:underline; }
 </style>
 </head>
 <body>
@@ -124,15 +128,16 @@
   <header>
     <div class="addr">101.4</div>
     <h1>The statement of cash flows: operating, investing, financing</h1>
-    <p class="why">Net income is a modeled estimate; cash is a conserved quantity — this statement is the mass balance that reconciles the one number a business cannot fake running out of.</p>
+    <p class="why">Net income rests on estimates and judgment; cash is a fact you can check against a bank statement — this statement reconciles the one number a business cannot fake running out of.</p>
   </header>
 
   <!-- 1. WRITTEN / TEACHING SECTION -->
   <section id="learn">
     <h2>Learn</h2>
 
-    <p class="lead">You now have a snapshot (the balance sheet, 101.2) and an
-    accrual event log (the income statement, 101.3). Why a <em>third</em>
+    <p class="lead">You now have a snapshot of financial position (the balance
+    sheet, 101.2) and an accrual record of the period's performance (the
+    income statement, 101.3). Why a <em>third</em>
     statement? Because the income statement deliberately does <strong>not</strong>
     track cash. Under accrual accounting, revenue is recorded when
     <em>earned</em> and expenses when <em>incurred</em> — not when money moves.
@@ -156,18 +161,18 @@
     it becomes fatal.</p>
 
     <div class="analogy">
-      <b>Engineering framing — a mass balance on cash.</b> Cash is a conserved
-      quantity: it cannot be created by an accounting estimate, only moved
-      across the system boundary. The CFS is exactly a control-volume balance:
-      <em>accumulation = inflows − outflows</em>, integrated over the period.
-      Beginning cash plus every flow across the boundary must equal ending
-      cash — to the dollar, with no plug terms. And like a good energy audit,
-      the statement doesn't just total the flows; it <strong>partitions</strong>
-      them by mechanism, so you can see <em>which subsystem</em> is generating
-      or consuming cash. Net income involves judgment calls (depreciation
-      schedules, revenue timing, estimates of bad debts). The cash balance is
-      checkable against a bank statement. That's why analysts treat the CFS as
-      the hardest statement to manipulate.
+      <b>Why analysts trust this statement most.</b> Cash cannot be created
+      by an accounting estimate — it changes only when money actually moves.
+      The CFS is a strict reconciliation: beginning cash plus every inflow,
+      minus every outflow, must equal ending cash to the dollar, with no plug
+      figures, and the ending balance is checkable against a bank statement.
+      The statement also doesn't just total the flows; it
+      <strong>classifies</strong> them by activity, so a reader can see which
+      part of the business is generating cash and which is consuming it. Net
+      income involves judgment calls (depreciation schedules, revenue timing,
+      estimates of bad debts); the cash flow statement is built from cleared
+      transactions. That's why analysts treat the CFS as the hardest
+      statement to manipulate.
     </div>
 
     <h3>The governing identity</h3>
@@ -345,7 +350,7 @@
       <tr class="tot"><td>Ending cash (ties to the 2025 balance sheet)</td><td class="num">54,000</td></tr>
     </table>
 
-    <p>The mass balance closes: 25,000 + 84,000 − 30,000 − 25,000 = 54,000,
+    <p>The reconciliation closes: 25,000 + 84,000 − 30,000 − 25,000 = 54,000,
     exactly the cash line on the ending balance sheet. Notice the proceeds
     ($15,000) sit in investing while the gain ($5,000) was scrubbed out of
     operating — the $10,000 book value never appears as a cash flow anywhere,
@@ -392,7 +397,7 @@
 
   <!-- 2. VISUAL SECTIONS -->
   <section id="see-1" class="see">
-    <h2>See it: the cash mass balance</h2>
+    <h2>See it: the cash reconciliation, event by event</h2>
     <p>Toggle events on and off and watch each one land in (or stay out of)
     the three sections. The waterfall runs beginning cash → operating →
     investing → financing → ending cash; the readout below contrasts accrual
@@ -515,6 +520,11 @@
     <div id="result"></div>
   </section>
 
+  <nav class="lesson-nav">
+    <a href="index.html">← All lessons</a>
+    <a href="../harness/results.html">Results &amp; mastery →</a>
+  </nav>
+
 </div>
 
 <script>
@@ -574,7 +584,7 @@
     document.getElementById(svgId).innerHTML = s;
   }
 
-  /* ================= viz-1: cash mass balance ================= */
+  /* ================= viz-1: cash reconciliation ================= */
   (function () {
     const BEGIN = 50; // $k
     const SECNAME = { O: "Operating", I: "Investing", F: "Financing", N: "No cash effect" };

@@ -58,6 +58,10 @@
   #result { margin-top:1em; font-weight:600; }
   .hint { font-size:13px; color:var(--muted); }
   ul.tight li { margin:.2em 0; }
+  .lesson-nav { display:flex; justify-content:space-between; margin-top:3em;
+       padding-top:1em; border-top:1px solid #e5e7eb; }
+  .lesson-nav a { color:var(--accent); font-weight:600; text-decoration:none; }
+  .lesson-nav a:hover { text-decoration:underline; }
 </style>
 </head>
 <body>
@@ -104,7 +108,7 @@
     standards (e.g. GAAP / IFRS) precisely <em>because</em> outsiders must be
     able to trust and compare it.</p>
 
-    <h3>The accounting equation: the invariant</h3>
+    <h3>The accounting equation: the fundamental identity</h3>
     <p class="lead">Everything a business owns had to be paid for somehow — and
     there are only two sources of that funding: money lent to the business, and
     money the owners put in (or left in). That single fact is the accounting
@@ -132,15 +136,16 @@
     stake, also called <em>net worth</em> or <em>net assets</em>.</p>
 
     <div class="analogy">
-      <b>Systems analogy — a conservation law.</b> If you've done any physics or
-      engineering, treat the equation like conservation of mass: nothing enters
-      or leaves the system without being accounted for on <em>both</em> sides of
-      a boundary. Every transaction is a balanced flow. Buy a $10k machine with
-      cash? One asset (equipment) goes up $10k, another asset (cash) goes down
-      $10k — the books still balance. Take a $10k loan? Assets (cash) +$10k and
-      liabilities (loan) +$10k — still balanced. The equation is the invariant
-      the system maintains after <em>every</em> event. Double-entry bookkeeping
-      (101.5) is just the mechanism that enforces this invariant.
+      <b>The dual-aspect principle.</b> Accountants build the equation's
+      discipline into every entry: a transaction always has two aspects —
+      what was received, and where it came from — so every recorded event
+      touches at least two accounts and leaves the equation intact. Buy a
+      $10k machine with cash? One asset (equipment) goes up $10k, another
+      asset (cash) goes down $10k — the books still balance. Take a $10k
+      loan? Assets (cash) +$10k and liabilities (loan payable) +$10k — still
+      balanced. No legitimate transaction moves only one side. Double-entry
+      bookkeeping (101.5) is the recording mechanism that enforces this dual
+      aspect on every entry.
     </div>
 
     <h3>Why "it always balances" is powerful</h3>
@@ -255,6 +260,11 @@
     </form>
     <div id="result"></div>
   </section>
+
+  <nav class="lesson-nav">
+    <a href="index.html">← All lessons</a>
+    <a href="../harness/results.html">Results &amp; mastery →</a>
+  </nav>
 
 </div>
 

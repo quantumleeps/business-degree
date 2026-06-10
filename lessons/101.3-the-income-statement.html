@@ -94,6 +94,10 @@
   .hint { font-size:13px; color:var(--muted); }
   ul.tight li { margin:.2em 0; }
   svg text { font-family:system-ui,sans-serif; }
+  .lesson-nav { display:flex; justify-content:space-between; margin-top:3em;
+       padding-top:1em; border-top:1px solid #e5e7eb; }
+  .lesson-nav a { color:var(--accent); font-weight:600; text-decoration:none; }
+  .lesson-nav a:hover { text-decoration:underline; }
 </style>
 </head>
 <body>
@@ -118,24 +122,26 @@
     owners?</em> The answer is <strong>net income</strong>: revenues minus
     expenses.</p>
 
-    <h3>Rate vs. state</h3>
-    <p>An engineer's framing: if equity is the level in a tank, net income is
-    the net inflow rate integrated over the period. Revenue is flow in, expenses
-    are flow out, and the period's accumulated difference gets dumped into the
-    <strong>retained earnings</strong> register on the balance sheet when the
-    period closes. That's why the two statements can never disagree — the flow
-    literally integrates into the stock:</p>
+    <h3>How income connects to the balance sheet</h3>
+    <p>Revenues and expenses are, at bottom, changes in owners' equity —
+    tracked in their own accounts during the period so performance can be
+    measured. Revenue increases the owners' claim, expenses decrease it, and
+    the period's net difference — net income — is added to
+    <strong>retained earnings</strong> on the balance sheet when the period
+    closes. That's why the two statements can never disagree — the income
+    statement's bottom line is, by construction, a component of equity:</p>
 
     <div class="eq">Ending RE&nbsp; = &nbsp;Beginning RE&nbsp; + &nbsp;Net income&nbsp; − &nbsp;Dividends</div>
 
     <div class="analogy">
-      <b>Systems analogy — the derivative of equity.</b> If the balance sheet is
-      the system state at clock ticks <i>t₀</i> and <i>t₁</i>, the income
-      statement is (most of) the diff between them, attributed to operations.
-      Equity can also change from owner transactions — paid-in capital and
-      dividends — so the income statement isolates the part of Δequity the
-      business <em>earned</em>, as opposed to the part the owners moved in or
-      out themselves. Mixing those two up is how bad dashboards get built.
+      <b>Earned vs. contributed equity.</b> Equity changes for exactly two
+      kinds of reasons: the business <em>earned</em> something (revenues and
+      expenses — the income statement's territory), or the owners moved money
+      themselves (issuing stock, paying dividends — capital transactions,
+      never income). The income statement deliberately isolates the earned
+      part. Keeping the two separate is what lets a reader ask “how good is
+      this business?” without the answer being distorted by financing
+      decisions the owners happened to make that year.
     </div>
 
     <h3>The multi-step structure</h3>
@@ -189,9 +195,10 @@
     <p>Why bother? Because the income statement is trying to measure
     <em>economic performance per period</em>, and cash timing is noisy —
     customers pay late, suppliers get paid early, machines are bought once and
-    used for a decade. Accrual accounting filters the cash-timing noise out of
-    the performance signal. (The cash-timing truth still matters — that's the
-    statement of cash flows, lesson 101.4.)</p>
+    used for a decade. Accrual accounting separates performance from cash
+    timing, so the income statement measures what the period actually earned.
+    (The cash-timing truth still matters — that's the statement of cash
+    flows, lesson 101.4.)</p>
 
     <h3>Depreciation: an expense with no cash attached</h3>
     <p>The matching principle's most famous consequence. Buy a $200,000 machine
@@ -462,6 +469,11 @@
     </form>
     <div id="result"></div>
   </section>
+
+  <nav class="lesson-nav">
+    <a href="index.html">← All lessons</a>
+    <a href="../harness/results.html">Results &amp; mastery →</a>
+  </nav>
 
 </div>
 

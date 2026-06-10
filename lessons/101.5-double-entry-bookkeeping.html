@@ -100,7 +100,7 @@
         border:1px solid #d1d5db; border-radius:6px; width:160px; }
   .q.right { border-color:var(--accent); background:#f0f7f4; }
   .q.wrong { border-color:#b91c1c; background:#fef2f2; }
-  .q .fb { margin-top:10px; padding-top:8px; border-top:1px dashed #d1d5db;
+  .q .fb { display:block; margin-top:10px; padding-top:8px; border-top:1px dashed #d1d5db;
         font-size:14px; }
   .q.right .fb b { color:var(--accent); }
   .q.wrong .fb b { color:#b91c1c; }
@@ -110,6 +110,10 @@
   button:disabled { background:#e5e7eb; color:#9ca3af; cursor:not-allowed; }
   #result { margin-top:1em; font-weight:600; }
   ul.tight li { margin:.25em 0; }
+  .lesson-nav { display:flex; justify-content:space-between; margin-top:3em;
+       padding-top:1em; border-top:1px solid #e5e7eb; }
+  .lesson-nav a { color:var(--accent); font-weight:600; text-decoration:none; }
+  .lesson-nav a:hover { text-decoration:underline; }
 </style>
 </head>
 <body>
@@ -621,6 +625,11 @@
     </form>
     <div id="result"></div>
   </section>
+
+  <nav class="lesson-nav">
+    <a href="index.html">← All lessons</a>
+    <a href="../harness/results.html">Results &amp; mastery →</a>
+  </nav>
 
 </div>
 
