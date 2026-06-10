@@ -1,0 +1,57 @@
+{
+  "address": "102.1",
+  "title": "Scarcity, opportunity cost, and the production possibilities frontier",
+  "questions": [
+    {
+      "qid": "q1",
+      "type": "mc",
+      "correct": "b",
+      "topic": "opportunity cost",
+      "explanation": "Opportunity cost is the value of the single next-best alternative you gave up — not the cash outlay alone (that misses implicit costs like forgone salary) and not the sum of every alternative (you could only have taken one of them)."
+    },
+    {
+      "qid": "q2",
+      "type": "mc",
+      "correct": "b",
+      "topic": "scarcity",
+      "explanation": "Scarcity is the permanent condition that limited resources can't satisfy unlimited wants — it forces choice and exists even in rich economies. Empty shelves at a posted price are a shortage (a temporary market disequilibrium), and high prices or poverty are symptoms, not the definition."
+    },
+    {
+      "qid": "q3",
+      "type": "num",
+      "correct": 1.5,
+      "tolerance": 0.01,
+      "topic": "PPF",
+      "explanation": "Moving C→D gains 100 drones (200→300) and gives up 150 e-bikes (850→700). Opportunity cost per drone = 150 ÷ 100 = 1.5 e-bikes. The slope of the PPF segment is exactly this per-unit opportunity cost."
+    },
+    {
+      "qid": "q4",
+      "type": "mc",
+      "correct": "c",
+      "topic": "PPF shifts",
+      "explanation": "Only more resources or better technology move the frontier itself. Reallocating workers is a movement along the frontier; hiring the unemployed moves the economy from an interior point to the frontier (taking up slack, not growth); a preference change alters which point is chosen, not what is attainable."
+    },
+    {
+      "qid": "q5",
+      "type": "num",
+      "correct": 151000,
+      "tolerance": 1,
+      "topic": "opportunity cost",
+      "explanation": "Economic cost = explicit + implicit costs that change with the decision: tuition $60,000 + incremental housing ($18,000 − $12,000 = $6,000) + forgone salary $85,000 = $151,000. The $12,000 base rent is paid either way, and the $2,000 deposit is sunk — already gone under every alternative, so it doesn't count."
+    },
+    {
+      "qid": "q6",
+      "type": "mc",
+      "correct": "b",
+      "topic": "comparative advantage",
+      "explanation": "Comparative advantage follows the lower opportunity cost, not the higher output. A model costs Ben 6/3 = 2 forgone reports; it costs Ana 12/4 = 3. Ben gives up less, so models should go to Ben even though Ana out-produces him at everything (her edge is absolute advantage, which doesn't decide assignment)."
+    },
+    {
+      "qid": "q7",
+      "type": "mc",
+      "correct": "b",
+      "topic": "PPF",
+      "explanation": "The bow shape is the law of increasing opportunity cost: resources are specialized, so the first units of a good are made with resources well-suited to it, while later units must pull in resources that were far more productive elsewhere — each extra unit costs more of the other good. Utility and inflation are about consumption and prices, not the production trade-off."
+    }
+  ]
+}

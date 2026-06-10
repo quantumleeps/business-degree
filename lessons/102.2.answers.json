@@ -1,0 +1,65 @@
+{
+  "address": "102.2",
+  "title": "Demand: the curve, shifts, and determinants",
+  "questions": [
+    {
+      "qid": "q1",
+      "type": "mc",
+      "correct": "b",
+      "topic": "law of demand",
+      "explanation": "The law of demand is strictly about the good's own price: price up, quantity demanded down, everything else held constant. A price change never shifts the demand curve — it moves you along it; income effects on demand are a separate determinant, not the law itself."
+    },
+    {
+      "qid": "q2",
+      "type": "mc",
+      "correct": "a",
+      "topic": "movement vs shift",
+      "explanation": "Only a change in the good's own price moves you along its demand curve. Income, the price of a related good (tea is a substitute), and tastes (the health study) all change how much buyers want at every price — those shift the entire curve."
+    },
+    {
+      "qid": "q3",
+      "type": "mc",
+      "correct": "b",
+      "topic": "income & normal vs inferior",
+      "explanation": "An inferior good is one whose demand falls when income rises — buyers trade up to alternatives (fresh meals over instant noodles). Normal goods move with income in the same direction. Substitute/complement describe relationships between two goods' prices, not the income response."
+    },
+    {
+      "qid": "q4",
+      "type": "num",
+      "correct": 100,
+      "tolerance": 0.5,
+      "topic": "demand function",
+      "explanation": "Qd at $8 is 500 − 25(8) = 300; at $12 it's 500 − 25(12) = 200. The fall is 100. Shortcut: the slope coefficient says 25 subscriptions are lost per dollar, so a $4 increase costs 25 × 4 = 100. This is a movement along the curve."
+    },
+    {
+      "qid": "q5",
+      "type": "num",
+      "correct": 14,
+      "tolerance": 0.01,
+      "topic": "market demand",
+      "explanation": "Market demand sums quantities at the same price: Maya takes 20 − 2(6) = 8 and Liam takes 12 − 6 = 6, so the market is 8 + 6 = 14. Add horizontally (quantities at each price), never vertically (prices)."
+    },
+    {
+      "qid": "q6",
+      "type": "mc",
+      "correct": "b",
+      "topic": "related goods",
+      "explanation": "If X's price rising pushes buyers toward Y, the goods serve the same need — they're substitutes. Complements move the other way: a pricier complement makes the whole bundle more expensive and demand for the partner good falls."
+    },
+    {
+      "qid": "q7",
+      "type": "mc",
+      "correct": "c",
+      "topic": "expectations",
+      "explanation": "Expectations are a demand shifter that acts immediately: anticipating higher future prices, buyers pull purchases forward, so today's demand curve shifts right before any actual price change. Waiting for the tariff to 'take effect' misses that markets respond to news, not just events."
+    },
+    {
+      "qid": "q8",
+      "type": "num",
+      "correct": 20,
+      "tolerance": 0.01,
+      "topic": "demand function",
+      "explanation": "The choke price sets Qd = 0: 500 − 25P = 0 → P = 500/25 = $20. Graphically it's the vertical intercept of the inverse demand curve P = 20 − Q/25 — the price at which the most-eager remaining buyer drops out."
+    }
+  ]
+}

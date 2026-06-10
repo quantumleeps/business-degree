@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>102.2 — Demand: the curve, shifts, and determinants</title>
+<style>
+  :root { --ink:#1a1a2e; --paper:#fdfdfb; --accent:#2d6a4f; --accent2:#1d4ed8;
+          --muted:#6b7280; --warn:#b45309; --bad:#b91c1c; }
+  body { margin:0; font:16px/1.6 system-ui,sans-serif; color:var(--ink);
+         background:var(--paper); }
+  .wrap { max-width:860px; margin:0 auto; padding:32px 20px 80px; }
+  header .addr { font:600 13px ui-monospace,monospace; color:var(--accent);
+                 letter-spacing:.05em; }
+  h1 { font-size:30px; margin:.2em 0 .1em; line-height:1.2; }
+  .why { color:var(--muted); font-style:italic; margin-bottom:2em; }
+  section { margin:2.5em 0; }
+  h2 { border-bottom:2px solid var(--accent); padding-bottom:4px; }
+  h3 { margin:1.6em 0 .3em; font-size:18px; }
+  .lead { font-size:17px; }
+  .note { background:#f0f7f4; border-left:4px solid var(--accent);
+          padding:12px 16px; border-radius:0 8px 8px 0; margin:1.2em 0;
+          font-size:15px; }
+  .eq { font:600 16px ui-monospace,monospace; text-align:center;
+        background:#fff; border:1px solid #e5e7eb; border-radius:10px;
+        padding:14px; margin:1.2em 0; }
+  table.book { border-collapse:collapse; width:100%; margin:1em 0; font-size:14.5px; }
+  table.book th, table.book td { border:1px solid #e5e7eb; padding:6px 9px;
+        text-align:left; vertical-align:top; }
+  table.book th { background:#f9fafb; }
+  table.book td.num, table.book th.num { text-align:right;
+        font-family:ui-monospace,monospace; white-space:nowrap; }
+  table.book tr.hl td { background:#fef9c3; }
+  ul.tight li { margin:.25em 0; }
+  .hint { font-size:13px; color:var(--muted); }
+  .visual { border:1px solid #e5e7eb; border-radius:12px; padding:16px;
+            background:#fff; }
+  .controls { display:flex; flex-wrap:wrap; gap:8px 14px; margin-bottom:10px;
+              align-items:center; }
+  .controls label { font-size:13.5px; font-weight:600; }
+  .controls input[type=range] { vertical-align:middle; width:170px; }
+  .controls .val { font:600 13px ui-monospace,monospace; color:var(--accent2); }
+  .controls button { background:#e5e7eb; color:#374151; font-size:12.5px;
+                     padding:6px 10px; }
+  .controls button.on { background:var(--accent2); color:#fff; }
+  .controls button.reset { background:var(--muted); color:#fff; }
+  .readout { font:600 13.5px ui-monospace,monospace; margin-top:8px; }
+  .readout .lbl { color:var(--muted); font-weight:600; font-family:system-ui; }
+  .vizmsg { margin-top:8px; font-size:14px; min-height:2.6em; }
+  .vizmsg b.move { color:var(--accent2); } .vizmsg b.shift { color:var(--warn); }
+  .vgrid { display:grid; grid-template-columns:1fr 220px; gap:14px; }
+  @media (max-width:720px){ .vgrid { grid-template-columns:1fr; } }
+  svg { display:block; max-width:100%; height:auto; }
+  button { background:var(--accent); color:#fff; border:0; padding:10px 18px;
+           border-radius:8px; font-size:15px; cursor:pointer; }
+  button:hover { filter:brightness(1.07); }
+  .q { margin:1.2em 0; padding:14px; border:1px solid #e5e7eb; border-radius:10px; }
+  .q .opts label { display:block; margin:4px 0; cursor:pointer; }
+  .q input[type=number], .q input[type=text] { font-size:15px; padding:6px 8px;
+        border:1px solid #d1d5db; border-radius:6px; width:180px; }
+  .q.right { border-color:var(--accent); background:#f0f7f4; }
+  .q.wrong { border-color:#b91c1c; background:#fef2f2; }
+  .q .fb { margin-top:10px; padding-top:8px; border-top:1px dashed #d1d5db;
+        font-size:14px; }
+  .q.right .fb b { color:var(--accent); }
+  .q.wrong .fb b { color:#b91c1c; }
+  #result { margin-top:1em; font-weight:600; }
+  .lesson-nav { display:flex; justify-content:space-between; margin-top:3em;
+       padding-top:1em; border-top:1px solid #e5e7eb; }
+  .lesson-nav a { color:var(--accent); font-weight:600; text-decoration:none; }
+  .lesson-nav a:hover { text-decoration:underline; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="addr">102.2</div>
+    <h1>Demand: the curve, shifts, and determinants</h1>
+    <p class="why">"What happens to sales if we raise the price?" is half of every pricing meeting. The demand curve is the disciplined way to answer it — and to keep that answer separate from everything <em>else</em> that moves sales.</p>
+  </header>
+
+  <!-- 1. LEARN -->
+  <section id="learn">
+    <h2>Learn</h2>
+
+    <p class="lead">Demand is the buyer side of a market. This lesson builds
+    the demand curve from individual willingness to pay, states the law of
+    demand and why it holds, and then draws the single most-tested distinction
+    in introductory economics: a <em>movement along</em> the curve versus a
+    <em>shift of</em> the curve.</p>
+
+    <h3>What demand is (and isn't)</h3>
+    <p><strong>Demand</strong> is the relationship between the price of a good
+    and the quantity buyers are <em>willing and able</em> to purchase per
+    period, holding everything else constant. Three parts of that definition
+    carry weight:</p>
+    <ul class="tight">
+      <li><b>Willing and able</b> — wanting a Tesla isn't demand; wanting one
+      at a price you can and would actually pay is.</li>
+      <li><b>Per period</b> — demand is a flow: units per week, per month.
+      "Quantity demanded" with no time unit is meaningless.</li>
+      <li><b>Holding everything else constant</b> — the famous <em>ceteris
+      paribus</em>. The curve isolates the price–quantity relationship; all
+      other influences are frozen and, when they change, move the whole curve.</li>
+    </ul>
+    <p>A <strong>demand schedule</strong> is the relationship as a table; the
+    <strong>demand curve</strong> is the same data plotted with price on the
+    vertical axis and quantity on the horizontal (a convention from Alfred
+    Marshall that economics has kept ever since).</p>
+
+    <h3>The law of demand, and why it holds</h3>
+    <p>The <strong>law of demand</strong>: when the price of a good rises,
+    quantity demanded falls, ceteris paribus — demand curves slope downward.
+    Two forces produce it:</p>
+    <ul class="tight">
+      <li><b>The substitution effect.</b> When coffee gets pricier relative to
+      tea, some buyers switch to tea. The relative price change pushes buyers
+      toward substitutes.</li>
+      <li><b>The income effect.</b> A higher price shrinks the purchasing power
+      of a given budget — buyers can simply afford less of everything,
+      including this good.</li>
+    </ul>
+    <p>A third way to see it: read the curve <em>vertically</em>. At each
+    quantity, the curve's height is the maximum some buyer will pay for that
+    unit — the <strong>marginal willingness to pay</strong>. Buyers ranked from
+    most-eager to least-eager form a descending staircase, so lower prices
+    reach buyers with lower willingness to pay: more units sell. (This vertical
+    reading is what makes consumer surplus and elasticity work later in the
+    course.)</p>
+
+    <h3>Demand as an equation</h3>
+    <p>For computation we usually use a linear demand function:</p>
+    <div class="eq">Q<sub>d</sub> = a − bP &nbsp;&nbsp;&nbsp; (demand) &nbsp;&nbsp;|&nbsp;&nbsp;
+    P = a/b − Q<sub>d</sub>/b &nbsp;&nbsp;&nbsp; (inverse demand)</div>
+    <p>Here <b>a</b> is the quantity buyers would take at a price of zero (the
+    horizontal intercept), and <b>b</b> tells how many units of quantity are
+    lost per dollar of price increase. The price that drives quantity to zero —
+    the vertical intercept a/b — is the <strong>choke price</strong>.</p>
+    <p><b>Worked example.</b> Suppose monthly demand for a meal-kit subscription
+    in one city is</p>
+    <div class="eq">Q<sub>d</sub> = 500 − 25P</div>
+    <ul class="tight">
+      <li>At P = $8: Q<sub>d</sub> = 500 − 25(8) = <b>300 subscriptions</b>.</li>
+      <li>Raise price to $12: Q<sub>d</sub> = 500 − 25(12) = 200. The $4
+      increase costs 25 × 4 = <b>100 subscriptions</b> — a movement <em>along</em>
+      the curve.</li>
+      <li>Choke price: 500/25 = <b>$20</b>. At $20 or more, no one subscribes.</li>
+    </ul>
+
+    <h3>Movement along vs. shift of the curve</h3>
+    <p>This distinction does more work than any other in the course, so the
+    vocabulary is strict:</p>
+    <ul class="tight">
+      <li>A change in the good's <b>own price</b> causes a <b>change in
+      quantity demanded</b> — a movement <em>along</em> a fixed curve. Nothing
+      about buyers' circumstances changed; they're just responding to price.</li>
+      <li>A change in <b>anything else</b> buyers care about causes a
+      <b>change in demand</b> — the entire curve shifts, because the quantity
+      demanded is now different <em>at every price</em>. In the equation, the
+      intercept a moves.</li>
+    </ul>
+    <div class="note">If you can say "at the same price as before, buyers now
+    want more (or less)," the curve shifted. If the only thing that changed is
+    the price tag, you moved along it.</div>
+
+    <h3>The determinants: what shifts demand</h3>
+    <p>Five standard shifters, each worth knowing with its direction:</p>
+    <table class="book">
+      <tr><th>Determinant</th><th>Change</th><th>Effect on demand</th></tr>
+      <tr><td rowspan="2"><b>Income</b></td>
+          <td>Rises, good is <b>normal</b></td><td>Increases (shifts right) — most goods</td></tr>
+      <tr><td>Rises, good is <b>inferior</b></td><td>Decreases (shifts left) — e.g. instant noodles, bus rides; buyers trade up</td></tr>
+      <tr><td rowspan="2"><b>Prices of related goods</b></td>
+          <td>Price of a <b>substitute</b> rises (tea ↑ for coffee)</td><td>Increases — buyers switch toward this good</td></tr>
+      <tr><td>Price of a <b>complement</b> rises (printers ↑ for ink)</td><td>Decreases — the bundle got pricier</td></tr>
+      <tr><td><b>Tastes &amp; preferences</b></td><td>Shift toward the good (trend, health study, marketing)</td><td>Increases</td></tr>
+      <tr><td><b>Expectations</b></td><td>Buyers expect higher future prices or higher future income</td><td>Increases today — purchases get pulled forward</td></tr>
+      <tr><td><b>Number of buyers</b></td><td>Market grows (demographics, market entry, exports open up)</td><td>Increases — market demand sums over more buyers</td></tr>
+    </table>
+    <p>Note what is <em>not</em> on the list: the good's own price. It never
+    shifts the curve — it's the axis the curve is drawn against.</p>
+
+    <h3>From individual to market demand</h3>
+    <p>Market demand is the <strong>horizontal sum</strong> of individual
+    demands: at each price, add up the quantities (not the prices!) each buyer
+    would take.</p>
+    <p><b>Worked example.</b> A market with two buyers:</p>
+    <div class="eq">Maya: Q<sub>1</sub> = 20 − 2P (for P ≤ $10) &nbsp;&nbsp;
+    Liam: Q<sub>2</sub> = 12 − P (for P ≤ $12)</div>
+    <table class="book">
+      <tr><th class="num">Price</th><th class="num">Maya</th><th class="num">Liam</th><th class="num">Market Q</th></tr>
+      <tr><td class="num">$12</td><td class="num">0</td><td class="num">0</td><td class="num">0</td></tr>
+      <tr><td class="num">$11</td><td class="num">0</td><td class="num">1</td><td class="num">1</td></tr>
+      <tr><td class="num">$10</td><td class="num">0</td><td class="num">2</td><td class="num">2</td></tr>
+      <tr><td class="num">$8</td><td class="num">4</td><td class="num">4</td><td class="num">8</td></tr>
+      <tr><td class="num">$6</td><td class="num">8</td><td class="num">6</td><td class="num">14</td></tr>
+      <tr><td class="num">$4</td><td class="num">12</td><td class="num">8</td><td class="num">20</td></tr>
+    </table>
+    <p>Algebraically: for $10 &lt; P ≤ $12 only Liam buys, so market demand is
+    Q = 12 − P. For P ≤ $10 both buy: Q = (20 − 2P) + (12 − P) = 32 − 3P. The
+    market curve has a <strong>kink</strong> at $10 where Maya enters — real
+    market demand curves flatten as price falls partly because each price cut
+    recruits new buyers, not just more purchases from existing ones.</p>
+    <p>This is also why "number of buyers" shifts demand: more buyers means
+    more individual curves in the sum at every price.</p>
+  </section>
+
+  <!-- 2. VISUALS -->
+  <section id="see-1" class="see">
+    <h2>See it: movement along vs. shift</h2>
+    <p>The curve is Q<sub>d</sub> = 500 − 25P. Use the <b>price slider</b> to move
+    along the curve — the curve itself never budges. Then hit the determinant
+    buttons and watch the whole curve relocate while the price stays put. The
+    schedule on the right tracks the highlighted row.</p>
+    <div class="visual" id="viz-1">
+      <div class="controls">
+        <label>Price: $<span class="val" id="v1-pval">8</span>
+        <input type="range" id="v1-p" min="0" max="20" step="0.5" value="8"></label>
+      </div>
+      <div class="controls" id="v1-btns">
+        <button data-da="80"  data-note="Income rises (normal good): at every price, buyers take more — the curve shifts RIGHT. The price didn't change; demand did.">Income ↑ (normal)</button>
+        <button data-da="-80" data-note="Income rises but the good is inferior: buyers trade up and away from it — the curve shifts LEFT even though incomes improved.">Income ↑ (inferior)</button>
+        <button data-da="80"  data-note="A substitute got pricier: buyers switch toward this good at every price — demand shifts RIGHT.">Substitute price ↑</button>
+        <button data-da="-80" data-note="A complement got pricier: the whole bundle now costs more, so buyers take less of this good at every price — demand shifts LEFT.">Complement price ↑</button>
+        <button data-da="100" data-note="More buyers in the market: market demand is the horizontal sum of individual demands, so more buyers means more quantity at every price — RIGHT shift.">Buyers ↑</button>
+        <button data-da="60"  data-note="Buyers expect higher prices ahead: purchases get pulled forward into today — current demand shifts RIGHT now, before any price changes.">Expect price ↑ soon</button>
+        <button class="reset" id="v1-reset">Reset shift</button>
+      </div>
+      <div class="vgrid">
+        <svg id="v1-svg" viewBox="0 0 560 390"></svg>
+        <div>
+          <table class="book" id="v1-sched"></table>
+        </div>
+      </div>
+      <div class="readout" id="v1-read"></div>
+      <div class="vizmsg" id="v1-msg"><b class="move">Slider = movement along</b> (change in quantity demanded). <b class="shift">Buttons = shift</b> (change in demand).</div>
+    </div>
+  </section>
+
+  <section id="see-2" class="see">
+    <h2>See it: building market demand from individual buyers</h2>
+    <p>Maya (blue) and Liam (orange) sum horizontally into market demand
+    (green). Slide the price: at each level the market quantity is the two
+    individual quantities laid end to end. Notice the kink at $10 — above it,
+    Maya is out of the market entirely.</p>
+    <div class="visual" id="viz-2">
+      <div class="controls">
+        <label>Price: $<span class="val" id="v2-pval">6</span>
+        <input type="range" id="v2-p" min="0" max="12" step="0.5" value="6"></label>
+      </div>
+      <svg id="v2-svg" viewBox="0 0 560 390"></svg>
+      <div class="readout" id="v2-read"></div>
+    </div>
+  </section>
+
+  <!-- 3. QUIZ -->
+  <section id="quiz">
+    <h2>Check yourself</h2>
+    <form id="quizForm">
+
+      <div class="q" data-qid="q1" data-type="mc">
+        <p><strong>1.</strong> The law of demand states that, ceteris paribus:</p>
+        <div class="opts">
+          <label><input type="radio" name="q1" value="a"> When income rises, quantity demanded rises</label>
+          <label><input type="radio" name="q1" value="b"> When the price of a good rises, quantity demanded falls</label>
+          <label><input type="radio" name="q1" value="c"> When the price of a good rises, demand shifts left</label>
+          <label><input type="radio" name="q1" value="d"> Quantity demanded always equals quantity supplied</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q2" data-type="mc">
+        <p><strong>2.</strong> Which event causes a movement <em>along</em> the demand curve for coffee (rather than a shift of it)?</p>
+        <div class="opts">
+          <label><input type="radio" name="q2" value="a"> A fall in the price of coffee</label>
+          <label><input type="radio" name="q2" value="b"> A rise in consumers' incomes</label>
+          <label><input type="radio" name="q2" value="c"> A rise in the price of tea</label>
+          <label><input type="radio" name="q2" value="d"> A new study touting coffee's health benefits</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q3" data-type="mc">
+        <p><strong>3.</strong> Household incomes in a region rise 8%, and sales of store-brand instant noodles fall. For these consumers, instant noodles are best classified as:</p>
+        <div class="opts">
+          <label><input type="radio" name="q3" value="a"> A normal good</label>
+          <label><input type="radio" name="q3" value="b"> An inferior good</label>
+          <label><input type="radio" name="q3" value="c"> A complement</label>
+          <label><input type="radio" name="q3" value="d"> A substitute</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q4" data-type="num">
+        <p><strong>4.</strong> Demand for a meal-kit subscription is Q<sub>d</sub> = 500 − 25P. The firm raises its price from $8 to $12. By how many subscriptions does quantity demanded fall?</p>
+        <input type="number" name="q4" step="any" /> <span class="hint">subscriptions</span>
+      </div>
+
+      <div class="q" data-qid="q5" data-type="num">
+        <p><strong>5.</strong> A market has two buyers: Maya with Q<sub>1</sub> = 20 − 2P and Liam with Q<sub>2</sub> = 12 − P (each zero when its expression goes negative). What is market quantity demanded at P = $6?</p>
+        <input type="number" name="q5" step="any" /> <span class="hint">units</span>
+      </div>
+
+      <div class="q" data-qid="q6" data-type="mc">
+        <p><strong>6.</strong> When the price of good X rises, demand for good Y increases. Goods X and Y are:</p>
+        <div class="opts">
+          <label><input type="radio" name="q6" value="a"> Complements</label>
+          <label><input type="radio" name="q6" value="b"> Substitutes</label>
+          <label><input type="radio" name="q6" value="c"> Both normal goods</label>
+          <label><input type="radio" name="q6" value="d"> Both inferior goods</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q7" data-type="mc">
+        <p><strong>7.</strong> News breaks that tariffs will sharply raise laptop prices in three months. What happens in the laptop market <em>today</em>?</p>
+        <div class="opts">
+          <label><input type="radio" name="q7" value="a"> Nothing until the tariffs actually take effect</label>
+          <label><input type="radio" name="q7" value="b"> Quantity demanded falls along the current curve</label>
+          <label><input type="radio" name="q7" value="c"> Demand increases now, as buyers pull purchases forward</label>
+          <label><input type="radio" name="q7" value="d"> Demand decreases now, since laptops will soon be unaffordable</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q8" data-type="num">
+        <p><strong>8.</strong> For the demand curve Q<sub>d</sub> = 500 − 25P, what is the choke price — the lowest price at which quantity demanded is zero (in dollars)?</p>
+        <input type="number" name="q8" step="any" /> <span class="hint">dollars</span>
+      </div>
+
+      <button type="submit">Submit answers</button>
+    </form>
+    <div id="result"></div>
+  </section>
+
+  <!-- 4. NAV -->
+  <nav class="lesson-nav">
+    <a href="index.html">← All lessons</a>
+    <a href="../harness/results.html">Results &amp; mastery →</a>
+  </nav>
+
+</div>
+
+<script>
+const LESSON_ADDRESS = "102.2";
+const SVGNS = "http://www.w3.org/2000/svg";
+function el(tag, attrs, parent) {
+  const e = document.createElementNS(SVGNS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (parent) parent.appendChild(e);
+  return e;
+}
+function makeScales(xmax, ymax) {
+  const L = 56, R = 535, T = 18, B = 340;
+  return { x: q => L + (q/xmax)*(R-L), y: p => B - (p/ymax)*(B-T),
+           L, R, T, B, xmax, ymax };
+}
+function drawAxes(svg, s, xlab, ylab, xstep, ystep, money) {
+  el("line", {x1:s.L, y1:s.B, x2:s.R, y2:s.B, stroke:"#1a1a2e", "stroke-width":1.5}, svg);
+  el("line", {x1:s.L, y1:s.T, x2:s.L, y2:s.B, stroke:"#1a1a2e", "stroke-width":1.5}, svg);
+  for (let v = 0; v <= s.xmax; v += xstep) {
+    const t = el("text", {x:s.x(v), y:s.B+18, "text-anchor":"middle",
+                          "font-size":"11", fill:"#6b7280"}, svg);
+    t.textContent = v;
+    el("line", {x1:s.x(v), y1:s.B, x2:s.x(v), y2:s.B+4, stroke:"#6b7280"}, svg);
+  }
+  for (let v = 0; v <= s.ymax; v += ystep) {
+    const t = el("text", {x:s.L-8, y:s.y(v)+4, "text-anchor":"end",
+                          "font-size":"11", fill:"#6b7280"}, svg);
+    t.textContent = (money?"$":"") + v;
+    el("line", {x1:s.L-4, y1:s.y(v), x2:s.L, y2:s.y(v), stroke:"#6b7280"}, svg);
+  }
+  const xl = el("text", {x:(s.L+s.R)/2, y:s.B+36, "text-anchor":"middle",
+                         "font-size":"12.5", "font-weight":"600", fill:"#1a1a2e"}, svg);
+  xl.textContent = xlab;
+  const yl = el("text", {x:14, y:(s.T+s.B)/2, "font-size":"12.5", "font-weight":"600",
+                         fill:"#1a1a2e", transform:`rotate(-90 14 ${(s.T+s.B)/2})`,
+                         "text-anchor":"middle"}, svg);
+  yl.textContent = ylab;
+}
+
+/* ---------- viz-1: movement vs shift ---------- */
+(function() {
+  const A0 = 500, B = 25;          // Qd = a - 25P
+  let a = A0;
+  const svg = document.getElementById("v1-svg");
+  const s = makeScales(650, 22);
+  drawAxes(svg, s, "Quantity (subscriptions / month)", "Price", 100, 4, true);
+  function dLine(aVal) {
+    // P from 0..a/B → Q = a - 25P; draw from (a,0) up to choke price
+    const choke = aVal/B;
+    return `M ${s.x(aVal)} ${s.y(0)} L ${s.x(0)} ${s.y(Math.min(choke, s.ymax))}`;
+  }
+  const base = el("path", {d:dLine(A0), fill:"none", stroke:"#9ca3af",
+                           "stroke-width":2, "stroke-dasharray":"6 4",
+                           visibility:"hidden"}, svg);
+  const cur = el("path", {d:dLine(A0), fill:"none", stroke:"#2d6a4f",
+                          "stroke-width":3}, svg);
+  const dropX = el("line", {stroke:"#9ca3af", "stroke-dasharray":"4 3"}, svg);
+  const dropY = el("line", {stroke:"#9ca3af", "stroke-dasharray":"4 3"}, svg);
+  const dot = el("circle", {r:7, fill:"#1d4ed8", stroke:"#fff", "stroke-width":2}, svg);
+  const slider = document.getElementById("v1-p");
+
+  const schedP = [16, 12, 8, 4, 0];
+  function renderSched(p) {
+    const tbl = document.getElementById("v1-sched");
+    let html = "<tr><th class='num'>Price</th><th class='num'>Qd</th></tr>";
+    // include slider price row, keep sorted desc
+    const rows = [...new Set([...schedP, +slider.value])].sort((x,y)=>y-x);
+    rows.forEach(pp => {
+      const q = Math.max(0, a - B*pp);
+      const hl = Math.abs(pp - p) < 0.001 ? " class='hl'" : "";
+      html += `<tr${hl}><td class='num'>$${pp}</td><td class='num'>${Math.round(q)}</td></tr>`;
+    });
+    tbl.innerHTML = html;
+  }
+  function update() {
+    const p = +slider.value;
+    const q = Math.max(0, a - B*p);
+    document.getElementById("v1-pval").textContent = p;
+    cur.setAttribute("d", dLine(a));
+    base.setAttribute("visibility", a === A0 ? "hidden" : "visible");
+    dot.setAttribute("cx", s.x(q)); dot.setAttribute("cy", s.y(p));
+    dropX.setAttribute("x1", s.x(q)); dropX.setAttribute("y1", s.y(p));
+    dropX.setAttribute("x2", s.x(q)); dropX.setAttribute("y2", s.B);
+    dropY.setAttribute("x1", s.L); dropY.setAttribute("y1", s.y(p));
+    dropY.setAttribute("x2", s.x(q)); dropY.setAttribute("y2", s.y(p));
+    document.getElementById("v1-read").innerHTML =
+      `<span class="lbl">Curve:</span> Qd = ${a} − 25P &nbsp;
+       <span class="lbl">At P=$${p}:</span> Qd = ${Math.round(q)}`;
+    renderSched(p);
+  }
+  slider.addEventListener("input", () => {
+    update();
+    document.getElementById("v1-msg").innerHTML =
+      "<b class='move'>Movement along the curve</b> — only the good's own price changed, so this is a change in <em>quantity demanded</em>. The curve stayed put.";
+  });
+  document.querySelectorAll("#v1-btns button[data-da]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      a = A0 + (+btn.dataset.da);
+      document.querySelectorAll("#v1-btns button").forEach(b => b.classList.remove("on"));
+      btn.classList.add("on");
+      update();
+      document.getElementById("v1-msg").innerHTML =
+        "<b class='shift'>Shift of the curve</b> — " + btn.dataset.note +
+        " (Dashed = original curve.)";
+    });
+  });
+  document.getElementById("v1-reset").addEventListener("click", () => {
+    a = A0;
+    document.querySelectorAll("#v1-btns button").forEach(b => b.classList.remove("on"));
+    update();
+    document.getElementById("v1-msg").innerHTML =
+      "<b class='move'>Slider = movement along</b> (change in quantity demanded). <b class='shift'>Buttons = shift</b> (change in demand).";
+  });
+  update();
+})();
+
+/* ---------- viz-2: horizontal summation ---------- */
+(function() {
+  const svg = document.getElementById("v2-svg");
+  const s = makeScales(34, 13);
+  drawAxes(svg, s, "Quantity (units / week)", "Price", 4, 2, true);
+  const qMaya = p => Math.max(0, 20 - 2*p);
+  const qLiam = p => Math.max(0, 12 - p);
+  function poly(qfn, color, dash) {
+    let d = "";
+    for (let p = 13; p >= 0; p -= 0.1) {
+      const q = qfn(p);
+      d += (d ? "L" : "M") + s.x(q).toFixed(1) + " " + s.y(p).toFixed(1) + " ";
+    }
+    el("path", {d, fill:"none", stroke:color, "stroke-width":2.5,
+                ...(dash ? {"stroke-dasharray":dash} : {})}, svg);
+  }
+  poly(qMaya, "#1d4ed8");
+  poly(qLiam, "#b45309");
+  poly(p => qMaya(p)+qLiam(p), "#2d6a4f");
+  const lbl = (x, y, txt, color) => {
+    const t = el("text", {x, y, "font-size":"11.5", "font-weight":"700", fill:color}, svg);
+    t.textContent = txt;
+  };
+  lbl(s.x(qMaya(2))-30, s.y(2)-8, "Maya", "#1d4ed8");
+  lbl(s.x(qLiam(2))+6, s.y(2)+14, "Liam", "#b45309");
+  lbl(s.x(qMaya(2)+qLiam(2))+6, s.y(2)-8, "Market", "#2d6a4f");
+  const pLine = el("line", {stroke:"#9ca3af", "stroke-dasharray":"4 3"}, svg);
+  const segM = el("line", {stroke:"#1d4ed8", "stroke-width":6, "stroke-linecap":"round"}, svg);
+  const segL = el("line", {stroke:"#b45309", "stroke-width":6, "stroke-linecap":"round"}, svg);
+  const dot = el("circle", {r:6, fill:"#2d6a4f", stroke:"#fff", "stroke-width":2}, svg);
+  const slider = document.getElementById("v2-p");
+  function update() {
+    const p = +slider.value;
+    document.getElementById("v2-pval").textContent = p;
+    const m = qMaya(p), l = qLiam(p), tot = m + l;
+    pLine.setAttribute("x1", s.L); pLine.setAttribute("y1", s.y(p));
+    pLine.setAttribute("x2", s.x(34)); pLine.setAttribute("y2", s.y(p));
+    segM.setAttribute("x1", s.x(0)); segM.setAttribute("y1", s.y(p));
+    segM.setAttribute("x2", s.x(m)); segM.setAttribute("y2", s.y(p));
+    segL.setAttribute("x1", s.x(m)); segL.setAttribute("y1", s.y(p));
+    segL.setAttribute("x2", s.x(tot)); segL.setAttribute("y2", s.y(p));
+    dot.setAttribute("cx", s.x(tot)); dot.setAttribute("cy", s.y(p));
+    document.getElementById("v2-read").innerHTML =
+      `<span class="lbl">At P=$${p}:</span> Maya ${m.toFixed(1)} + Liam ${l.toFixed(1)} = market ${tot.toFixed(1)} units` +
+      (m === 0 && p < 13 ? ` &nbsp;<span class="lbl">(Maya is priced out above $10 — that's the kink)</span>` : "");
+  }
+  slider.addEventListener("input", update);
+  update();
+})();
+
+/* ---------- quiz submit (grading is server-side) ---------- */
+document.getElementById("quizForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const fd = new FormData(e.target);
+  const answers = {};
+  document.querySelectorAll(".q").forEach(q => {
+    const qid = q.dataset.qid;
+    answers[qid] = fd.get(qid);
+  });
+
+  const payload = { address: LESSON_ADDRESS, answers, ts: Date.now() };
+
+  try {
+    const res = await fetch(location.protocol === "file:"
+        ? "http://127.0.0.1:8753/record" : "/record", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+    if (data.error) {
+      document.getElementById("result").textContent = "Recorder error: " + data.error;
+      return;
+    }
+    document.getElementById("result").textContent =
+      `Score: ${data.correct}/${data.total}. ` +
+      (data.weak_topics?.length ? `Review: ${data.weak_topics.join(", ")}` : "Nice work.");
+    (data.results || []).forEach(r => {
+      const q = document.querySelector(`.q[data-qid="${r.qid}"]`);
+      if (!q) return;
+      q.classList.remove("right", "wrong");
+      q.classList.add(r.is_correct ? "right" : "wrong");
+      let fb = q.querySelector(".fb");
+      if (!fb) { fb = document.createElement("div"); fb.className = "fb"; q.appendChild(fb); }
+      fb.textContent = "";
+      const mark = document.createElement("b");
+      mark.textContent = r.is_correct ? "✓ Correct" : "✗ Incorrect";
+      fb.appendChild(mark);
+      if (!r.is_correct && r.explanation) fb.append(" — " + r.explanation);
+    });
+  } catch (err) {
+    const blob = new Blob([JSON.stringify(payload, null, 2)], {type:"application/json"});
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `${LESSON_ADDRESS}.attempt.json`;
+    a.click();
+    document.getElementById("result").textContent =
+      "Recorder offline — downloaded attempt JSON. Run scripts/serve.py and import it.";
+  }
+});
+</script>
+</body>
+</html>

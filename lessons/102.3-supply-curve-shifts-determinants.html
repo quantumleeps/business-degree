@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>102.3 — Supply: the curve, shifts, and determinants</title>
+<style>
+  :root { --ink:#1a1a2e; --paper:#fdfdfb; --accent:#2d6a4f; --accent2:#1d4ed8;
+          --muted:#6b7280; --warn:#b45309; --bad:#b91c1c; }
+  body { margin:0; font:16px/1.6 system-ui,sans-serif; color:var(--ink);
+         background:var(--paper); }
+  .wrap { max-width:860px; margin:0 auto; padding:32px 20px 80px; }
+  header .addr { font:600 13px ui-monospace,monospace; color:var(--accent);
+                 letter-spacing:.05em; }
+  h1 { font-size:30px; margin:.2em 0 .1em; line-height:1.2; }
+  .why { color:var(--muted); font-style:italic; margin-bottom:2em; }
+  section { margin:2.5em 0; }
+  h2 { border-bottom:2px solid var(--accent); padding-bottom:4px; }
+  h3 { margin:1.6em 0 .3em; font-size:18px; }
+  .lead { font-size:17px; }
+  .note { background:#f0f7f4; border-left:4px solid var(--accent);
+          padding:12px 16px; border-radius:0 8px 8px 0; margin:1.2em 0;
+          font-size:15px; }
+  .eq { font:600 16px ui-monospace,monospace; text-align:center;
+        background:#fff; border:1px solid #e5e7eb; border-radius:10px;
+        padding:14px; margin:1.2em 0; }
+  table.book { border-collapse:collapse; width:100%; margin:1em 0; font-size:14.5px; }
+  table.book th, table.book td { border:1px solid #e5e7eb; padding:6px 9px;
+        text-align:left; vertical-align:top; }
+  table.book th { background:#f9fafb; }
+  table.book td.num, table.book th.num { text-align:right;
+        font-family:ui-monospace,monospace; white-space:nowrap; }
+  ul.tight li { margin:.25em 0; }
+  .hint { font-size:13px; color:var(--muted); }
+  .visual { border:1px solid #e5e7eb; border-radius:12px; padding:16px;
+            background:#fff; }
+  .controls { display:flex; flex-wrap:wrap; gap:8px 14px; margin-bottom:10px;
+              align-items:center; }
+  .controls label { font-size:13.5px; font-weight:600; }
+  .controls input[type=range] { vertical-align:middle; width:170px; }
+  .controls .val { font:600 13px ui-monospace,monospace; color:var(--accent2); }
+  .controls button { background:#e5e7eb; color:#374151; font-size:12.5px;
+                     padding:6px 10px; }
+  .controls button.on { background:var(--accent2); color:#fff; }
+  .controls button.reset { background:var(--muted); color:#fff; }
+  .readout { font:600 13.5px ui-monospace,monospace; margin-top:8px; }
+  .readout .lbl { color:var(--muted); font-weight:600; font-family:system-ui; }
+  .vizmsg { margin-top:8px; font-size:14px; min-height:2.6em; }
+  .vizmsg b.move { color:var(--accent2); } .vizmsg b.shift { color:var(--warn); }
+  svg { display:block; max-width:100%; height:auto; }
+  button { background:var(--accent); color:#fff; border:0; padding:10px 18px;
+           border-radius:8px; font-size:15px; cursor:pointer; }
+  button:hover { filter:brightness(1.07); }
+  .q { margin:1.2em 0; padding:14px; border:1px solid #e5e7eb; border-radius:10px; }
+  .q .opts label { display:block; margin:4px 0; cursor:pointer; }
+  .q input[type=number], .q input[type=text] { font-size:15px; padding:6px 8px;
+        border:1px solid #d1d5db; border-radius:6px; width:180px; }
+  .q.right { border-color:var(--accent); background:#f0f7f4; }
+  .q.wrong { border-color:#b91c1c; background:#fef2f2; }
+  .q .fb { margin-top:10px; padding-top:8px; border-top:1px dashed #d1d5db;
+        font-size:14px; }
+  .q.right .fb b { color:var(--accent); }
+  .q.wrong .fb b { color:#b91c1c; }
+  .q table.book { font-size:13.5px; }
+  #result { margin-top:1em; font-weight:600; }
+  .lesson-nav { display:flex; justify-content:space-between; margin-top:3em;
+       padding-top:1em; border-top:1px solid #e5e7eb; }
+  .lesson-nav a { color:var(--accent); font-weight:600; text-decoration:none; }
+  .lesson-nav a:hover { text-decoration:underline; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="addr">102.3</div>
+    <h1>Supply: the curve, shifts, and determinants</h1>
+    <p class="why">Behind every supply curve is a seller doing arithmetic: "at this price, is the next unit worth producing?" Read supply as marginal cost and the whole producer side of the market snaps into focus.</p>
+  </header>
+
+  <!-- 1. LEARN -->
+  <section id="learn">
+    <h2>Learn</h2>
+
+    <p class="lead">Supply is the seller side of a market: the relationship
+    between price and the quantity producers are willing and able to sell per
+    period, ceteris paribus. The structure of this lesson deliberately mirrors
+    102.2 — law, curve, equation, movement-vs-shift, determinants, market
+    summation — because the two sides of the market are built the same way and
+    meet in 102.4.</p>
+
+    <h3>The law of supply, and where it comes from</h3>
+    <p>The <strong>law of supply</strong>: when the price of a good rises,
+    quantity supplied rises, ceteris paribus — supply curves slope upward.</p>
+    <p>The economic engine behind it is <strong>rising marginal cost</strong>.
+    A producer expands output as long as the price covers the cost of the
+    <em>next</em> unit (the marginal cost, MC). In the short run, marginal cost
+    typically rises with output: the easiest capacity gets used first — the
+    most productive shifts, the best-suited machines, the cheapest suppliers —
+    and squeezing out additional units means overtime pay, expedited freight,
+    and pressing less efficient equipment into service. So a higher price is
+    exactly what makes additional, costlier units worth producing.</p>
+    <div class="note"><b>Read the supply curve vertically</b> and it's a
+    marginal-cost curve: at each quantity, the height is the minimum price a
+    seller would accept for that unit. (The full cost theory behind MC comes in
+    102.7; here we only need that MC rises in the short run.) The gap between
+    the market price and that minimum acceptable price, summed over units, is
+    <em>producer surplus</em> — the seller-side twin of consumer surplus.</div>
+    <p>Two boundary cases keep the law honest: supply can be nearly
+    <em>vertical</em> in the very short run (a fixed catch of fish, concert
+    seats tonight), and individual firms only start producing once price covers
+    the cost of their first units — which is why supply curves often start at a
+    positive price rather than at the origin.</p>
+
+    <h3>Supply as an equation</h3>
+    <div class="eq">Q<sub>s</sub> = c + dP &nbsp;&nbsp;&nbsp; (supply) &nbsp;&nbsp;|&nbsp;&nbsp;
+    P = (Q<sub>s</sub> − c)/d &nbsp;&nbsp;&nbsp; (inverse supply)</div>
+    <p>The coefficient <b>d</b> &gt; 0 gives the law of supply its upward slope:
+    each extra dollar of price coaxes out d more units. The intercept <b>c</b>
+    is often <em>negative</em> — that's not a bug, it encodes the minimum price
+    needed before anyone produces at all.</p>
+    <p><b>Worked example.</b> Suppose the weekly supply of artisan sourdough
+    loaves across a city's bakeries is</p>
+    <div class="eq">Q<sub>s</sub> = −100 + 30P</div>
+    <ul class="tight">
+      <li><b>Entry price:</b> set Q<sub>s</sub> = 0 → P = 100/30 ≈ <b>$3.33</b>.
+      Below $3.33 a loaf, no bakery covers the marginal cost of even its first
+      batch; the market supplies nothing.</li>
+      <li>At P = $5: Q<sub>s</sub> = −100 + 150 = <b>50 loaves</b>.</li>
+      <li>At P = $9: Q<sub>s</sub> = −100 + 270 = <b>170 loaves</b>. The $4 price
+      rise pulled out 30 × 4 = 120 extra loaves — bakeries adding batches,
+      staying open longer, and marginal bakeries entering.</li>
+    </ul>
+
+    <h3>Movement along vs. shift of the curve</h3>
+    <p>The same strict vocabulary as the demand side:</p>
+    <ul class="tight">
+      <li>A change in the good's <b>own price</b> → <b>change in quantity
+      supplied</b>: a movement <em>along</em> a fixed supply curve.</li>
+      <li>A change in <b>anything else</b> sellers care about → <b>change in
+      supply</b>: the whole curve shifts, because the profitable quantity is
+      now different <em>at every price</em>.</li>
+    </ul>
+    <div class="note">Same test as before: "at the same price as before, would
+    sellers now produce a different amount?" Yes → the curve shifted. The only
+    change is the price tag → movement along.</div>
+    <p>Directional language: an <em>increase in supply</em> means the curve
+    shifts <b>right/down</b> — more quantity at every price, equivalently every
+    quantity offered at a lower minimum price. A <em>decrease in supply</em>
+    shifts it left/up. (Up means decrease on the supply side — students who
+    memorize "up = more" get burned here; think in quantities at a given
+    price.)</p>
+
+    <h3>The determinants: what shifts supply</h3>
+    <table class="book">
+      <tr><th>Determinant</th><th>Change</th><th>Effect on supply</th></tr>
+      <tr><td><b>Input prices</b></td><td>Wages, flour, energy, freight rise</td>
+          <td>Decreases (left/up) — every unit's marginal cost is now higher</td></tr>
+      <tr><td><b>Technology / productivity</b></td><td>Better ovens, process improvements</td>
+          <td>Increases (right/down) — same inputs yield more output, MC falls</td></tr>
+      <tr><td><b>Taxes &amp; subsidies</b></td><td>Per-unit tax of $t on sellers</td>
+          <td>Decreases — the curve shifts <em>up by exactly $t</em>: sellers need $t more per unit to net the same; a subsidy shifts it down</td></tr>
+      <tr><td><b>Prices of related outputs</b></td><td>Price of an alternative product the same resources could make rises (croissants for a bakery; soybeans for a corn farmer)</td>
+          <td>Decreases — resources migrate to the now-more-profitable substitute in production</td></tr>
+      <tr><td><b>Expectations</b></td><td>Sellers expect higher prices soon (storable good)</td>
+          <td>Decreases today — withhold inventory to sell later at the better price</td></tr>
+      <tr><td><b>Number of sellers</b></td><td>Entry of new firms</td>
+          <td>Increases — market supply sums over more firms</td></tr>
+    </table>
+    <p>Again, the good's own price is deliberately absent — it never shifts its
+    own curve.</p>
+    <p>One pairing worth keeping straight: <em>substitutes in production</em>
+    (what else the <b>seller</b> could make with the same resources — corn vs.
+    soybeans) are a supply shifter; <em>substitutes in consumption</em> (what
+    else the <b>buyer</b> could purchase — coffee vs. tea) are a demand
+    shifter. Same word, different side of the market.</p>
+
+    <h3>From the firm to market supply</h3>
+    <p>Market supply is the <strong>horizontal sum</strong> of individual
+    firms' supply curves: at each price, add the quantities each firm is
+    willing to produce. Because different firms have different costs, price
+    increases raise market quantity through two channels — existing firms
+    slide up their own curves <em>and</em> higher-cost firms cross their entry
+    threshold and start producing. That entry margin is why market supply
+    tends to flatten (get more price-responsive) at higher prices, and it's
+    why "number of sellers" is a shifter.</p>
+    <p><b>Worked example.</b> Two producers: firm A with Q<sub>A</sub> = −20 + 10P
+    (produces when P ≥ $2) and firm B with Q<sub>B</sub> = −60 + 10P (needs P ≥ $6 —
+    a higher-cost producer). At P = $5 only A produces: market Q = 30. At
+    P = $8 both do: Q = (−20 + 80) + (−60 + 80) = <b>80</b>. The market curve
+    kinks at $6 where B enters.</p>
+  </section>
+
+  <!-- 2. VISUALS -->
+  <section id="see-1" class="see">
+    <h2>See it: movement along vs. shift</h2>
+    <p>The bakery market's supply is Q<sub>s</sub> = −100 + 30P. The <b>price
+    slider</b> slides along the curve; the determinant buttons move the curve
+    itself. Note the per-unit tax: it shifts the curve up by <em>exactly</em>
+    the tax — a parallel vertical displacement, not a slope change.</p>
+    <div class="visual" id="viz-1">
+      <div class="controls">
+        <label>Price: $<span class="val" id="v1-pval">8</span>
+        <input type="range" id="v1-p" min="0" max="20" step="0.5" value="8"></label>
+      </div>
+      <div class="controls" id="v1-btns">
+        <button data-dc="-90" data-dt="0" data-note="Input prices rose (flour, wages): every unit costs more to make, so at each price bakeries profitably produce less — supply shifts LEFT/UP.">Input prices ↑</button>
+        <button data-dc="90" data-dt="0" data-note="Better technology cut marginal cost: at every price, more units clear the 'worth producing' bar — supply shifts RIGHT/DOWN.">Technology ↑</button>
+        <button data-dc="0" data-dt="2" data-note="A $2 per-unit tax on sellers: to net the same amount per loaf, every quantity now requires a price exactly $2 higher — the curve shifts UP by $2, parallel.">$2/unit tax</button>
+        <button data-dc="90" data-dt="0" data-note="New bakeries entered: market supply is the horizontal sum over firms, so more firms means more quantity at every price — RIGHT shift.">Sellers ↑</button>
+        <button data-dc="-60" data-dt="0" data-note="Croissant prices jumped: croissants are a substitute IN PRODUCTION, so ovens and bakers migrate to them — sourdough supply shifts LEFT.">Croissant price ↑</button>
+        <button class="reset" id="v1-reset">Reset shift</button>
+      </div>
+      <svg id="v1-svg" viewBox="0 0 560 390"></svg>
+      <div class="readout" id="v1-read"></div>
+      <div class="vizmsg" id="v1-msg"><b class="move">Slider = movement along</b> (change in quantity supplied). <b class="shift">Buttons = shift</b> (change in supply).</div>
+    </div>
+  </section>
+
+  <section id="see-2" class="see">
+    <h2>See it: marginal cost is the supply curve</h2>
+    <p>One bakery's marginal cost for each successive daily batch, drawn as a
+    staircase. Slide the market price: the bakery bakes every batch whose MC is
+    at or below the price and stops at the first one that isn't. The staircase
+    <em>is</em> the firm's supply curve; the shaded gap between price and MC on
+    each produced batch is producer surplus.</p>
+    <div class="visual" id="viz-2">
+      <div class="controls">
+        <label>Market price: $<span class="val" id="v2-pval">13</span>
+        <input type="range" id="v2-p" min="0" max="36" step="1" value="13"></label>
+      </div>
+      <svg id="v2-svg" viewBox="0 0 560 390"></svg>
+      <div class="readout" id="v2-read"></div>
+    </div>
+  </section>
+
+  <section id="see-3" class="see">
+    <h2>See it: market supply is firms summed horizontally</h2>
+    <p>Firm A (blue, enters at $2) and higher-cost firm B (orange, enters at
+    $6) sum into market supply (green). Slide the price across $6 and watch the
+    kink: above it, both expansion <em>and</em> entry are adding quantity.</p>
+    <div class="visual" id="viz-3">
+      <div class="controls">
+        <label>Price: $<span class="val" id="v3-pval">5</span>
+        <input type="range" id="v3-p" min="0" max="12" step="0.5" value="5"></label>
+      </div>
+      <svg id="v3-svg" viewBox="0 0 560 390"></svg>
+      <div class="readout" id="v3-read"></div>
+    </div>
+  </section>
+
+  <!-- 3. QUIZ -->
+  <section id="quiz">
+    <h2>Check yourself</h2>
+    <form id="quizForm">
+
+      <div class="q" data-qid="q1" data-type="mc">
+        <p><strong>1.</strong> Supply curves slope upward primarily because:</p>
+        <div class="opts">
+          <label><input type="radio" name="q1" value="a"> Sellers prefer higher prices to lower ones</label>
+          <label><input type="radio" name="q1" value="b"> Marginal cost rises with output in the short run, so higher prices make additional units worth producing</label>
+          <label><input type="radio" name="q1" value="c"> Higher prices increase demand, which producers must match</label>
+          <label><input type="radio" name="q1" value="d"> Producers' fixed costs rise as they expand</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q2" data-type="mc">
+        <p><strong>2.</strong> Which event causes an increase in <em>quantity supplied</em> of sourdough (a movement along the supply curve), rather than an increase in <em>supply</em>?</p>
+        <div class="opts">
+          <label><input type="radio" name="q2" value="a"> The market price of sourdough rises</label>
+          <label><input type="radio" name="q2" value="b"> Flour prices fall</label>
+          <label><input type="radio" name="q2" value="c"> A new high-efficiency oven becomes standard</label>
+          <label><input type="radio" name="q2" value="d"> Three new bakeries open in town</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q3" data-type="mc">
+        <p><strong>3.</strong> The price of soybeans rises sharply. For farmers who can plant either corn or soybeans on the same land, what happens in the <em>corn</em> market?</p>
+        <div class="opts">
+          <label><input type="radio" name="q3" value="a"> Corn supply increases — farmers have more revenue to invest</label>
+          <label><input type="radio" name="q3" value="b"> Corn supply decreases — acreage shifts to the now-more-profitable soybeans</label>
+          <label><input type="radio" name="q3" value="c"> Quantity of corn supplied falls along the existing curve</label>
+          <label><input type="radio" name="q3" value="d"> Corn demand decreases — soybeans are a substitute</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q4" data-type="num">
+        <p><strong>4.</strong> City sourdough supply is Q<sub>s</sub> = −100 + 30P. How many loaves are supplied per week at P = $9?</p>
+        <input type="number" name="q4" step="any" /> <span class="hint">loaves</span>
+      </div>
+
+      <div class="q" data-qid="q5" data-type="num">
+        <p><strong>5.</strong> For that same supply curve Q<sub>s</sub> = −100 + 30P, what is the minimum price (in dollars) at which any loaves are supplied at all? Round to the nearest cent.</p>
+        <input type="number" name="q5" step="any" /> <span class="hint">dollars</span>
+      </div>
+
+      <div class="q" data-qid="q6" data-type="mc">
+        <p><strong>6.</strong> The city imposes a $2-per-loaf tax collected from bakeries. The supply curve:</p>
+        <div class="opts">
+          <label><input type="radio" name="q6" value="a"> Shifts down by $2 — bakeries earn less per loaf</label>
+          <label><input type="radio" name="q6" value="b"> Shifts up by exactly $2 — every quantity now requires a price $2 higher for sellers to net the same</label>
+          <label><input type="radio" name="q6" value="c"> Rotates and becomes steeper, since the tax matters more at high volumes</label>
+          <label><input type="radio" name="q6" value="d"> Does not move — taxes affect demand, not supply</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q7" data-type="num">
+        <p><strong>7.</strong> A bakery's marginal cost per batch is: 1st batch $4, 2nd $6, 3rd $9, 4th $13, 5th $18. At a market price of $13 per batch, how many batches does it produce?</p>
+        <input type="number" name="q7" step="any" /> <span class="hint">batches</span>
+      </div>
+
+      <button type="submit">Submit answers</button>
+    </form>
+    <div id="result"></div>
+  </section>
+
+  <!-- 4. NAV -->
+  <nav class="lesson-nav">
+    <a href="index.html">← All lessons</a>
+    <a href="../harness/results.html">Results &amp; mastery →</a>
+  </nav>
+
+</div>
+
+<script>
+const LESSON_ADDRESS = "102.3";
+const SVGNS = "http://www.w3.org/2000/svg";
+function el(tag, attrs, parent) {
+  const e = document.createElementNS(SVGNS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (parent) parent.appendChild(e);
+  return e;
+}
+function makeScales(xmax, ymax) {
+  const L = 56, R = 535, T = 18, B = 340;
+  return { x: q => L + (q/xmax)*(R-L), y: p => B - (p/ymax)*(B-T),
+           L, R, T, B, xmax, ymax };
+}
+function drawAxes(svg, s, xlab, ylab, xstep, ystep, money) {
+  el("line", {x1:s.L, y1:s.B, x2:s.R, y2:s.B, stroke:"#1a1a2e", "stroke-width":1.5}, svg);
+  el("line", {x1:s.L, y1:s.T, x2:s.L, y2:s.B, stroke:"#1a1a2e", "stroke-width":1.5}, svg);
+  for (let v = 0; v <= s.xmax; v += xstep) {
+    const t = el("text", {x:s.x(v), y:s.B+18, "text-anchor":"middle",
+                          "font-size":"11", fill:"#6b7280"}, svg);
+    t.textContent = v;
+    el("line", {x1:s.x(v), y1:s.B, x2:s.x(v), y2:s.B+4, stroke:"#6b7280"}, svg);
+  }
+  for (let v = 0; v <= s.ymax; v += ystep) {
+    const t = el("text", {x:s.L-8, y:s.y(v)+4, "text-anchor":"end",
+                          "font-size":"11", fill:"#6b7280"}, svg);
+    t.textContent = (money?"$":"") + v;
+    el("line", {x1:s.L-4, y1:s.y(v), x2:s.L, y2:s.y(v), stroke:"#6b7280"}, svg);
+  }
+  const xl = el("text", {x:(s.L+s.R)/2, y:s.B+36, "text-anchor":"middle",
+                         "font-size":"12.5", "font-weight":"600", fill:"#1a1a2e"}, svg);
+  xl.textContent = xlab;
+  const yl = el("text", {x:14, y:(s.T+s.B)/2, "font-size":"12.5", "font-weight":"600",
+                         fill:"#1a1a2e", transform:`rotate(-90 14 ${(s.T+s.B)/2})`,
+                         "text-anchor":"middle"}, svg);
+  yl.textContent = ylab;
+}
+
+/* ---------- viz-1: movement vs shift ---------- */
+(function() {
+  // Qs = c + 30(P - t); base c = -100, t = 0 (per-unit tax raises the
+  // price needed for each quantity by t).
+  const C0 = -100, D = 30;
+  let c = C0, tax = 0;
+  const svg = document.getElementById("v1-svg");
+  const s = makeScales(550, 22);
+  drawAxes(svg, s, "Quantity (loaves / week)", "Price", 100, 4, true);
+  function qs(p, cV, tV) { return Math.max(0, cV + D*(p - tV)); }
+  function sPath(cV, tV) {
+    const pEntry = tV - cV/D;                 // price where Q hits 0
+    const p0 = Math.max(0, pEntry);
+    let d = `M ${s.x(0)} ${s.y(Math.min(p0, s.ymax))} `;
+    d += `L ${s.x(qs(s.ymax, cV, tV))} ${s.y(s.ymax)}`;
+    return d;
+  }
+  const base = el("path", {d:sPath(C0,0), fill:"none", stroke:"#9ca3af",
+                           "stroke-width":2, "stroke-dasharray":"6 4",
+                           visibility:"hidden"}, svg);
+  const cur = el("path", {d:sPath(C0,0), fill:"none", stroke:"#2d6a4f",
+                          "stroke-width":3}, svg);
+  const dropX = el("line", {stroke:"#9ca3af", "stroke-dasharray":"4 3"}, svg);
+  const dropY = el("line", {stroke:"#9ca3af", "stroke-dasharray":"4 3"}, svg);
+  const dot = el("circle", {r:7, fill:"#1d4ed8", stroke:"#fff", "stroke-width":2}, svg);
+  const slider = document.getElementById("v1-p");
+  function update() {
+    const p = +slider.value;
+    const q = qs(p, c, tax);
+    document.getElementById("v1-pval").textContent = p;
+    cur.setAttribute("d", sPath(c, tax));
+    base.setAttribute("visibility", (c === C0 && tax === 0) ? "hidden" : "visible");
+    dot.setAttribute("cx", s.x(q)); dot.setAttribute("cy", s.y(p));
+    dropX.setAttribute("x1", s.x(q)); dropX.setAttribute("y1", s.y(p));
+    dropX.setAttribute("x2", s.x(q)); dropX.setAttribute("y2", s.B);
+    dropY.setAttribute("x1", s.L); dropY.setAttribute("y1", s.y(p));
+    dropY.setAttribute("x2", s.x(q)); dropY.setAttribute("y2", s.y(p));
+    const eqn = tax ? `Qs = ${C0} + 30(P − ${tax})` : `Qs = ${c} + 30P`;
+    document.getElementById("v1-read").innerHTML =
+      `<span class="lbl">Curve:</span> ${eqn} &nbsp;
+       <span class="lbl">At P=$${p}:</span> Qs = ${Math.round(q)}`;
+  }
+  slider.addEventListener("input", () => {
+    update();
+    document.getElementById("v1-msg").innerHTML =
+      "<b class='move'>Movement along the curve</b> — only the good's own price changed: a change in <em>quantity supplied</em>. The curve stayed put.";
+  });
+  document.querySelectorAll("#v1-btns button[data-dc]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      c = C0 + (+btn.dataset.dc);
+      tax = +btn.dataset.dt;
+      document.querySelectorAll("#v1-btns button").forEach(b => b.classList.remove("on"));
+      btn.classList.add("on");
+      update();
+      document.getElementById("v1-msg").innerHTML =
+        "<b class='shift'>Shift of the curve</b> — " + btn.dataset.note +
+        " (Dashed = original curve.)";
+    });
+  });
+  document.getElementById("v1-reset").addEventListener("click", () => {
+    c = C0; tax = 0;
+    document.querySelectorAll("#v1-btns button").forEach(b => b.classList.remove("on"));
+    update();
+    document.getElementById("v1-msg").innerHTML =
+      "<b class='move'>Slider = movement along</b> (change in quantity supplied). <b class='shift'>Buttons = shift</b> (change in supply).";
+  });
+  update();
+})();
+
+/* ---------- viz-2: MC staircase = firm supply ---------- */
+(function() {
+  const MC = [4, 6, 9, 13, 18, 24, 31];      // marginal cost of batch i+1
+  const svg = document.getElementById("v2-svg");
+  const s = makeScales(8, 36);
+  drawAxes(svg, s, "Batches per day", "Price / marginal cost", 1, 6, true);
+  // surplus shading group sits under the staircase
+  const shade = el("g", {}, svg);
+  MC.forEach((mc, i) => {
+    el("line", {x1:s.x(i), y1:s.y(mc), x2:s.x(i+1), y2:s.y(mc),
+                stroke:"#2d6a4f", "stroke-width":3}, svg);
+    if (i < MC.length-1)
+      el("line", {x1:s.x(i+1), y1:s.y(mc), x2:s.x(i+1), y2:s.y(MC[i+1]),
+                  stroke:"#2d6a4f", "stroke-width":1.5,
+                  "stroke-dasharray":"3 3"}, svg);
+    const t = el("text", {x:s.x(i+0.5), y:s.y(mc)-6, "text-anchor":"middle",
+                          "font-size":"10.5", fill:"#2d6a4f",
+                          "font-weight":"700"}, svg);
+    t.textContent = "$"+mc;
+  });
+  const pLine = el("line", {stroke:"#1d4ed8", "stroke-width":2.5}, svg);
+  const pLbl = el("text", {"font-size":"11.5", "font-weight":"700",
+                           fill:"#1d4ed8"}, svg);
+  const slider = document.getElementById("v2-p");
+  function update() {
+    const p = +slider.value;
+    document.getElementById("v2-pval").textContent = p;
+    pLine.setAttribute("x1", s.L); pLine.setAttribute("y1", s.y(p));
+    pLine.setAttribute("x2", s.x(8)); pLine.setAttribute("y2", s.y(p));
+    pLbl.setAttribute("x", s.x(7.2)); pLbl.setAttribute("y", s.y(p)-6);
+    pLbl.textContent = "P = $" + p;
+    while (shade.firstChild) shade.removeChild(shade.firstChild);
+    let n = 0, surplus = 0;
+    MC.forEach((mc, i) => {
+      if (mc <= p) {
+        n++; surplus += p - mc;
+        el("rect", {x:s.x(i), y:s.y(p), width:s.x(i+1)-s.x(i),
+                    height:Math.max(0, s.y(mc)-s.y(p)),
+                    fill:"#2d6a4f", opacity:0.15}, shade);
+      }
+    });
+    document.getElementById("v2-read").innerHTML =
+      `<span class="lbl">Quantity supplied:</span> ${n} batch${n===1?"":"es"}
+       &nbsp; <span class="lbl">Producer surplus:</span> $${surplus}` +
+      (n < MC.length ? ` &nbsp; <span class="lbl">Next batch needs:</span> $${MC[n]}` : "");
+  }
+  slider.addEventListener("input", update);
+  update();
+})();
+
+/* ---------- viz-3: market supply summation ---------- */
+(function() {
+  const svg = document.getElementById("v3-svg");
+  const s = makeScales(70, 13);
+  drawAxes(svg, s, "Quantity (units / week)", "Price", 10, 2, true);
+  const qA = p => Math.max(0, -20 + 10*p);
+  const qB = p => Math.max(0, -60 + 10*p);
+  function poly(qfn, color) {
+    let d = "";
+    for (let p = 0; p <= 13; p += 0.1) {
+      const q = qfn(p);
+      d += (d ? "L" : "M") + s.x(q).toFixed(1) + " " + s.y(p).toFixed(1) + " ";
+    }
+    el("path", {d, fill:"none", stroke:color, "stroke-width":2.5}, svg);
+  }
+  poly(qA, "#1d4ed8");
+  poly(qB, "#b45309");
+  poly(p => qA(p)+qB(p), "#2d6a4f");
+  const lbl = (x, y, txt, color) => {
+    const t = el("text", {x, y, "font-size":"11.5", "font-weight":"700", fill:color}, svg);
+    t.textContent = txt;
+  };
+  lbl(s.x(qA(11))-38, s.y(11)+4, "Firm A", "#1d4ed8");
+  lbl(s.x(qB(11))-38, s.y(11)+18, "Firm B", "#b45309");
+  lbl(s.x(qA(11)+qB(11))-30, s.y(11)-8, "Market", "#2d6a4f");
+  const pLine = el("line", {stroke:"#9ca3af", "stroke-dasharray":"4 3"}, svg);
+  const segA = el("line", {stroke:"#1d4ed8", "stroke-width":6, "stroke-linecap":"round"}, svg);
+  const segB = el("line", {stroke:"#b45309", "stroke-width":6, "stroke-linecap":"round"}, svg);
+  const dot = el("circle", {r:6, fill:"#2d6a4f", stroke:"#fff", "stroke-width":2}, svg);
+  const slider = document.getElementById("v3-p");
+  function update() {
+    const p = +slider.value;
+    document.getElementById("v3-pval").textContent = p;
+    const a = qA(p), b = qB(p), tot = a + b;
+    pLine.setAttribute("x1", s.L); pLine.setAttribute("y1", s.y(p));
+    pLine.setAttribute("x2", s.x(70)); pLine.setAttribute("y2", s.y(p));
+    segA.setAttribute("x1", s.x(0)); segA.setAttribute("y1", s.y(p));
+    segA.setAttribute("x2", s.x(a)); segA.setAttribute("y2", s.y(p));
+    segB.setAttribute("x1", s.x(a)); segB.setAttribute("y1", s.y(p));
+    segB.setAttribute("x2", s.x(tot)); segB.setAttribute("y2", s.y(p));
+    dot.setAttribute("cx", s.x(tot)); dot.setAttribute("cy", s.y(p));
+    document.getElementById("v3-read").innerHTML =
+      `<span class="lbl">At P=$${p}:</span> A supplies ${a.toFixed(0)} + B supplies ${b.toFixed(0)} = market ${tot.toFixed(0)}` +
+      (b === 0 && p > 0 ? ` &nbsp;<span class="lbl">(B stays out below $6 — its costs are too high)</span>` : "");
+  }
+  slider.addEventListener("input", update);
+  update();
+})();
+
+/* ---------- quiz submit (grading is server-side) ---------- */
+document.getElementById("quizForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const fd = new FormData(e.target);
+  const answers = {};
+  document.querySelectorAll(".q").forEach(q => {
+    const qid = q.dataset.qid;
+    answers[qid] = fd.get(qid);
+  });
+
+  const payload = { address: LESSON_ADDRESS, answers, ts: Date.now() };
+
+  try {
+    const res = await fetch(location.protocol === "file:"
+        ? "http://127.0.0.1:8753/record" : "/record", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+    if (data.error) {
+      document.getElementById("result").textContent = "Recorder error: " + data.error;
+      return;
+    }
+    document.getElementById("result").textContent =
+      `Score: ${data.correct}/${data.total}. ` +
+      (data.weak_topics?.length ? `Review: ${data.weak_topics.join(", ")}` : "Nice work.");
+    (data.results || []).forEach(r => {
+      const q = document.querySelector(`.q[data-qid="${r.qid}"]`);
+      if (!q) return;
+      q.classList.remove("right", "wrong");
+      q.classList.add(r.is_correct ? "right" : "wrong");
+      let fb = q.querySelector(".fb");
+      if (!fb) { fb = document.createElement("div"); fb.className = "fb"; q.appendChild(fb); }
+      fb.textContent = "";
+      const mark = document.createElement("b");
+      mark.textContent = r.is_correct ? "✓ Correct" : "✗ Incorrect";
+      fb.appendChild(mark);
+      if (!r.is_correct && r.explanation) fb.append(" — " + r.explanation);
+    });
+  } catch (err) {
+    const blob = new Blob([JSON.stringify(payload, null, 2)], {type:"application/json"});
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `${LESSON_ADDRESS}.attempt.json`;
+    a.click();
+    document.getElementById("result").textContent =
+      "Recorder offline — downloaded attempt JSON. Run scripts/serve.py and import it.";
+  }
+});
+</script>
+</body>
+</html>

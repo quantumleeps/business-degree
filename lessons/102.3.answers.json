@@ -1,0 +1,58 @@
+{
+  "address": "102.3",
+  "title": "Supply: the curve, shifts, and determinants",
+  "questions": [
+    {
+      "qid": "q1",
+      "type": "mc",
+      "correct": "b",
+      "topic": "law of supply",
+      "explanation": "The upward slope comes from rising marginal cost: producers expand output while price covers the cost of the next unit, and in the short run each additional unit tends to cost more (overtime, less-efficient capacity). Higher prices therefore make more units worth producing. 'Sellers like high prices' isn't a mechanism, and demand doesn't enter the supply curve."
+    },
+    {
+      "qid": "q2",
+      "type": "mc",
+      "correct": "a",
+      "topic": "movement vs shift",
+      "explanation": "Only a change in the good's own price moves you along its supply curve — that's a change in quantity supplied. Cheaper inputs, better technology, and more sellers all change how much is offered at every price, so they shift the whole curve (a change in supply)."
+    },
+    {
+      "qid": "q3",
+      "type": "mc",
+      "correct": "b",
+      "topic": "supply shifts",
+      "explanation": "Corn and soybeans are substitutes in production — the same land can grow either. When soybean prices rise, planting corn now means giving up more soybean revenue, so acreage migrates and corn supply shifts left. It's a shift (the corn price didn't change), and it's a supply-side story, not a demand one."
+    },
+    {
+      "qid": "q4",
+      "type": "num",
+      "correct": 170,
+      "tolerance": 0.5,
+      "topic": "supply function",
+      "explanation": "Qs = −100 + 30(9) = −100 + 270 = 170 loaves. The slope coefficient means each extra dollar of price draws out 30 more loaves once the market is past its entry price."
+    },
+    {
+      "qid": "q5",
+      "type": "num",
+      "correct": 3.33,
+      "tolerance": 0.05,
+      "topic": "supply function",
+      "explanation": "Set Qs = 0: −100 + 30P = 0 → P = 100/30 ≈ $3.33. The negative intercept encodes an entry threshold — below this price not even the lowest-cost producer covers the marginal cost of its first units, so market quantity is zero."
+    },
+    {
+      "qid": "q6",
+      "type": "mc",
+      "correct": "b",
+      "topic": "supply shifts",
+      "explanation": "A per-unit tax on sellers shifts the supply curve up by exactly the tax: for any quantity, sellers must receive a price $2 higher to net what that quantity required before. It's a parallel vertical displacement (equivalently a left shift), not a rotation — the tax is the same $2 on every unit."
+    },
+    {
+      "qid": "q7",
+      "type": "num",
+      "correct": 4,
+      "tolerance": 0.01,
+      "topic": "marginal cost & supply",
+      "explanation": "Produce every batch whose marginal cost is at or below price: $4, $6, $9, and $13 all pass at P = $13 (the 4th batch exactly breaks even on the margin), but the 5th costs $18 > $13, so it's not produced. Quantity supplied = 4 — reading the MC schedule as the firm's supply curve."
+    }
+  ]
+}

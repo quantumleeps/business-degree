@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>102.1 — Scarcity, opportunity cost, and the production possibilities frontier</title>
+<style>
+  :root { --ink:#1a1a2e; --paper:#fdfdfb; --accent:#2d6a4f; --accent2:#1d4ed8;
+          --muted:#6b7280; --warn:#b45309; --bad:#b91c1c; }
+  body { margin:0; font:16px/1.6 system-ui,sans-serif; color:var(--ink);
+         background:var(--paper); }
+  .wrap { max-width:860px; margin:0 auto; padding:32px 20px 80px; }
+  header .addr { font:600 13px ui-monospace,monospace; color:var(--accent);
+                 letter-spacing:.05em; }
+  h1 { font-size:30px; margin:.2em 0 .1em; line-height:1.2; }
+  .why { color:var(--muted); font-style:italic; margin-bottom:2em; }
+  section { margin:2.5em 0; }
+  h2 { border-bottom:2px solid var(--accent); padding-bottom:4px; }
+  h3 { margin:1.6em 0 .3em; font-size:18px; }
+  .lead { font-size:17px; }
+  .note { background:#f0f7f4; border-left:4px solid var(--accent);
+          padding:12px 16px; border-radius:0 8px 8px 0; margin:1.2em 0;
+          font-size:15px; }
+  .eq { font:600 16px ui-monospace,monospace; text-align:center;
+        background:#fff; border:1px solid #e5e7eb; border-radius:10px;
+        padding:14px; margin:1.2em 0; }
+  table.book { border-collapse:collapse; width:100%; margin:1em 0; font-size:14.5px; }
+  table.book th, table.book td { border:1px solid #e5e7eb; padding:6px 9px;
+        text-align:left; vertical-align:top; }
+  table.book th { background:#f9fafb; }
+  table.book td.num, table.book th.num { text-align:right;
+        font-family:ui-monospace,monospace; white-space:nowrap; }
+  ul.tight li { margin:.25em 0; }
+  .hint { font-size:13px; color:var(--muted); }
+  .visual { border:1px solid #e5e7eb; border-radius:12px; padding:16px;
+            background:#fff; }
+  .controls { display:flex; flex-wrap:wrap; gap:10px 18px; margin-bottom:10px;
+              align-items:center; }
+  .controls label { font-size:13.5px; font-weight:600; }
+  .controls input[type=range] { vertical-align:middle; width:170px; }
+  .controls .val { font:600 13px ui-monospace,monospace; color:var(--accent2); }
+  .readout { font:600 13.5px ui-monospace,monospace; margin-top:8px; }
+  .readout .lbl { color:var(--muted); font-weight:600; font-family:system-ui; }
+  .vizmsg { margin-top:8px; font-size:14px; min-height:1.4em; }
+  .vizmsg.eff { color:var(--accent); } .vizmsg.ineff { color:var(--warn); }
+  .vizmsg.un { color:var(--bad); }
+  svg { display:block; max-width:100%; height:auto; }
+  button { background:var(--accent); color:#fff; border:0; padding:10px 18px;
+           border-radius:8px; font-size:15px; cursor:pointer; }
+  button:hover { filter:brightness(1.07); }
+  .controls button { background:var(--muted); font-size:13px; padding:6px 11px; }
+  .q { margin:1.2em 0; padding:14px; border:1px solid #e5e7eb; border-radius:10px; }
+  .q .opts label { display:block; margin:4px 0; cursor:pointer; }
+  .q input[type=number], .q input[type=text] { font-size:15px; padding:6px 8px;
+        border:1px solid #d1d5db; border-radius:6px; width:180px; }
+  .q.right { border-color:var(--accent); background:#f0f7f4; }
+  .q.wrong { border-color:#b91c1c; background:#fef2f2; }
+  .q .fb { margin-top:10px; padding-top:8px; border-top:1px dashed #d1d5db;
+        font-size:14px; }
+  .q.right .fb b { color:var(--accent); }
+  .q.wrong .fb b { color:#b91c1c; }
+  .q table.book { font-size:13.5px; }
+  #result { margin-top:1em; font-weight:600; }
+  .lesson-nav { display:flex; justify-content:space-between; margin-top:3em;
+       padding-top:1em; border-top:1px solid #e5e7eb; }
+  .lesson-nav a { color:var(--accent); font-weight:600; text-decoration:none; }
+  .lesson-nav a:hover { text-decoration:underline; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="addr">102.1</div>
+    <h1>Scarcity, opportunity cost, and the production possibilities frontier</h1>
+    <p class="why">Every business decision — every hire, every product launch, every dollar of capital — is a choice to do one thing <em>instead of</em> another. Economics begins by making that "instead of" explicit and measurable.</p>
+  </header>
+
+  <!-- 1. WRITTEN / TEACHING SECTION -->
+  <section id="learn">
+    <h2>Learn</h2>
+
+    <p class="lead">Microeconomics is the study of how individuals and firms
+    make choices under <strong>scarcity</strong> — and how those choices
+    interact in markets. This first lesson builds the three tools everything
+    else in the course rests on: the concept of scarcity itself, opportunity
+    cost as the true measure of what a choice costs, and the production
+    possibilities frontier (PPF), the first formal economic model you'll use.</p>
+
+    <h3>Scarcity: the problem economics exists to study</h3>
+    <p>Human wants are effectively unlimited; the resources available to
+    satisfy them are not. Economists group productive resources — the
+    <strong>factors of production</strong> — into four categories:</p>
+    <ul class="tight">
+      <li><b>Land</b> — natural resources: acreage, minerals, water, spectrum.</li>
+      <li><b>Labor</b> — human work time and effort.</li>
+      <li><b>Capital</b> — produced goods used to produce other goods: machines,
+      buildings, software. (Note: in economics "capital" means physical capital,
+      not money. Money finances the purchase of capital; it doesn't produce
+      anything by itself.)</li>
+      <li><b>Entrepreneurship</b> — the organizing, risk-taking function that
+      combines the other three.</li>
+    </ul>
+    <p>Because resources are limited and wants are not, every society — and
+    every firm — must answer three questions: <em>what</em> to produce,
+    <em>how</em> to produce it, and <em>for whom</em>. Markets, prices, and
+    firms are all mechanisms for answering those questions.</p>
+    <div class="note"><b>Scarcity ≠ shortage.</b> Scarcity is the permanent
+    condition that resources can't satisfy all wants — it never goes away, even
+    in rich economies. A <em>shortage</em> is a temporary market situation where
+    quantity demanded exceeds quantity supplied at the going price (you'll
+    formalize this in 102.4). Bottled water is scarce always; it's in shortage
+    only when the shelves are empty at the posted price.</div>
+
+    <h3>Opportunity cost: what a choice really costs</h3>
+    <p>Because choosing one use of a resource means giving up others, the true
+    cost of any choice is the <strong>opportunity cost</strong>: the value of
+    the <em>next-best alternative forgone</em>. Not the sum of every alternative
+    you didn't take — only the best one, because that's the one you actually
+    sacrificed.</p>
+    <p>Opportunity cost has two components, and only one of them shows up in a
+    bookkeeper's records:</p>
+    <ul class="tight">
+      <li><b>Explicit costs</b> — actual cash outlays (tuition, wages paid, rent).</li>
+      <li><b>Implicit costs</b> — the value of resources you already own that
+      could have earned something elsewhere (your forgone salary, the rent your
+      own building could have collected, forgone interest on your own funds).</li>
+    </ul>
+    <div class="eq">Economic cost = explicit costs + implicit costs<br>
+    Accounting cost = explicit costs only</div>
+    <p><b>Worked example.</b> You're deciding whether to leave a job paying
+    $85,000 to do a one-year, full-time analytics program. Tuition and fees are
+    $60,000. Living near campus will cost $18,000, but you'd have spent $12,000
+    on rent anyway. The economic cost of the year:</p>
+    <table class="book">
+      <tr><th>Item</th><th>Type</th><th class="num">Amount</th></tr>
+      <tr><td>Tuition and fees</td><td>Explicit</td><td class="num">$60,000</td></tr>
+      <tr><td>Incremental housing ($18,000 − $12,000)</td><td>Explicit (incremental only)</td><td class="num">$6,000</td></tr>
+      <tr><td>Forgone salary</td><td>Implicit</td><td class="num">$85,000</td></tr>
+      <tr><td><b>Economic (opportunity) cost</b></td><td></td><td class="num"><b>$151,000</b></td></tr>
+    </table>
+    <p>Two details matter. First, the $12,000 of rent you'd pay either way is
+    <em>not</em> a cost of the program — only costs that change with the
+    decision count. Second, anything already spent and unrecoverable — a
+    <strong>sunk cost</strong> — is irrelevant to the decision. If you'd paid a
+    $2,000 non-refundable deposit last month, that $2,000 should not influence
+    whether you enroll today; it's gone under every alternative.</p>
+    <div class="note"><b>Thinking at the margin.</b> Most real decisions aren't
+    all-or-nothing but "a little more or a little less" — one more hire, one
+    more production run. Rational choice compares <em>marginal benefit</em> to
+    <em>marginal cost</em>: do it if MB ≥ MC. The PPF below makes marginal
+    opportunity cost visible as the slope of the frontier.</div>
+
+    <h3>The production possibilities frontier</h3>
+    <p>The <strong>PPF</strong> is the simplest economic model: an economy (or
+    a firm) with fixed resources and fixed technology, producing just two
+    goods. The frontier traces every combination of the two goods that is
+    attainable when all resources are fully and efficiently employed.</p>
+    <p>Take a factory that can build <b>drones</b> or <b>e-bikes</b> with the
+    same workforce and equipment. Its production menu:</p>
+    <table class="book">
+      <tr><th>Plan</th><th class="num">Drones</th><th class="num">E-bikes</th>
+          <th class="num">E-bikes given up for the last 100 drones</th>
+          <th class="num">Opportunity cost per drone</th></tr>
+      <tr><td>A</td><td class="num">0</td><td class="num">1,000</td><td class="num">—</td><td class="num">—</td></tr>
+      <tr><td>B</td><td class="num">100</td><td class="num">950</td><td class="num">50</td><td class="num">0.5</td></tr>
+      <tr><td>C</td><td class="num">200</td><td class="num">850</td><td class="num">100</td><td class="num">1.0</td></tr>
+      <tr><td>D</td><td class="num">300</td><td class="num">700</td><td class="num">150</td><td class="num">1.5</td></tr>
+      <tr><td>E</td><td class="num">400</td><td class="num">400</td><td class="num">300</td><td class="num">3.0</td></tr>
+      <tr><td>F</td><td class="num">500</td><td class="num">0</td><td class="num">400</td><td class="num">4.0</td></tr>
+    </table>
+    <p>Read the geometry as economics:</p>
+    <ul class="tight">
+      <li><b>Points on the frontier</b> are <em>productively efficient</em>:
+      producing more of one good requires producing less of the other.</li>
+      <li><b>Points inside</b> are attainable but <em>inefficient</em>: some
+      resources are idle or misallocated (unemployment, a half-used plant).
+      You can get more of both goods for free by moving to the frontier.</li>
+      <li><b>Points outside</b> are <em>unattainable</em> with current
+      resources and technology.</li>
+      <li><b>The slope</b> of the frontier is the marginal opportunity cost of
+      the good on the horizontal axis, measured in units of the vertical-axis
+      good. Moving from plan C to plan D, each extra drone costs 1.5 e-bikes.</li>
+    </ul>
+
+    <h3>Why the frontier bows outward</h3>
+    <p>Notice the opportunity cost column <em>rises</em> — 0.5, 1.0, 1.5, 3.0,
+    4.0 e-bikes per drone. This is the <strong>law of increasing opportunity
+    cost</strong>, and it's why realistic PPFs bow outward (are concave to the
+    origin). The reason is that resources are <em>specialized</em>. The first
+    workers shifted into drone production are the avionics techs who were
+    mediocre at bike assembly — cheap transfers. The last workers shifted are
+    the wheel-building specialists — moving them sacrifices a lot of e-bike
+    output for little drone output.</p>
+    <p>If resources were perfectly interchangeable between the two goods, the
+    opportunity cost would be constant and the PPF would be a straight line.
+    That's the standard assumption for the comparative-advantage examples
+    below.</p>
+
+    <h3>Shifting the frontier: growth</h3>
+    <p>The frontier is drawn for <em>given</em> resources and technology.
+    Change those and the frontier itself moves:</p>
+    <ul class="tight">
+      <li><b>More resources</b> (labor force growth, capital investment) or
+      <b>broad technological progress</b> shift the whole frontier outward.</li>
+      <li><b>Biased technical change</b> — a breakthrough that only helps drone
+      production — pivots the frontier: the drone intercept moves out while the
+      e-bike intercept stays put. Even so, the economy can consume more of
+      <em>both</em> goods if it chooses a point that converts some of the drone
+      gain into e-bikes.</li>
+      <li>Today's choice <em>position</em> affects tomorrow's frontier: a firm
+      (or country) that picks a point heavy in capital goods over consumption
+      goods grows its future PPF faster. Growth has an opportunity cost paid in
+      present consumption.</li>
+    </ul>
+    <p>Moving from an interior point to the frontier is <em>not</em> growth —
+    that's taking up slack. Growth means the frontier itself moves.</p>
+
+    <h3>Application: comparative advantage and the gains from specialization</h3>
+    <p>Opportunity cost also answers a question every manager faces: <em>who
+    should do what?</em> Two analysts, Ana and Ben, each work an 8-hour day
+    producing client reports or financial models (assume constant, linear
+    trade-offs):</p>
+    <table class="book">
+      <tr><th></th><th class="num">Reports per day (max)</th><th class="num">Models per day (max)</th>
+          <th class="num">Opp. cost of 1 model</th><th class="num">Opp. cost of 1 report</th></tr>
+      <tr><td>Ana</td><td class="num">12</td><td class="num">4</td><td class="num">3 reports</td><td class="num">1/3 model</td></tr>
+      <tr><td>Ben</td><td class="num">6</td><td class="num">3</td><td class="num">2 reports</td><td class="num">1/2 model</td></tr>
+    </table>
+    <p>Ana has an <strong>absolute advantage</strong> in both tasks — she
+    out-produces Ben at everything. But assignment should follow
+    <strong>comparative advantage</strong>: who gives up <em>less</em> to do a
+    task. A model costs Ben only 2 forgone reports versus Ana's 3, so Ben has
+    the comparative advantage in models; Ana's report costs her 1/3 of a model
+    versus Ben's 1/2, so Ana has the comparative advantage in reports.
+    Because comparative advantage is about <em>relative</em> opportunity
+    costs, no one can have the comparative advantage in everything.</p>
+    <p>Specializing along comparative-advantage lines pushes the team's joint
+    output to its joint frontier — the third visual below shows the gap
+    between "everyone splits their time the same way" and "each specializes in
+    their low-opportunity-cost task." This is the same logic that drives gains
+    from trade between firms and between countries.</p>
+  </section>
+
+  <!-- 2. VISUALS -->
+  <section id="see-1" class="see">
+    <h2>See it: walking the frontier</h2>
+    <p>Drag the slider to move along the drone/e-bike frontier (the table
+    above, drawn as a curve). Watch the marginal opportunity cost climb as
+    drone production grows. Then <b>click anywhere on the chart</b> to test a
+    production plan: efficient, inefficient, or unattainable?</p>
+    <div class="visual" id="viz-1">
+      <div class="controls">
+        <label>Drones: <input type="range" id="v1-d" min="0" max="500" step="5" value="200">
+        <span class="val" id="v1-dval">200</span></label>
+      </div>
+      <svg id="v1-svg" viewBox="0 0 560 390"></svg>
+      <div class="readout" id="v1-read"></div>
+      <div class="vizmsg" id="v1-msg">Click the chart to classify a production plan.</div>
+    </div>
+  </section>
+
+  <section id="see-2" class="see">
+    <h2>See it: growing (and pivoting) the frontier</h2>
+    <p>The frontier is fixed only as long as resources and technology are.
+    Add capacity that helps both goods and the frontier shifts out everywhere;
+    improve only drone technology and it pivots — the e-bike intercept doesn't
+    move.</p>
+    <div class="visual" id="viz-2">
+      <div class="controls">
+        <label>Overall resources: <input type="range" id="v2-k" min="70" max="130" value="100">
+        <span class="val" id="v2-kval">100%</span></label>
+        <label>Drone tech: <input type="range" id="v2-a" min="70" max="140" value="100">
+        <span class="val" id="v2-aval">100%</span></label>
+        <label>E-bike tech: <input type="range" id="v2-b" min="70" max="140" value="100">
+        <span class="val" id="v2-bval">100%</span></label>
+        <button id="v2-reset">Reset</button>
+      </div>
+      <svg id="v2-svg" viewBox="0 0 560 390"></svg>
+      <div class="vizmsg" id="v2-msg">Dashed curve = original frontier. Solid = after your changes.</div>
+    </div>
+  </section>
+
+  <section id="see-3" class="see">
+    <h2>See it: comparative advantage and the joint frontier</h2>
+    <p>Ana and Ben's combined possibilities. The straight gray line is what the
+    team produces if both split their day in the same proportions. The kinked
+    green frontier is what's attainable when tasks are assigned by comparative
+    advantage — the low-opportunity-cost producer of models (steeper isn't
+    better; <em>cheaper</em> is) takes on models first. Slide the team's
+    model/report mix and watch the specialization gain.</p>
+    <div class="visual" id="viz-3">
+      <div class="controls">
+        <label>Team time on models: <input type="range" id="v3-t" min="0" max="100" value="50">
+        <span class="val" id="v3-tval">50%</span></label>
+      </div>
+      <svg id="v3-svg" viewBox="0 0 560 390"></svg>
+      <div class="readout" id="v3-read"></div>
+      <div class="vizmsg" id="v3-msg"></div>
+    </div>
+  </section>
+
+  <!-- 3. QUIZ -->
+  <section id="quiz">
+    <h2>Check yourself</h2>
+    <form id="quizForm">
+
+      <div class="q" data-qid="q1" data-type="mc">
+        <p><strong>1.</strong> The opportunity cost of a choice is best defined as:</p>
+        <div class="opts">
+          <label><input type="radio" name="q1" value="a"> The total cash outlay the choice requires</label>
+          <label><input type="radio" name="q1" value="b"> The value of the next-best alternative forgone</label>
+          <label><input type="radio" name="q1" value="c"> The combined value of all alternatives forgone</label>
+          <label><input type="radio" name="q1" value="d"> The difference between accounting profit and cash flow</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q2" data-type="mc">
+        <p><strong>2.</strong> Which statement describes <em>scarcity</em>, as economists use the term?</p>
+        <div class="opts">
+          <label><input type="radio" name="q2" value="a"> After the storm, stores ran out of bottled water at the posted price</label>
+          <label><input type="radio" name="q2" value="b"> Society's wants exceed what its limited resources can produce, so choices must be made</label>
+          <label><input type="radio" name="q2" value="c"> Prices of raw materials have risen sharply this year</label>
+          <label><input type="radio" name="q2" value="d"> Some households cannot afford basic goods</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q3" data-type="num">
+        <p><strong>3.</strong> Using the factory's production menu below, what is the opportunity cost <em>per drone</em> (in e-bikes) of moving from plan C to plan D?</p>
+        <table class="book">
+          <tr><th>Plan</th><th class="num">Drones</th><th class="num">E-bikes</th></tr>
+          <tr><td>C</td><td class="num">200</td><td class="num">850</td></tr>
+          <tr><td>D</td><td class="num">300</td><td class="num">700</td></tr>
+        </table>
+        <input type="number" name="q3" step="any" /> <span class="hint">e-bikes per drone</span>
+      </div>
+
+      <div class="q" data-qid="q4" data-type="mc">
+        <p><strong>4.</strong> Which event shifts an economy's PPF outward?</p>
+        <div class="opts">
+          <label><input type="radio" name="q4" value="a"> Reallocating workers from e-bike production to drone production</label>
+          <label><input type="radio" name="q4" value="b"> Previously unemployed workers are hired and output rises to the frontier</label>
+          <label><input type="radio" name="q4" value="c"> A robotics breakthrough raises productivity in producing both goods</label>
+          <label><input type="radio" name="q4" value="d"> Consumers' preferences swing strongly toward drones</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q5" data-type="num">
+        <p><strong>5.</strong> You leave a job paying $85,000 for a one-year, full-time program. Tuition and fees are $60,000. Housing near campus costs $18,000, but you would have paid $12,000 in rent anyway. Last month you also paid a $2,000 <em>non-refundable</em> application deposit. What is the economic (opportunity) cost of the year, in dollars?</p>
+        <input type="number" name="q5" step="any" /> <span class="hint">dollars</span>
+      </div>
+
+      <div class="q" data-qid="q6" data-type="mc">
+        <p><strong>6.</strong> Ana can produce 12 reports or 4 models per day; Ben can produce 6 reports or 3 models. Who has the comparative advantage in models, and why?</p>
+        <div class="opts">
+          <label><input type="radio" name="q6" value="a"> Ana — she can produce more models per day than Ben</label>
+          <label><input type="radio" name="q6" value="b"> Ben — a model costs him 2 forgone reports versus Ana's 3</label>
+          <label><input type="radio" name="q6" value="c"> Ana — her opportunity cost of a model is lower than Ben's</label>
+          <label><input type="radio" name="q6" value="d"> Neither — Ana has an absolute advantage in both tasks</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q7" data-type="mc">
+        <p><strong>7.</strong> Why does a realistic PPF bow outward (concave to the origin)?</p>
+        <div class="opts">
+          <label><input type="radio" name="q7" value="a"> Because inflation raises the cost of both goods over time</label>
+          <label><input type="radio" name="q7" value="b"> Because resources are specialized, so opportunity cost rises as production of a good expands</label>
+          <label><input type="radio" name="q7" value="c"> Because consumers experience diminishing marginal utility</label>
+          <label><input type="radio" name="q7" value="d"> Because technology is held fixed when the frontier is drawn</label>
+        </div>
+      </div>
+
+      <button type="submit">Submit answers</button>
+    </form>
+    <div id="result"></div>
+  </section>
+
+  <!-- 4. NAV -->
+  <nav class="lesson-nav">
+    <a href="index.html">← All lessons</a>
+    <a href="../harness/results.html">Results &amp; mastery →</a>
+  </nav>
+
+</div>
+
+<script>
+const LESSON_ADDRESS = "102.1";
+const SVGNS = "http://www.w3.org/2000/svg";
+function el(tag, attrs, parent) {
+  const e = document.createElementNS(SVGNS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (parent) parent.appendChild(e);
+  return e;
+}
+
+/* Shared PPF data: piecewise-linear through the production menu. */
+const PPF_PTS = [[0,1000],[100,950],[200,850],[300,700],[400,400],[500,0]];
+function ppfE(d) {            // e-bikes attainable at d drones (linear interp)
+  if (d <= 0) return PPF_PTS[0][1];
+  if (d >= 500) return 0;
+  for (let i = 1; i < PPF_PTS.length; i++) {
+    if (d <= PPF_PTS[i][0]) {
+      const [x0,y0] = PPF_PTS[i-1], [x1,y1] = PPF_PTS[i];
+      return y0 + (y1-y0)*(d-x0)/(x1-x0);
+    }
+  }
+  return 0;
+}
+function ppfMOC(d) {          // e-bikes per drone on current segment
+  for (let i = 1; i < PPF_PTS.length; i++) {
+    if (d <= PPF_PTS[i][0]) {
+      const [x0,y0] = PPF_PTS[i-1], [x1,y1] = PPF_PTS[i];
+      return (y0-y1)/(x1-x0);
+    }
+  }
+  return (PPF_PTS[4][1]-PPF_PTS[5][1])/(PPF_PTS[5][0]-PPF_PTS[4][0]);
+}
+
+/* Axis helpers for a 560x390 viewBox chart. */
+function makeScales(xmax, ymax) {
+  const L = 64, R = 535, T = 18, B = 340;
+  return {
+    x: d => L + (d/xmax)*(R-L),
+    y: e => B - (e/ymax)*(B-T),
+    L, R, T, B, xmax, ymax
+  };
+}
+function drawAxes(svg, s, xlab, ylab, xstep, ystep) {
+  el("line", {x1:s.L, y1:s.B, x2:s.R, y2:s.B, stroke:"#1a1a2e", "stroke-width":1.5}, svg);
+  el("line", {x1:s.L, y1:s.T, x2:s.L, y2:s.B, stroke:"#1a1a2e", "stroke-width":1.5}, svg);
+  for (let v = 0; v <= s.xmax; v += xstep) {
+    const t = el("text", {x:s.x(v), y:s.B+18, "text-anchor":"middle",
+                          "font-size":"11", fill:"#6b7280"}, svg);
+    t.textContent = v;
+    el("line", {x1:s.x(v), y1:s.B, x2:s.x(v), y2:s.B+4, stroke:"#6b7280"}, svg);
+  }
+  for (let v = 0; v <= s.ymax; v += ystep) {
+    const t = el("text", {x:s.L-8, y:s.y(v)+4, "text-anchor":"end",
+                          "font-size":"11", fill:"#6b7280"}, svg);
+    t.textContent = v;
+    el("line", {x1:s.L-4, y1:s.y(v), x2:s.L, y2:s.y(v), stroke:"#6b7280"}, svg);
+  }
+  const xl = el("text", {x:(s.L+s.R)/2, y:s.B+36, "text-anchor":"middle",
+                         "font-size":"12.5", "font-weight":"600", fill:"#1a1a2e"}, svg);
+  xl.textContent = xlab;
+  const yl = el("text", {x:14, y:(s.T+s.B)/2, "font-size":"12.5", "font-weight":"600",
+                         fill:"#1a1a2e", transform:`rotate(-90 14 ${(s.T+s.B)/2})`,
+                         "text-anchor":"middle"}, svg);
+  yl.textContent = ylab;
+}
+function pathFrom(pts, s, scaleX=1, scaleY=1) {
+  return pts.map((p,i) => (i?"L":"M") + s.x(p[0]*scaleX).toFixed(1) + " "
+                        + s.y(p[1]*scaleY).toFixed(1)).join(" ");
+}
+
+/* ---------- viz-1: walk the frontier + classify clicked points ---------- */
+(function() {
+  const svg = document.getElementById("v1-svg");
+  const s = makeScales(550, 1100);
+  drawAxes(svg, s, "Drones per month", "E-bikes per month", 100, 200);
+  el("path", {d: pathFrom(PPF_PTS, s), fill:"none", stroke:"#2d6a4f",
+              "stroke-width":3}, svg);
+  PPF_PTS.forEach((p,i) => {
+    el("circle", {cx:s.x(p[0]), cy:s.y(p[1]), r:3.5, fill:"#2d6a4f"}, svg);
+    const t = el("text", {x:s.x(p[0])+8, y:s.y(p[1])-6, "font-size":"11",
+                          "font-weight":"700", fill:"#2d6a4f"}, svg);
+    t.textContent = "ABCDEF"[i];
+  });
+  const dropX = el("line", {stroke:"#9ca3af", "stroke-dasharray":"4 3"}, svg);
+  const dropY = el("line", {stroke:"#9ca3af", "stroke-dasharray":"4 3"}, svg);
+  const dot = el("circle", {r:7, fill:"#1d4ed8", stroke:"#fff", "stroke-width":2}, svg);
+  const testDot = el("circle", {r:6, fill:"none", stroke:"#b45309",
+                                "stroke-width":2.5, visibility:"hidden"}, svg);
+  const slider = document.getElementById("v1-d");
+  const read = document.getElementById("v1-read");
+  function update() {
+    const d = +slider.value, e = ppfE(d), moc = ppfMOC(Math.max(d, 1));
+    document.getElementById("v1-dval").textContent = d;
+    dot.setAttribute("cx", s.x(d)); dot.setAttribute("cy", s.y(e));
+    dropX.setAttribute("x1", s.x(d)); dropX.setAttribute("y1", s.y(e));
+    dropX.setAttribute("x2", s.x(d)); dropX.setAttribute("y2", s.B);
+    dropY.setAttribute("x1", s.L); dropY.setAttribute("y1", s.y(e));
+    dropY.setAttribute("x2", s.x(d)); dropY.setAttribute("y2", s.y(e));
+    read.innerHTML = `<span class="lbl">Plan:</span> ${d} drones, ${Math.round(e)} e-bikes
+      &nbsp; <span class="lbl">Marginal opportunity cost here:</span> ${moc.toFixed(1)} e-bikes per drone`;
+  }
+  slider.addEventListener("input", update);
+  update();
+
+  svg.addEventListener("click", ev => {
+    const pt = svg.createSVGPoint();
+    pt.x = ev.clientX; pt.y = ev.clientY;
+    const p = pt.matrixTransform(svg.getScreenCTM().inverse());
+    const d = (p.x - s.L)/(s.R-s.L)*s.xmax;
+    const e = (s.B - p.y)/(s.B-s.T)*s.ymax;
+    if (d < 0 || e < 0 || d > s.xmax || e > s.ymax) return;
+    testDot.setAttribute("cx", s.x(d)); testDot.setAttribute("cy", s.y(e));
+    testDot.setAttribute("visibility", "visible");
+    const frontier = ppfE(d);
+    const msg = document.getElementById("v1-msg");
+    const slack = frontier - e;
+    if (d > 500 || slack < -15) {
+      msg.className = "vizmsg un";
+      msg.textContent = `(${Math.round(d)}, ${Math.round(e)}) — UNATTAINABLE: beyond the frontier with current resources and technology.`;
+    } else if (Math.abs(slack) <= 15) {
+      msg.className = "vizmsg eff";
+      msg.textContent = `(${Math.round(d)}, ${Math.round(e)}) — EFFICIENT: on the frontier; more drones now means fewer e-bikes.`;
+    } else {
+      msg.className = "vizmsg ineff";
+      msg.textContent = `(${Math.round(d)}, ${Math.round(e)}) — ATTAINABLE BUT INEFFICIENT: idle or misallocated resources; about ${Math.round(slack)} more e-bikes are free at this drone count.`;
+    }
+  });
+})();
+
+/* ---------- viz-2: shift / pivot the frontier ---------- */
+(function() {
+  const svg = document.getElementById("v2-svg");
+  const s = makeScales(750, 1500);
+  drawAxes(svg, s, "Drones per month", "E-bikes per month", 150, 300);
+  el("path", {d: pathFrom(PPF_PTS, s), fill:"none", stroke:"#9ca3af",
+              "stroke-width":2, "stroke-dasharray":"6 4"}, svg);
+  const cur = el("path", {fill:"none", stroke:"#2d6a4f", "stroke-width":3}, svg);
+  const ids = ["v2-k","v2-a","v2-b"];
+  function update() {
+    const k = +document.getElementById("v2-k").value/100;
+    const a = +document.getElementById("v2-a").value/100;
+    const b = +document.getElementById("v2-b").value/100;
+    document.getElementById("v2-kval").textContent = Math.round(k*100)+"%";
+    document.getElementById("v2-aval").textContent = Math.round(a*100)+"%";
+    document.getElementById("v2-bval").textContent = Math.round(b*100)+"%";
+    cur.setAttribute("d", pathFrom(PPF_PTS, s, a*k, b*k));
+    const msg = document.getElementById("v2-msg");
+    if (a === b && k === 1 && a === 1) {
+      msg.textContent = "Dashed curve = original frontier. Solid = after your changes.";
+    } else if (a !== 1 && b === 1 && k === 1) {
+      msg.textContent = "Drone-only technical change PIVOTS the frontier: the drone intercept moves, the e-bike intercept doesn't — yet mixed plans can still yield more of both goods.";
+    } else if (b !== 1 && a === 1 && k === 1) {
+      msg.textContent = "E-bike-only technical change pivots the frontier the other way: only the e-bike intercept moves.";
+    } else if (k !== 1 && a === 1 && b === 1) {
+      msg.textContent = k > 1
+        ? "More resources (labor, capital) shift the whole frontier outward — growth."
+        : "Losing resources shifts the whole frontier inward — every efficient plan now yields less.";
+    } else {
+      msg.textContent = "A combination: overall resources scale the whole frontier; good-specific technology stretches one axis.";
+    }
+  }
+  ids.forEach(id => document.getElementById(id).addEventListener("input", update));
+  document.getElementById("v2-reset").addEventListener("click", () => {
+    document.getElementById("v2-k").value = 100;
+    document.getElementById("v2-a").value = 100;
+    document.getElementById("v2-b").value = 100;
+    update();
+  });
+  update();
+})();
+
+/* ---------- viz-3: comparative advantage / joint frontier ---------- */
+(function() {
+  const ANA = {r:12, m:4}, BEN = {r:6, m:3};   // daily maxima
+  const ocAna = ANA.r/ANA.m, ocBen = BEN.r/BEN.m;  // reports forgone per model
+  const totR = ANA.r + BEN.r, totM = ANA.m + BEN.m;
+  const svg = document.getElementById("v3-svg");
+  const s = makeScales(8, 20);
+  drawAxes(svg, s, "Models per day (team)", "Reports per day (team)", 1, 4);
+
+  // Joint frontier: lower-opportunity-cost model producer specializes first.
+  const first = ocBen <= ocAna ? BEN : ANA;
+  const second = first === BEN ? ANA : BEN;
+  const kink = [first.m, totR - (first.r)];   // first producer fully on models
+  const joint = [[0, totR], kink, [totM, 0]];
+  el("path", {d: pathFrom(joint, s), fill:"none", stroke:"#2d6a4f", "stroke-width":3}, svg);
+  // Proportional (no-specialization) line.
+  el("line", {x1:s.x(0), y1:s.y(totR), x2:s.x(totM), y2:s.y(0),
+              stroke:"#9ca3af", "stroke-width":2, "stroke-dasharray":"6 4"}, svg);
+  const lt = el("text", {x:s.x(kink[0])+8, y:s.y(kink[1])-8, "font-size":"11.5",
+                         "font-weight":"700", fill:"#2d6a4f"}, svg);
+  lt.textContent = "kink: Ben fully on models";
+  const gap = el("line", {stroke:"#b45309", "stroke-width":2.5}, svg);
+  const dotLine = el("circle", {r:6, fill:"#9ca3af", stroke:"#fff", "stroke-width":2}, svg);
+  const dotFront = el("circle", {r:6, fill:"#2d6a4f", stroke:"#fff", "stroke-width":2}, svg);
+
+  function frontierR(m) {
+    if (m <= kink[0]) return totR - ocBen*m;          // Ben's segment (flatter)
+    return kink[1] - ocAna*(m - kink[0]);             // then Ana's
+  }
+  const slider = document.getElementById("v3-t");
+  function update() {
+    const t = +slider.value/100;
+    document.getElementById("v3-tval").textContent = Math.round(t*100)+"%";
+    const m = t*totM;                       // both split time identically
+    const rLine = (1-t)*totR;
+    const rFront = frontierR(m);
+    dotLine.setAttribute("cx", s.x(m)); dotLine.setAttribute("cy", s.y(rLine));
+    dotFront.setAttribute("cx", s.x(m)); dotFront.setAttribute("cy", s.y(rFront));
+    gap.setAttribute("x1", s.x(m)); gap.setAttribute("y1", s.y(rLine));
+    gap.setAttribute("x2", s.x(m)); gap.setAttribute("y2", s.y(rFront));
+    document.getElementById("v3-read").innerHTML =
+      `<span class="lbl">Same-split team:</span> ${m.toFixed(1)} models, ${rLine.toFixed(1)} reports
+       &nbsp; <span class="lbl">Specialized by comparative advantage:</span> ${m.toFixed(1)} models, ${rFront.toFixed(1)} reports`;
+    const gain = rFront - rLine;
+    document.getElementById("v3-msg").textContent = gain > 0.05
+      ? `Specialization gain at this mix: +${gain.toFixed(1)} reports per day for free — same people, same hours, better assignment.`
+      : "At the endpoints there's nothing to reassign — the gain appears in between.";
+  }
+  slider.addEventListener("input", update);
+  update();
+})();
+
+/* ---------- quiz submit (grading is server-side) ---------- */
+document.getElementById("quizForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const fd = new FormData(e.target);
+  const answers = {};
+  document.querySelectorAll(".q").forEach(q => {
+    const qid = q.dataset.qid;
+    answers[qid] = fd.get(qid);
+  });
+
+  const payload = { address: LESSON_ADDRESS, answers, ts: Date.now() };
+
+  try {
+    const res = await fetch(location.protocol === "file:"
+        ? "http://127.0.0.1:8753/record" : "/record", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+    if (data.error) {
+      document.getElementById("result").textContent = "Recorder error: " + data.error;
+      return;
+    }
+    document.getElementById("result").textContent =
+      `Score: ${data.correct}/${data.total}. ` +
+      (data.weak_topics?.length ? `Review: ${data.weak_topics.join(", ")}` : "Nice work.");
+    (data.results || []).forEach(r => {
+      const q = document.querySelector(`.q[data-qid="${r.qid}"]`);
+      if (!q) return;
+      q.classList.remove("right", "wrong");
+      q.classList.add(r.is_correct ? "right" : "wrong");
+      let fb = q.querySelector(".fb");
+      if (!fb) { fb = document.createElement("div"); fb.className = "fb"; q.appendChild(fb); }
+      fb.textContent = "";
+      const mark = document.createElement("b");
+      mark.textContent = r.is_correct ? "✓ Correct" : "✗ Incorrect";
+      fb.appendChild(mark);
+      if (!r.is_correct && r.explanation) fb.append(" — " + r.explanation);
+    });
+  } catch (err) {
+    const blob = new Blob([JSON.stringify(payload, null, 2)], {type:"application/json"});
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `${LESSON_ADDRESS}.attempt.json`;
+    a.click();
+    document.getElementById("result").textContent =
+      "Recorder offline — downloaded attempt JSON. Run scripts/serve.py and import it.";
+  }
+});
+</script>
+</body>
+</html>

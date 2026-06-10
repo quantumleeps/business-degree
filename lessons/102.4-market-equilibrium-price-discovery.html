@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>102.4 — Market equilibrium and price discovery</title>
+<style>
+  :root { --ink:#1a1a2e; --paper:#fdfdfb; --accent:#2d6a4f; --accent2:#1d4ed8;
+          --muted:#6b7280; --warn:#b45309; --bad:#b91c1c; }
+  body { margin:0; font:16px/1.6 system-ui,sans-serif; color:var(--ink);
+         background:var(--paper); }
+  .wrap { max-width:860px; margin:0 auto; padding:32px 20px 80px; }
+  header .addr { font:600 13px ui-monospace,monospace; color:var(--accent);
+                 letter-spacing:.05em; }
+  h1 { font-size:30px; margin:.2em 0 .1em; line-height:1.2; }
+  .why { color:var(--muted); font-style:italic; margin-bottom:2em; }
+  section { margin:2.5em 0; }
+  h2 { border-bottom:2px solid var(--accent); padding-bottom:4px; }
+  h3 { margin:1.6em 0 .3em; font-size:18px; }
+  .lead { font-size:17px; }
+  .note { background:#f0f7f4; border-left:4px solid var(--accent);
+          padding:12px 16px; border-radius:0 8px 8px 0; margin:1.2em 0;
+          font-size:15px; }
+  .eq { font:600 16px ui-monospace,monospace; text-align:center;
+        background:#fff; border:1px solid #e5e7eb; border-radius:10px;
+        padding:14px; margin:1.2em 0; }
+  table.book { border-collapse:collapse; width:100%; margin:1em 0; font-size:14.5px; }
+  table.book th, table.book td { border:1px solid #e5e7eb; padding:6px 9px;
+        text-align:left; vertical-align:top; }
+  table.book th { background:#f9fafb; }
+  table.book td.num, table.book th.num { text-align:right;
+        font-family:ui-monospace,monospace; white-space:nowrap; }
+  table.book td.up { color:var(--accent); font-weight:700; }
+  table.book td.dn { color:var(--bad); font-weight:700; }
+  table.book td.amb { color:var(--warn); font-weight:700; }
+  ul.tight li { margin:.25em 0; }
+  .hint { font-size:13px; color:var(--muted); }
+  .visual { border:1px solid #e5e7eb; border-radius:12px; padding:16px;
+            background:#fff; }
+  .controls { display:flex; flex-wrap:wrap; gap:8px 14px; margin-bottom:10px;
+              align-items:center; }
+  .controls label { font-size:13.5px; font-weight:600; }
+  .controls input[type=range] { vertical-align:middle; width:150px; }
+  .controls .val { font:600 13px ui-monospace,monospace; color:var(--accent2); }
+  .controls button { background:#e5e7eb; color:#374151; font-size:12.5px;
+                     padding:6px 10px; }
+  .controls button.on { background:var(--accent2); color:#fff; }
+  .controls button.reset { background:var(--muted); color:#fff; }
+  .controls button.go { background:var(--accent); color:#fff; }
+  .readout { font:600 13.5px ui-monospace,monospace; margin-top:8px; }
+  .readout .lbl { color:var(--muted); font-weight:600; font-family:system-ui; }
+  .readout .short { color:var(--bad); } .readout .surp { color:var(--warn); }
+  .vizmsg { margin-top:8px; font-size:14px; min-height:2.6em; }
+  svg { display:block; max-width:100%; height:auto; }
+  button { background:var(--accent); color:#fff; border:0; padding:10px 18px;
+           border-radius:8px; font-size:15px; cursor:pointer; }
+  button:hover { filter:brightness(1.07); }
+  table.tlog { border-collapse:collapse; width:100%; margin-top:8px; font-size:12.5px; }
+  table.tlog th, table.tlog td { border-bottom:1px solid #f3f4f6; padding:3px 8px;
+        text-align:right; font-family:ui-monospace,monospace; white-space:nowrap; }
+  table.tlog th { background:#f9fafb; font-family:system-ui; }
+  table.tlog td:first-child, table.tlog th:first-child { text-align:left; }
+  .q { margin:1.2em 0; padding:14px; border:1px solid #e5e7eb; border-radius:10px; }
+  .q .opts label { display:block; margin:4px 0; cursor:pointer; }
+  .q input[type=number], .q input[type=text] { font-size:15px; padding:6px 8px;
+        border:1px solid #d1d5db; border-radius:6px; width:180px; }
+  .q.right { border-color:var(--accent); background:#f0f7f4; }
+  .q.wrong { border-color:#b91c1c; background:#fef2f2; }
+  .q .fb { margin-top:10px; padding-top:8px; border-top:1px dashed #d1d5db;
+        font-size:14px; }
+  .q.right .fb b { color:var(--accent); }
+  .q.wrong .fb b { color:#b91c1c; }
+  #result { margin-top:1em; font-weight:600; }
+  .lesson-nav { display:flex; justify-content:space-between; margin-top:3em;
+       padding-top:1em; border-top:1px solid #e5e7eb; }
+  .lesson-nav a { color:var(--accent); font-weight:600; text-decoration:none; }
+  .lesson-nav a:hover { text-decoration:underline; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="addr">102.4</div>
+    <h1>Market equilibrium and price discovery</h1>
+    <p class="why">No committee sets the price of coffee, lumber, or software engineers — yet those prices exist, update daily, and coordinate millions of strangers. This lesson is the mechanism that makes that work.</p>
+  </header>
+
+  <!-- 1. LEARN -->
+  <section id="learn">
+    <h2>Learn</h2>
+
+    <p class="lead">102.2 built the buyer side, 102.3 the seller side. Put them
+    in the same market and something remarkable happens: a single price emerges
+    at which buyers' and sellers' plans are mutually consistent. This lesson
+    covers what equilibrium is, how to compute it, why prices move toward it,
+    and how to predict where it goes when conditions change (<em>comparative
+    statics</em>) — the workhorse skill of applied microeconomics.</p>
+
+    <h3>Equilibrium: where plans agree</h3>
+    <p>The <strong>market equilibrium</strong> is the price–quantity pair
+    (P*, Q*) at which quantity demanded equals quantity supplied:</p>
+    <div class="eq">Q<sub>d</sub>(P*) = Q<sub>s</sub>(P*) = Q*</div>
+    <p>P* is the <strong>market-clearing price</strong>: every buyer willing to
+    pay it finds a seller, every seller willing to accept it finds a buyer, and
+    nothing is left over. "Equilibrium" means exactly what it says — a state
+    with <em>no built-in tendency to change</em>. At any other price, someone's
+    plans are frustrated, and frustrated traders change their behavior; at P*,
+    no one has a reason to.</p>
+    <p><b>Worked example</b> (used throughout this lesson). The weekly market
+    for cold-brew concentrate bottles in one city:</p>
+    <div class="eq">Q<sub>d</sub> = 120 − 4P &nbsp;&nbsp;&nbsp; Q<sub>s</sub> = −30 + 6P</div>
+    <p>Set them equal and solve:</p>
+    <div class="eq">120 − 4P = −30 + 6P &nbsp;→&nbsp; 150 = 10P &nbsp;→&nbsp; P* = $15
+    <br>Q* = 120 − 4(15) = 60 &nbsp;(check: −30 + 6(15) = 60 ✓)</div>
+    <p>Always run the check on the <em>other</em> equation — it catches sign
+    errors instantly.</p>
+
+    <h3>Off equilibrium: surplus and shortage</h3>
+    <p>What if the price is wrong? Both directions are instructive:</p>
+    <ul class="tight">
+      <li><b>Price above P*</b> — say $20: Q<sub>s</sub> = 90 but Q<sub>d</sub> = 40.
+      Sellers bring 50 more bottles than buyers want: a <strong>surplus</strong>
+      (excess supply) of 50. Inventory piles up. Sellers holding unsold stock
+      cut price to move it; as price falls, quantity demanded rises and
+      quantity supplied falls until the gap closes at $15.</li>
+      <li><b>Price below P*</b> — say $10: Q<sub>d</sub> = 80 but Q<sub>s</sub> = 30:
+      a <strong>shortage</strong> (excess demand) of 50. Shelves empty early,
+      waiting lists form, and frustrated buyers bid more (or sellers, seeing
+      stockouts, raise the posted price); as price rises, the gap closes from
+      both sides.</li>
+    </ul>
+    <div class="eq">Surplus at P: &nbsp;Q<sub>s</sub>(P) − Q<sub>d</sub>(P) &gt; 0
+    &nbsp;&nbsp;|&nbsp;&nbsp; Shortage at P: &nbsp;Q<sub>d</sub>(P) − Q<sub>s</sub>(P) &gt; 0</div>
+    <p>Crucially, the correction is a <em>movement along both curves</em> —
+    neither curve shifts. The curves describe behavior at every price; the
+    price is what moves.</p>
+
+    <h3>Price discovery: how markets find P* without anyone computing it</h3>
+    <p>No one in the cold-brew market solves the algebra. Prices converge on
+    P* through decentralized trial and error, and the signals doing the work
+    are mundane:</p>
+    <ul class="tight">
+      <li><b>Inventories and stockouts.</b> Unplanned inventory buildup tells a
+      seller "your price is above what the market clears at"; chronic sellouts
+      and backorders say the opposite. Retailers re-price on exactly these
+      signals.</li>
+      <li><b>Auctions and order books.</b> Securities and commodity exchanges
+      make the process explicit: standing bids and asks adjust until they
+      cross. The textbook image of an auctioneer calling out prices until
+      excess demand is zero (Walras's <em>tâtonnement</em>, "groping") is a
+      stylized version of this.</li>
+      <li><b>Negotiation and quotes.</b> In B2B markets, quotes that win too
+      easily drift up; quotes that keep losing drift down.</li>
+    </ul>
+    <p>The deeper point (associated with Hayek): the equilibrium price
+    <em>aggregates dispersed information</em> no single participant holds. A
+    frost in Brazil raises coffee's price worldwide; millions of users economize
+    on coffee without knowing why. The price is the signal <em>and</em> the
+    incentive at once — that is what "the price system coordinates" means, and
+    it's why no central planner with a spreadsheet is needed to balance
+    quantities.</p>
+    <div class="note"><b>Preview — when price isn't allowed to move.</b> If a
+    law caps price below P* (a ceiling, like rent control) the shortage becomes
+    <em>permanent</em>: queues, waiting lists, and non-price rationing replace
+    the price signal. A floor above P* (like a minimum wage in the labor
+    market) makes the surplus permanent. Full treatment when we get to policy
+    applications; for now, note that the surplus/shortage logic above only
+    self-corrects when price is free to adjust.</div>
+
+    <h3>Comparative statics: predicting the new equilibrium</h3>
+    <p>The most common applied question: <em>conditions changed — what happens
+    to price and quantity?</em> The method is always the same three steps:</p>
+    <ol>
+      <li>Decide <b>which curve</b> shifts (demand shifter or supply shifter? —
+      the determinant lists from 102.2 and 102.3).</li>
+      <li>Decide <b>which direction</b>.</li>
+      <li>Read the new intersection.</li>
+    </ol>
+    <p>The four single-shift cases:</p>
+    <table class="book">
+      <tr><th>Shift</th><th>P*</th><th>Q*</th><th>Example</th></tr>
+      <tr><td>Demand ↑ (right)</td><td class="up">rises</td><td class="up">rises</td><td>Heat wave → cold-brew demand jumps</td></tr>
+      <tr><td>Demand ↓ (left)</td><td class="dn">falls</td><td class="dn">falls</td><td>Cold snap; tastes move on</td></tr>
+      <tr><td>Supply ↑ (right)</td><td class="dn">falls</td><td class="up">rises</td><td>Coffee bean prices drop; brewing tech improves</td></tr>
+      <tr><td>Supply ↓ (left)</td><td class="up">rises</td><td class="dn">falls</td><td>Bean costs spike; sellers exit</td></tr>
+    </table>
+    <p><b>Worked single shift.</b> A heat wave shifts demand to
+    Q<sub>d</sub> = 150 − 4P (supply unchanged):</p>
+    <div class="eq">150 − 4P = −30 + 6P → 180 = 10P → P* = $18, Q* = 78</div>
+    <p>Price and quantity both rose — the signature of a demand increase.
+    (If instead you observed P up but Q <em>down</em>, a supply decrease did
+    it. Reading the (ΔP, ΔQ) pair backwards to infer which curve moved is a
+    genuinely useful diagnostic.)</p>
+    <p><b>When both curves shift</b>, one variable is predictable and the other
+    depends on the relative sizes of the shifts — it is <strong>ambiguous</strong>
+    until you know magnitudes:</p>
+    <table class="book">
+      <tr><th>Combination</th><th>P*</th><th>Q*</th></tr>
+      <tr><td>D ↑ and S ↑</td><td class="amb">ambiguous</td><td class="up">rises</td></tr>
+      <tr><td>D ↑ and S ↓</td><td class="up">rises</td><td class="amb">ambiguous</td></tr>
+      <tr><td>D ↓ and S ↑</td><td class="dn">falls</td><td class="amb">ambiguous</td></tr>
+      <tr><td>D ↓ and S ↓</td><td class="amb">ambiguous</td><td class="dn">falls</td></tr>
+    </table>
+    <p>Don't memorize the table — reconstruct it. Each shift "votes" on P and
+    on Q: a demand rise votes P↑ Q↑; a supply rise votes P↓ Q↑. Where the votes
+    agree, the direction is certain; where they conflict, magnitudes decide.</p>
+  </section>
+
+  <!-- 2. VISUALS -->
+  <section id="see-1" class="see">
+    <h2>See it: equilibrium, surplus, and shortage</h2>
+    <p>The cold-brew market: Q<sub>d</sub> = 120 − 4P (blue), Q<sub>s</sub> = −30 + 6P
+    (green). Shift either curve and watch (P*, Q*) move. Then drag the
+    <b>market price</b> away from equilibrium: the orange bar is the surplus or
+    shortage that price creates — the disequilibrium that pressures price back.</p>
+    <div class="visual" id="viz-1">
+      <div class="controls">
+        <label>Demand shift: <input type="range" id="v1-dd" min="-40" max="60" step="5" value="0">
+        <span class="val" id="v1-ddval">0</span></label>
+        <label>Supply shift: <input type="range" id="v1-ds" min="-40" max="60" step="5" value="0">
+        <span class="val" id="v1-dsval">0</span></label>
+        <button class="reset" id="v1-reset">Reset</button>
+      </div>
+      <div class="controls">
+        <label>Market price: $<span class="val" id="v1-pval">15.0</span>
+        <input type="range" id="v1-p" min="5" max="28" step="0.5" value="15"></label>
+        <button id="v1-snap">Snap to equilibrium</button>
+      </div>
+      <svg id="v1-svg" viewBox="0 0 560 390"></svg>
+      <div class="readout" id="v1-read"></div>
+    </div>
+  </section>
+
+  <section id="see-2" class="see">
+    <h2>See it: price discovery by trial and error</h2>
+    <p>Start the market at any price and press <b>Run</b>. Each "week," sellers
+    react only to what they can see — unsold inventory or empty shelves — and
+    nudge the price against the gap (a tâtonnement process). No one computes
+    P* = $15; the market gropes its way there.</p>
+    <div class="visual" id="viz-2">
+      <div class="controls">
+        <label>Starting price: $<span class="val" id="v2-p0val">24</span>
+        <input type="range" id="v2-p0" min="5" max="28" step="1" value="24"></label>
+        <button class="go" id="v2-run">Run</button>
+        <button class="reset" id="v2-reset">Reset</button>
+      </div>
+      <svg id="v2-svg" viewBox="0 0 560 390"></svg>
+      <div class="readout" id="v2-read"></div>
+      <table class="tlog" id="v2-log"></table>
+    </div>
+  </section>
+
+  <section id="see-3" class="see">
+    <h2>See it: comparative statics, case by case</h2>
+    <p>Pick a demand shift, a supply shift, or both. Dashed curves and the gray
+    dot are the old equilibrium; solid curves and the green dot are the new
+    one. The verdict line states what's certain and what depends on
+    magnitudes — drag the shift sizes in the first visual if you want to see an
+    "ambiguous" variable change direction.</p>
+    <div class="visual" id="viz-3">
+      <div class="controls" id="v3-dbtns">
+        <span style="font-weight:700;font-size:13px;">Demand:</span>
+        <button data-v="0" class="on">No change</button>
+        <button data-v="30">D ↑</button>
+        <button data-v="-30">D ↓</button>
+      </div>
+      <div class="controls" id="v3-sbtns">
+        <span style="font-weight:700;font-size:13px;">Supply:</span>
+        <button data-v="0" class="on">No change</button>
+        <button data-v="30">S ↑</button>
+        <button data-v="-30">S ↓</button>
+      </div>
+      <svg id="v3-svg" viewBox="0 0 560 390"></svg>
+      <div class="vizmsg" id="v3-msg"></div>
+    </div>
+  </section>
+
+  <!-- 3. QUIZ -->
+  <section id="quiz">
+    <h2>Check yourself</h2>
+    <form id="quizForm">
+
+      <div class="q" data-qid="q1" data-type="mc">
+        <p><strong>1.</strong> At the equilibrium price of a competitive market:</p>
+        <div class="opts">
+          <label><input type="radio" name="q1" value="a"> Every consumer who wants the good obtains it</label>
+          <label><input type="radio" name="q1" value="b"> Quantity demanded equals quantity supplied, and there is no tendency for price to change</label>
+          <label><input type="radio" name="q1" value="c"> Sellers earn zero profit</label>
+          <label><input type="radio" name="q1" value="d"> The government has set the price where surplus equals shortage</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q2" data-type="num">
+        <p><strong>2.</strong> A market has Q<sub>d</sub> = 200 − 5P and Q<sub>s</sub> = 20 + 4P. Find the equilibrium price P* (in dollars).</p>
+        <input type="number" name="q2" step="any" /> <span class="hint">dollars</span>
+      </div>
+
+      <div class="q" data-qid="q3" data-type="num">
+        <p><strong>3.</strong> For that same market (Q<sub>d</sub> = 200 − 5P, Q<sub>s</sub> = 20 + 4P), find the equilibrium quantity Q*.</p>
+        <input type="number" name="q3" step="any" /> <span class="hint">units</span>
+      </div>
+
+      <div class="q" data-qid="q4" data-type="num">
+        <p><strong>4.</strong> Still in that market, suppose a trade association convinces sellers to post a price of $26. How large is the resulting surplus or shortage, in units? (Enter the size of the gap as a positive number.)</p>
+        <input type="number" name="q4" step="any" /> <span class="hint">units</span>
+      </div>
+
+      <div class="q" data-qid="q5" data-type="mc">
+        <p><strong>5.</strong> A market is in shortage at the current price. As the price rises toward equilibrium, what happens?</p>
+        <div class="opts">
+          <label><input type="radio" name="q5" value="a"> The demand curve shifts left until it meets supply</label>
+          <label><input type="radio" name="q5" value="b"> The supply curve shifts right until the shortage is gone</label>
+          <label><input type="radio" name="q5" value="c"> Quantity demanded falls and quantity supplied rises — movements along both fixed curves</label>
+          <label><input type="radio" name="q5" value="d"> Both curves shift toward each other until they intersect at the new price</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q6" data-type="mc">
+        <p><strong>6.</strong> Demand and supply both increase at the same time. What can be predicted about the new equilibrium <em>without</em> knowing the sizes of the shifts?</p>
+        <div class="opts">
+          <label><input type="radio" name="q6" value="a"> Price rises; quantity is ambiguous</label>
+          <label><input type="radio" name="q6" value="b"> Quantity rises; price is ambiguous</label>
+          <label><input type="radio" name="q6" value="c"> Both price and quantity rise</label>
+          <label><input type="radio" name="q6" value="d"> Nothing can be predicted without magnitudes</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q7" data-type="mc">
+        <p><strong>7.</strong> In the specialty-coffee market, café wages rise sharply (a major input cost), and at the same time consumer incomes rise (specialty coffee is a normal good). The new equilibrium will have:</p>
+        <div class="opts">
+          <label><input type="radio" name="q7" value="a"> Higher price; quantity change ambiguous</label>
+          <label><input type="radio" name="q7" value="b"> Lower price; quantity change ambiguous</label>
+          <label><input type="radio" name="q7" value="c"> Higher quantity; price change ambiguous</label>
+          <label><input type="radio" name="q7" value="d"> Lower quantity and lower price</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q8" data-type="mc">
+        <p><strong>8.</strong> A retailer notices unplanned inventory accumulating week after week at its current posted price. In supply-and-demand terms, the inventory buildup is evidence that:</p>
+        <div class="opts">
+          <label><input type="radio" name="q8" value="a"> The posted price is below the market-clearing level</label>
+          <label><input type="radio" name="q8" value="b"> The posted price is above the market-clearing level, and cutting it would shrink the gap</label>
+          <label><input type="radio" name="q8" value="c"> Demand has increased, shifting the curve right</label>
+          <label><input type="radio" name="q8" value="d"> The market has reached equilibrium, since goods are available</label>
+        </div>
+      </div>
+
+      <button type="submit">Submit answers</button>
+    </form>
+    <div id="result"></div>
+  </section>
+
+  <!-- 4. NAV -->
+  <nav class="lesson-nav">
+    <a href="index.html">← All lessons</a>
+    <a href="../harness/results.html">Results &amp; mastery →</a>
+  </nav>
+
+</div>
+
+<script>
+const LESSON_ADDRESS = "102.4";
+const SVGNS = "http://www.w3.org/2000/svg";
+function el(tag, attrs, parent) {
+  const e = document.createElementNS(SVGNS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (parent) parent.appendChild(e);
+  return e;
+}
+function makeScales(xmax, ymax) {
+  const L = 56, R = 535, T = 18, B = 340;
+  return { x: q => L + (q/xmax)*(R-L), y: p => B - (p/ymax)*(B-T),
+           L, R, T, B, xmax, ymax };
+}
+function drawAxes(svg, s, xlab, ylab, xstep, ystep) {
+  el("line", {x1:s.L, y1:s.B, x2:s.R, y2:s.B, stroke:"#1a1a2e", "stroke-width":1.5}, svg);
+  el("line", {x1:s.L, y1:s.T, x2:s.L, y2:s.B, stroke:"#1a1a2e", "stroke-width":1.5}, svg);
+  for (let v = 0; v <= s.xmax; v += xstep) {
+    const t = el("text", {x:s.x(v), y:s.B+18, "text-anchor":"middle",
+                          "font-size":"11", fill:"#6b7280"}, svg);
+    t.textContent = v;
+    el("line", {x1:s.x(v), y1:s.B, x2:s.x(v), y2:s.B+4, stroke:"#6b7280"}, svg);
+  }
+  for (let v = 0; v <= s.ymax; v += ystep) {
+    const t = el("text", {x:s.L-8, y:s.y(v)+4, "text-anchor":"end",
+                          "font-size":"11", fill:"#6b7280"}, svg);
+    t.textContent = "$" + v;
+    el("line", {x1:s.L-4, y1:s.y(v), x2:s.L, y2:s.y(v), stroke:"#6b7280"}, svg);
+  }
+  const xl = el("text", {x:(s.L+s.R)/2, y:s.B+36, "text-anchor":"middle",
+                         "font-size":"12.5", "font-weight":"600", fill:"#1a1a2e"}, svg);
+  xl.textContent = xlab;
+  const yl = el("text", {x:14, y:(s.T+s.B)/2, "font-size":"12.5", "font-weight":"600",
+                         fill:"#1a1a2e", transform:`rotate(-90 14 ${(s.T+s.B)/2})`,
+                         "text-anchor":"middle"}, svg);
+  yl.textContent = ylab;
+}
+/* Cold-brew market. Demand: Qd = 120 + dd − 4P. Supply: Qs = −30 + ds + 6P. */
+function qd(p, dd) { return Math.max(0, 120 + dd - 4*p); }
+function qs(p, ds) { return Math.max(0, -30 + ds + 6*p); }
+function eqm(dd, ds) {
+  const p = (150 + dd - ds)/10;
+  return { p, q: 120 + dd - 4*p };
+}
+function dPath(s, dd) {
+  const pTop = (120+dd)/4;
+  return `M ${s.x(qd(0,dd))} ${s.y(0)} L ${s.x(0)} ${s.y(Math.min(pTop, s.ymax))}`;
+}
+function sPath(s, ds) {
+  const pEntry = Math.max(0, (30-ds)/6);
+  return `M ${s.x(qs(pEntry,ds))} ${s.y(pEntry)} L ${s.x(qs(s.ymax,ds))} ${s.y(s.ymax)}`;
+}
+
+/* ---------- viz-1: equilibrium + disequilibrium bar ---------- */
+(function() {
+  const svg = document.getElementById("v1-svg");
+  const s = makeScales(200, 30);
+  drawAxes(svg, s, "Bottles / week", "Price", 40, 5);
+  const dBase = el("path", {fill:"none", stroke:"#93b4f5", "stroke-width":2,
+                            "stroke-dasharray":"6 4", visibility:"hidden"}, svg);
+  const sBase = el("path", {fill:"none", stroke:"#a7d3bd", "stroke-width":2,
+                            "stroke-dasharray":"6 4", visibility:"hidden"}, svg);
+  const dCur = el("path", {fill:"none", stroke:"#1d4ed8", "stroke-width":3}, svg);
+  const sCur = el("path", {fill:"none", stroke:"#2d6a4f", "stroke-width":3}, svg);
+  const dl = el("text", {"font-size":"12", "font-weight":"700", fill:"#1d4ed8"}, svg);
+  const sl = el("text", {"font-size":"12", "font-weight":"700", fill:"#2d6a4f"}, svg);
+  dl.textContent = "D"; sl.textContent = "S";
+  const gapBar = el("line", {stroke:"#b45309", "stroke-width":7,
+                             "stroke-linecap":"round", opacity:0.85}, svg);
+  const gapLbl = el("text", {"font-size":"12", "font-weight":"700",
+                             fill:"#b45309", "text-anchor":"middle"}, svg);
+  const pLine = el("line", {stroke:"#b45309", "stroke-dasharray":"5 3",
+                            "stroke-width":1.5}, svg);
+  const eqDrop1 = el("line", {stroke:"#9ca3af", "stroke-dasharray":"4 3"}, svg);
+  const eqDrop2 = el("line", {stroke:"#9ca3af", "stroke-dasharray":"4 3"}, svg);
+  const eqDot = el("circle", {r:7, fill:"#1a1a2e", stroke:"#fff", "stroke-width":2}, svg);
+  dBase.setAttribute("d", dPath(s, 0));
+  sBase.setAttribute("d", sPath(s, 0));
+
+  const ids = ["v1-dd","v1-ds","v1-p"];
+  function update() {
+    const dd = +document.getElementById("v1-dd").value;
+    const ds = +document.getElementById("v1-ds").value;
+    const p = +document.getElementById("v1-p").value;
+    document.getElementById("v1-ddval").textContent = (dd>0?"+":"")+dd;
+    document.getElementById("v1-dsval").textContent = (ds>0?"+":"")+ds;
+    document.getElementById("v1-pval").textContent = p.toFixed(1);
+    dCur.setAttribute("d", dPath(s, dd));
+    sCur.setAttribute("d", sPath(s, ds));
+    dBase.setAttribute("visibility", dd ? "visible" : "hidden");
+    sBase.setAttribute("visibility", ds ? "visible" : "hidden");
+    dl.setAttribute("x", s.x(qd(4, dd))+8); dl.setAttribute("y", s.y(4));
+    sl.setAttribute("x", s.x(qs(28, ds))+8); sl.setAttribute("y", s.y(28));
+    const e = eqm(dd, ds);
+    eqDot.setAttribute("cx", s.x(e.q)); eqDot.setAttribute("cy", s.y(e.p));
+    eqDrop1.setAttribute("x1", s.L); eqDrop1.setAttribute("y1", s.y(e.p));
+    eqDrop1.setAttribute("x2", s.x(e.q)); eqDrop1.setAttribute("y2", s.y(e.p));
+    eqDrop2.setAttribute("x1", s.x(e.q)); eqDrop2.setAttribute("y1", s.y(e.p));
+    eqDrop2.setAttribute("x2", s.x(e.q)); eqDrop2.setAttribute("y2", s.B);
+    const QD = qd(p, dd), QS = qs(p, ds);
+    pLine.setAttribute("x1", s.L); pLine.setAttribute("y1", s.y(p));
+    pLine.setAttribute("x2", s.x(200)); pLine.setAttribute("y2", s.y(p));
+    const gap = Math.abs(QS - QD);
+    let gapTxt = "";
+    if (gap > 0.5) {
+      gapBar.setAttribute("visibility", "visible");
+      gapLbl.setAttribute("visibility", "visible");
+      gapBar.setAttribute("x1", s.x(Math.min(QD,QS))); gapBar.setAttribute("y1", s.y(p));
+      gapBar.setAttribute("x2", s.x(Math.max(QD,QS))); gapBar.setAttribute("y2", s.y(p));
+      gapLbl.setAttribute("x", s.x((QD+QS)/2)); gapLbl.setAttribute("y", s.y(p)-10);
+      gapLbl.textContent = (QS > QD ? "surplus " : "shortage ") + Math.round(gap);
+      gapTxt = QS > QD
+        ? ` &nbsp;<span class="surp">Surplus ${Math.round(gap)} → inventory piles up → pressure DOWN on price</span>`
+        : ` &nbsp;<span class="short">Shortage ${Math.round(gap)} → stockouts, queues → pressure UP on price</span>`;
+    } else {
+      gapBar.setAttribute("visibility", "hidden");
+      gapLbl.setAttribute("visibility", "hidden");
+      gapTxt = " &nbsp;Market clears — no pressure on price.";
+    }
+    document.getElementById("v1-read").innerHTML =
+      `<span class="lbl">Equilibrium:</span> P*=$${e.p.toFixed(1)}, Q*=${e.q.toFixed(0)}
+       &nbsp; <span class="lbl">At posted $${p.toFixed(1)}:</span> Qd=${QD.toFixed(0)}, Qs=${QS.toFixed(0)}` + gapTxt;
+  }
+  ids.forEach(id => document.getElementById(id).addEventListener("input", update));
+  document.getElementById("v1-reset").addEventListener("click", () => {
+    document.getElementById("v1-dd").value = 0;
+    document.getElementById("v1-ds").value = 0;
+    update();
+  });
+  document.getElementById("v1-snap").addEventListener("click", () => {
+    const dd = +document.getElementById("v1-dd").value;
+    const ds = +document.getElementById("v1-ds").value;
+    document.getElementById("v1-p").value = eqm(dd, ds).p.toFixed(1);
+    update();
+  });
+  update();
+})();
+
+/* ---------- viz-2: tâtonnement ---------- */
+(function() {
+  const svg = document.getElementById("v2-svg");
+  const s = makeScales(200, 30);
+  drawAxes(svg, s, "Bottles / week", "Price", 40, 5);
+  el("path", {d:dPath(s, 0), fill:"none", stroke:"#1d4ed8", "stroke-width":2.5}, svg);
+  el("path", {d:sPath(s, 0), fill:"none", stroke:"#2d6a4f", "stroke-width":2.5}, svg);
+  const eqDot = el("circle", {cx:s.x(60), cy:s.y(15), r:5, fill:"none",
+                              stroke:"#1a1a2e", "stroke-width":2,
+                              "stroke-dasharray":"2 2"}, svg);
+  const trail = el("g", {}, svg);
+  const dot = el("circle", {r:7, fill:"#b45309", stroke:"#fff", "stroke-width":2}, svg);
+  let timer = null;
+  const slider = document.getElementById("v2-p0");
+  slider.addEventListener("input", () => {
+    document.getElementById("v2-p0val").textContent = slider.value;
+    reset();
+  });
+  function setDot(p) {
+    // plot at min(Qd,Qs): what actually trades at price p
+    const q = Math.min(qd(p,0), qs(p,0));
+    dot.setAttribute("cx", s.x(q)); dot.setAttribute("cy", s.y(p));
+    return q;
+  }
+  function reset() {
+    if (timer) { clearInterval(timer); timer = null; }
+    while (trail.firstChild) trail.removeChild(trail.firstChild);
+    document.getElementById("v2-log").innerHTML = "";
+    document.getElementById("v2-read").textContent = "";
+    setDot(+slider.value);
+  }
+  document.getElementById("v2-reset").addEventListener("click", reset);
+  document.getElementById("v2-run").addEventListener("click", () => {
+    reset();
+    let p = +slider.value, week = 0;
+    const log = document.getElementById("v2-log");
+    log.innerHTML = "<tr><th>Week</th><th>Price</th><th>Qd</th><th>Qs</th><th>Gap</th><th>Seller reaction</th></tr>";
+    timer = setInterval(() => {
+      week++;
+      const QD = qd(p,0), QS = qs(p,0), excess = QD - QS;
+      const row = document.createElement("tr");
+      const react = Math.abs(excess) < 1 ? "hold — market clears"
+        : excess > 0 ? "stockouts → raise price" : "unsold stock → cut price";
+      row.innerHTML = `<td>${week}</td><td>$${p.toFixed(2)}</td><td>${QD.toFixed(0)}</td>
+        <td>${QS.toFixed(0)}</td><td>${excess > 0 ? "short " : excess < 0 ? "surp " : ""}${Math.abs(excess).toFixed(0)}</td><td>${react}</td>`;
+      log.appendChild(row);
+      el("circle", {cx:dot.getAttribute("cx"), cy:dot.getAttribute("cy"),
+                    r:3, fill:"#b45309", opacity:0.45}, trail);
+      if (Math.abs(excess) < 1 || week >= 14) {
+        clearInterval(timer); timer = null;
+        document.getElementById("v2-read").innerHTML =
+          `<span class="lbl">Converged:</span> price ≈ $${p.toFixed(2)} after ${week} weeks — nobody computed $15; the gap did the steering.`;
+        return;
+      }
+      p = p + 0.04*excess;          // groping: adjust against the gap
+      p = Math.max(5, Math.min(28, p));
+      setDot(p);
+      document.getElementById("v2-read").innerHTML =
+        `<span class="lbl">Week ${week}:</span> P=$${p.toFixed(2)} ` +
+        (excess > 0 ? `<span class="short">shortage ${excess.toFixed(0)} → price up</span>`
+                    : `<span class="surp">surplus ${(-excess).toFixed(0)} → price down</span>`);
+    }, 650);
+  });
+  reset();
+})();
+
+/* ---------- viz-3: comparative statics cases ---------- */
+(function() {
+  const svg = document.getElementById("v3-svg");
+  const s = makeScales(200, 30);
+  drawAxes(svg, s, "Bottles / week", "Price", 40, 5);
+  el("path", {d:dPath(s, 0), fill:"none", stroke:"#93b4f5", "stroke-width":2,
+              "stroke-dasharray":"6 4"}, svg);
+  el("path", {d:sPath(s, 0), fill:"none", stroke:"#a7d3bd", "stroke-width":2,
+              "stroke-dasharray":"6 4"}, svg);
+  const e0 = eqm(0,0);
+  el("circle", {cx:s.x(e0.q), cy:s.y(e0.p), r:6, fill:"#9ca3af",
+                stroke:"#fff", "stroke-width":2}, svg);
+  const dCur = el("path", {fill:"none", stroke:"#1d4ed8", "stroke-width":3}, svg);
+  const sCur = el("path", {fill:"none", stroke:"#2d6a4f", "stroke-width":3}, svg);
+  const dot = el("circle", {r:7, fill:"#2d6a4f", stroke:"#fff", "stroke-width":2}, svg);
+  let dd = 0, ds = 0;
+  function verdict() {
+    if (!dd && !ds) return "No shifts selected — the equilibrium stays at P*=$15, Q*=60.";
+    const parts = [];
+    if (dd && ds) {
+      // votes: D↑: P+ Q+ ; S↑: P- Q+
+      const pVotes = (dd>0?1:-1) + (ds>0?-1:1);
+      const qVotes = (dd>0?1:-1) + (ds>0?1:-1);
+      parts.push(pVotes === 0
+        ? "P* is AMBIGUOUS — the shifts vote opposite ways on price; magnitude decides (here the chosen sizes gave the result shown)."
+        : `P* ${pVotes>0?"rises":"falls"} for certain — both shifts vote the same way on price.`);
+      parts.push(qVotes === 0
+        ? "Q* is AMBIGUOUS — the shifts vote opposite ways on quantity; magnitude decides."
+        : `Q* ${qVotes>0?"rises":"falls"} for certain — both shifts agree on quantity.`);
+    } else if (dd) {
+      parts.push(dd > 0 ? "Demand increase: P* rises and Q* rises — buyers compete for more at every price, and the higher price draws out more supply (a movement along the supply curve, which did not shift)."
+                        : "Demand decrease: P* falls and Q* falls.");
+    } else {
+      parts.push(ds > 0 ? "Supply increase: P* falls and Q* rises — more offered at every price pushes price down, and the lower price moves buyers down their unchanged demand curve."
+                        : "Supply decrease: P* rises and Q* falls — the classic cost-shock signature (P and Q move opposite ways).");
+    }
+    return parts.join(" ");
+  }
+  function update() {
+    dCur.setAttribute("d", dPath(s, dd));
+    sCur.setAttribute("d", sPath(s, ds));
+    const e = eqm(dd, ds);
+    dot.setAttribute("cx", s.x(e.q)); dot.setAttribute("cy", s.y(e.p));
+    document.getElementById("v3-msg").innerHTML =
+      `<b>New equilibrium: P*=$${e.p.toFixed(1)}, Q*=${e.q.toFixed(0)}</b> (was $${e0.p.toFixed(0)}, ${e0.q.toFixed(0)}). ` + verdict();
+  }
+  function wire(groupId, set) {
+    document.querySelectorAll(`#${groupId} button`).forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(`#${groupId} button`).forEach(b => b.classList.remove("on"));
+        btn.classList.add("on");
+        set(+btn.dataset.v);
+        update();
+      });
+    });
+  }
+  wire("v3-dbtns", v => dd = v);
+  wire("v3-sbtns", v => ds = v);
+  update();
+})();
+
+/* ---------- quiz submit (grading is server-side) ---------- */
+document.getElementById("quizForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const fd = new FormData(e.target);
+  const answers = {};
+  document.querySelectorAll(".q").forEach(q => {
+    const qid = q.dataset.qid;
+    answers[qid] = fd.get(qid);
+  });
+
+  const payload = { address: LESSON_ADDRESS, answers, ts: Date.now() };
+
+  try {
+    const res = await fetch(location.protocol === "file:"
+        ? "http://127.0.0.1:8753/record" : "/record", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+    if (data.error) {
+      document.getElementById("result").textContent = "Recorder error: " + data.error;
+      return;
+    }
+    document.getElementById("result").textContent =
+      `Score: ${data.correct}/${data.total}. ` +
+      (data.weak_topics?.length ? `Review: ${data.weak_topics.join(", ")}` : "Nice work.");
+    (data.results || []).forEach(r => {
+      const q = document.querySelector(`.q[data-qid="${r.qid}"]`);
+      if (!q) return;
+      q.classList.remove("right", "wrong");
+      q.classList.add(r.is_correct ? "right" : "wrong");
+      let fb = q.querySelector(".fb");
+      if (!fb) { fb = document.createElement("div"); fb.className = "fb"; q.appendChild(fb); }
+      fb.textContent = "";
+      const mark = document.createElement("b");
+      mark.textContent = r.is_correct ? "✓ Correct" : "✗ Incorrect";
+      fb.appendChild(mark);
+      if (!r.is_correct && r.explanation) fb.append(" — " + r.explanation);
+    });
+  } catch (err) {
+    const blob = new Blob([JSON.stringify(payload, null, 2)], {type:"application/json"});
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `${LESSON_ADDRESS}.attempt.json`;
+    a.click();
+    document.getElementById("result").textContent =
+      "Recorder offline — downloaded attempt JSON. Run scripts/serve.py and import it.";
+  }
+});
+</script>
+</body>
+</html>

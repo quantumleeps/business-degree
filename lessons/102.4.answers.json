@@ -1,0 +1,65 @@
+{
+  "address": "102.4",
+  "title": "Market equilibrium and price discovery",
+  "questions": [
+    {
+      "qid": "q1",
+      "type": "mc",
+      "correct": "b",
+      "topic": "equilibrium",
+      "explanation": "Equilibrium means quantity demanded equals quantity supplied at the going price, so no trader's plans are frustrated and price has no built-in tendency to move. It does not mean everyone who wants the good gets it — only buyers willing to pay P* do — and it says nothing about profits or government involvement."
+    },
+    {
+      "qid": "q2",
+      "type": "num",
+      "correct": 20,
+      "tolerance": 0.01,
+      "topic": "solving equilibrium",
+      "explanation": "Set Qd = Qs: 200 − 5P = 20 + 4P → 180 = 9P → P* = $20. Always verify in both equations: Qd = 200 − 100 = 100 and Qs = 20 + 80 = 100 ✓."
+    },
+    {
+      "qid": "q3",
+      "type": "num",
+      "correct": 100,
+      "tolerance": 0.01,
+      "topic": "solving equilibrium",
+      "explanation": "Substitute P* = 20 into either equation: Qd = 200 − 5(20) = 100 (check: Qs = 20 + 4(20) = 100). If your P* was wrong, this propagates — solve the equality first, then substitute."
+    },
+    {
+      "qid": "q4",
+      "type": "num",
+      "correct": 54,
+      "tolerance": 0.5,
+      "topic": "surplus & shortage",
+      "explanation": "At P = $26 (above P* = $20): Qs = 20 + 4(26) = 124 but Qd = 200 − 5(26) = 70. Sellers bring 124 − 70 = 54 more units than buyers take — a surplus of 54. Price above equilibrium always produces a surplus (excess supply), which pressures the price back down."
+    },
+    {
+      "qid": "q5",
+      "type": "mc",
+      "correct": "c",
+      "topic": "surplus & shortage",
+      "explanation": "Correcting a disequilibrium is a movement along both fixed curves: as price rises, buyers slide up the demand curve (quantity demanded falls) and sellers slide up the supply curve (quantity supplied rises) until the gap closes. The curves themselves only shift when a non-price determinant changes — a price change never shifts its own market's curves."
+    },
+    {
+      "qid": "q6",
+      "type": "mc",
+      "correct": "b",
+      "topic": "comparative statics",
+      "explanation": "Count each shift's 'votes': demand up votes price↑ quantity↑; supply up votes price↓ quantity↑. The quantity votes agree (Q* rises for certain); the price votes conflict, so price depends on which shift is bigger — ambiguous without magnitudes."
+    },
+    {
+      "qid": "q7",
+      "type": "mc",
+      "correct": "a",
+      "topic": "comparative statics",
+      "explanation": "Higher wages are an input-cost increase → supply decreases (votes price↑ quantity↓). Higher incomes for a normal good → demand increases (votes price↑ quantity↑). Both votes on price agree: P* rises for certain. The quantity votes conflict, so Q* is ambiguous until you know which shift dominates."
+    },
+    {
+      "qid": "q8",
+      "type": "mc",
+      "correct": "b",
+      "topic": "price discovery",
+      "explanation": "Persistent unplanned inventory means quantity supplied exceeds quantity demanded at the posted price — a surplus, which only happens above the market-clearing price. The buildup is exactly the decentralized signal price discovery runs on: cutting price moves buyers down their demand curve and shrinks the gap. (A demand increase would cause stockouts, not buildup.)"
+    }
+  ]
+}
