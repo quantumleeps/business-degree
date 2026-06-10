@@ -36,6 +36,10 @@ content sections with real teaching material for the specific topic.
   button { background:var(--accent); color:#fff; border:0; padding:10px 18px;
            border-radius:8px; font-size:15px; cursor:pointer; }
   #result { margin-top:1em; font-weight:600; }
+  .lesson-nav { display:flex; justify-content:space-between; margin-top:3em;
+       padding-top:1em; border-top:1px solid #e5e7eb; }
+  .lesson-nav a { color:var(--accent); font-weight:600; text-decoration:none; }
+  .lesson-nav a:hover { text-decoration:underline; }
 </style>
 </head>
 <body>
@@ -95,6 +99,12 @@ content sections with real teaching material for the specific topic.
     </form>
     <div id="result"></div>
   </section>
+
+  <!-- 4. NAV — always present so the user can move on after the quiz. -->
+  <nav class="lesson-nav">
+    <a href="index.html">← All lessons</a>
+    <a href="../harness/results.html">Results &amp; mastery →</a>
+  </nav>
 
 </div>
 

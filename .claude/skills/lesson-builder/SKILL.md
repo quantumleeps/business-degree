@@ -51,6 +51,9 @@ in this order:
    or page source. After grading, the page renders per-question ✓/✗ feedback
    in place from the `/record` response (the template has the handler) —
    right/wrong flags and explanations come only from the server, post-attempt.
+5. **Nav footer** — links back to `index.html` ("All lessons") and to
+   `../harness/results.html` ("Results & mastery"), so finishing a quiz never
+   dead-ends. The template has the markup.
 
 ## Depth calibration — college course level
 
