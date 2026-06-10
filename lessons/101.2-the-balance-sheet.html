@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>101.2 — The balance sheet: assets, liabilities, equity</title>
+<style>
+  :root { --ink:#1a1a2e; --paper:#fdfdfb; --accent:#2d6a4f; --accent2:#1d4ed8;
+          --muted:#6b7280; --warn:#b45309; }
+  body { margin:0; font:16px/1.6 system-ui,sans-serif; color:var(--ink);
+         background:var(--paper); }
+  .wrap { max-width:820px; margin:0 auto; padding:32px 20px 80px; }
+  header .addr { font:600 13px ui-monospace,monospace; color:var(--accent);
+                 letter-spacing:.05em; }
+  h1 { font-size:30px; margin:.2em 0 .1em; line-height:1.2; }
+  .why { color:var(--muted); font-style:italic; margin-bottom:2em; }
+  section { margin:2.5em 0; }
+  h2 { border-bottom:2px solid var(--accent); padding-bottom:4px; }
+  h3 { margin:1.6em 0 .3em; font-size:18px; }
+  .lead { font-size:17px; }
+  .analogy { background:#f0f7f4; border-left:4px solid var(--accent);
+             padding:12px 16px; border-radius:0 8px 8px 0; margin:1.2em 0; }
+  .eq { font:600 18px ui-monospace,monospace; text-align:center;
+        background:#fff; border:1px solid #e5e7eb; border-radius:10px;
+        padding:14px; margin:1.2em 0; }
+  table.book { border-collapse:collapse; width:100%; margin:1em 0; font-size:15px; }
+  table.book th, table.book td { border:1px solid #e5e7eb; padding:8px 10px;
+        text-align:left; }
+  table.book th { background:#f9fafb; }
+  table.book td.num { text-align:right; font-family:ui-monospace,monospace; }
+  .visual { border:1px solid #e5e7eb; border-radius:12px; padding:16px;
+            background:#fff; }
+  .controls { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:12px; }
+  .controls button { background:var(--accent2); font-size:13px; padding:7px 11px; }
+  .controls button.off { background:#e5e7eb; color:#374151; }
+  .controls button.reset { background:var(--muted); }
+  .bsheet { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:8px; }
+  .bsheet .side { border:1px solid #e5e7eb; border-radius:8px; overflow:hidden; }
+  .bsheet .side h4 { margin:0; padding:8px 10px; background:#f9fafb;
+        font-size:14px; border-bottom:1px solid #e5e7eb; }
+  .bsheet .row { display:flex; justify-content:space-between; padding:5px 10px;
+        font-size:14px; font-family:ui-monospace,monospace; }
+  .bsheet .sub { color:var(--muted); font-weight:600; padding:6px 10px 2px;
+        font:600 12px system-ui; letter-spacing:.03em; text-transform:uppercase; }
+  .bsheet .tot { border-top:1px solid #e5e7eb; font-weight:700; }
+  .metrics { display:flex; flex-wrap:wrap; gap:10px; margin-top:12px; font-size:14px; }
+  .metrics .m { border:1px solid #e5e7eb; border-radius:8px; padding:8px 12px;
+        background:#fff; }
+  .metrics .m b { display:block; font-size:18px; font-family:ui-monospace,monospace; }
+  .balstate { text-align:center; font:600 14px ui-monospace,monospace;
+              margin-top:10px; }
+  .balanced { color:var(--accent); }
+  .controls button:disabled { background:#e5e7eb; color:#9ca3af;
+        cursor:not-allowed; }
+  .controls button.util { background:var(--muted); }
+  .lastfx { font-size:13.5px; background:#eef6ff; border-left:3px solid
+        var(--accent2); padding:8px 12px; border-radius:0 8px 8px 0;
+        margin:10px 0; }
+  .row .d { font-size:11px; margin-right:8px; font-weight:700; }
+  .row .d.up { color:var(--accent); }
+  .row .d.dn { color:#b91c1c; }
+  .row.chg { animation:flash 1.4s ease-out; }
+  @keyframes flash { from { background:#fef9c3; } to { background:transparent; } }
+  .vizrow { display:flex; gap:22px; margin-top:14px; flex-wrap:wrap;
+        align-items:flex-start; }
+  .bars { display:flex; gap:26px; align-items:flex-end; }
+  .barcol { text-align:center; }
+  .barwrap { height:240px; display:flex; align-items:flex-end; }
+  .bar { position:relative; width:104px; display:flex;
+        flex-direction:column-reverse; border-radius:4px 4px 0 0;
+        overflow:visible; transition:height .35s; }
+  .seg { display:flex; align-items:center; justify-content:center;
+        color:#fff; font:600 11px system-ui; overflow:hidden;
+        transition:height .35s; }
+  .curline { position:absolute; left:-8px; right:-8px;
+        border-top:2px dashed var(--ink); }
+  .barlab { font-size:12.5px; margin-top:6px; color:var(--muted); }
+  .log { flex:1; min-width:220px; max-height:240px; overflow:auto;
+        font:12px ui-monospace,monospace; border:1px solid #e5e7eb;
+        border-radius:8px; padding:8px 10px; }
+  .log div { padding:2px 0; border-bottom:1px dashed #f3f4f6; }
+  .q { margin:1.2em 0; padding:14px; border:1px solid #e5e7eb; border-radius:10px; }
+  .q .opts label { display:block; margin:4px 0; cursor:pointer; }
+  .q input[type=number], .q input[type=text] { font-size:15px; padding:6px 8px;
+        border:1px solid #d1d5db; border-radius:6px; width:160px; }
+  button { background:var(--accent); color:#fff; border:0; padding:10px 18px;
+           border-radius:8px; font-size:15px; cursor:pointer; }
+  button:hover { filter:brightness(1.07); }
+  #result { margin-top:1em; font-weight:600; }
+  .hint { font-size:13px; color:var(--muted); }
+  ul.tight li { margin:.2em 0; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="addr">101.2</div>
+    <h1>The balance sheet: assets, liabilities, equity</h1>
+    <p class="why">If the accounting equation is the law, the balance sheet is the photograph that proves it held at a single instant.</p>
+  </header>
+
+  <!-- 1. WRITTEN / TEACHING SECTION -->
+  <section id="learn">
+    <h2>Learn</h2>
+
+    <p class="lead">In 101.1 you met the invariant: <strong>Assets = Liabilities
+    + Equity</strong>. The <strong>balance sheet</strong> (also called the
+    <em>statement of financial position</em>) is simply that equation written
+    out in full, line by line, <strong>as of one specific date</strong>. It
+    answers: <em>at this instant, what does the business control, what does it
+    owe, and what's left for the owners?</em></p>
+
+    <h3>A snapshot, not a movie</h3>
+    <p>This is the single most important framing. The balance sheet is a
+    <strong>point-in-time</strong> statement — "as of Dec 31, 2025." It's a
+    <em>stock</em>, not a <em>flow</em>. The income statement (101.3) and cash
+    flow statement (101.4) cover a <em>period</em> ("for the year ended…") —
+    they're flows. Mixing these up is the most common beginner error.</p>
+
+    <div class="analogy">
+      <b>Systems analogy — state vs. events.</b> Think of the business as a
+      stateful system. The balance sheet is a <strong>state dump</strong>: the
+      exact contents of every register at one clock tick. The income statement
+      is the <strong>event log</strong> of what happened between two ticks. You
+      reconstruct the new state by replaying the events onto the old state —
+      which is exactly how retained earnings link the two statements.
+    </div>
+
+    <h3>The three blocks — and the ordering rule</h3>
+    <p>Each side is grouped, and within each group items are conventionally
+    ordered by <strong>liquidity</strong> (how fast they turn into, or consume,
+    cash):</p>
+
+    <p><strong>Assets</strong> — resources the business controls. Split by a
+    one-year horizon:</p>
+    <ul class="tight">
+      <li><b>Current assets</b> — expected to become cash or be used up within
+        one year/operating cycle: cash, accounts receivable, inventory,
+        prepaid expenses. Listed most-liquid first (cash at top).</li>
+      <li><b>Non-current (long-term) assets</b> — used over many years:
+        property, plant &amp; equipment (PP&amp;E), long-term investments,
+        intangibles (patents, goodwill).</li>
+    </ul>
+
+    <p><strong>Liabilities</strong> — claims of outsiders (creditors). Same
+    split by when they come due:</p>
+    <ul class="tight">
+      <li><b>Current liabilities</b> — due within one year: accounts payable,
+        accrued wages, short-term debt, the current portion of long-term
+        debt.</li>
+      <li><b>Non-current liabilities</b> — due beyond one year: long-term
+        loans, bonds payable, lease obligations.</li>
+    </ul>
+
+    <p><strong>Equity</strong> — the owners' residual claim. For a corporation,
+    typically:</p>
+    <ul class="tight">
+      <li><b>Contributed capital</b> (e.g. common stock) — what owners paid in.</li>
+      <li><b>Retained earnings</b> — cumulative profits kept in the business
+        rather than paid out as dividends. <em>This is the hinge that connects
+        the income statement back to the balance sheet.</em></li>
+    </ul>
+
+    <div class="eq">Total Assets&nbsp; = &nbsp;Total Liabilities&nbsp; + &nbsp;Total Equity&nbsp; &nbsp;(always)</div>
+
+    <h3>What the structure reveals: liquidity</h3>
+    <p>Splitting current from non-current isn't bureaucratic — it lets a reader
+    judge whether the business can pay its near-term bills:</p>
+    <ul class="tight">
+      <li><b>Working capital</b> = Current assets − Current liabilities. The
+        cushion of short-term resources over short-term obligations.</li>
+      <li><b>Current ratio</b> = Current assets ÷ Current liabilities. A quick
+        solvency check; comfortably above 1 means near-term obligations are
+        covered by near-term resources.</li>
+    </ul>
+
+    <h3>A tiny worked example</h3>
+    <table class="book">
+      <tr><th>Assets</th><th class="num">$</th><th>Liabilities &amp; Equity</th><th class="num">$</th></tr>
+      <tr><td>Cash</td><td class="num">40,000</td><td>Accounts payable</td><td class="num">25,000</td></tr>
+      <tr><td>Accounts receivable</td><td class="num">30,000</td><td>Short-term debt</td><td class="num">15,000</td></tr>
+      <tr><td>Inventory</td><td class="num">50,000</td><td>Long-term loan</td><td class="num">60,000</td></tr>
+      <tr><td>Equipment (PP&amp;E)</td><td class="num">80,000</td><td>Common stock</td><td class="num">50,000</td></tr>
+      <tr><td></td><td class="num"></td><td>Retained earnings</td><td class="num">50,000</td></tr>
+      <tr><td><b>Total assets</b></td><td class="num"><b>200,000</b></td><td><b>Total L &amp; E</b></td><td class="num"><b>200,000</b></td></tr>
+    </table>
+    <p class="hint">Current assets = 40k + 30k + 50k = 120k. Current liabilities
+    = 25k + 15k = 40k. Working capital = 80k; current ratio = 3.0. Both sides
+    total 200k — it balances.</p>
+  </section>
+
+  <!-- 2. VISUAL SECTION -->
+  <section id="see">
+    <h2>See it</h2>
+    <p>Real books can't go out of balance, because <strong>every transaction
+    touches at least two accounts</strong> — that's the whole trick of
+    double-entry. Post transactions below and watch where each one lands: some
+    grow both sides, some shrink both sides, and some just shuffle value
+    within one side without moving the totals at all. The two bars stay
+    exactly the same height no matter what you do.</p>
+    <div class="visual" id="viz">
+      <div class="controls" id="txns"><!-- transaction buttons injected --></div>
+      <div class="lastfx" id="lastfx"></div>
+      <div class="bsheet">
+        <div class="side">
+          <h4>Assets</h4>
+          <div id="assetsBody"></div>
+          <div class="row tot"><span>Total assets</span><span id="totA">$0</span></div>
+        </div>
+        <div class="side">
+          <h4>Liabilities &amp; Equity</h4>
+          <div id="claimsBody"></div>
+          <div class="row tot"><span>Total L &amp; E</span><span id="totC">$0</span></div>
+        </div>
+      </div>
+      <div class="vizrow">
+        <div class="bars">
+          <div class="barcol">
+            <div class="barwrap"><div class="bar" id="barA"></div></div>
+            <div class="barlab">Assets</div>
+          </div>
+          <div class="barcol">
+            <div class="barwrap"><div class="bar" id="barC"></div></div>
+            <div class="barlab">Liabilities + Equity</div>
+          </div>
+        </div>
+        <div style="flex:1; min-width:240px;">
+          <div class="metrics">
+            <div class="m">Working capital<b id="wc">$0</b></div>
+            <div class="m">Current ratio<b id="cr">–</b></div>
+            <div class="m">Debt-to-equity<b id="de">–</b></div>
+          </div>
+          <div class="balstate" id="balstate"></div>
+          <div class="log" id="log"></div>
+        </div>
+      </div>
+    </div>
+    <p class="hint">The dashed line across each bar marks the top of the
+    <em>current</em> stack — the vertical gap between the two dashed lines is
+    working capital, drawn to scale. Try the refinance: the totals don't move,
+    yet working capital and the current ratio both improve. A button greys out
+    when the transaction would drive some account negative — another thing
+    real books won't let you do.</p>
+  </section>
+
+  <!-- 3. QUIZ -->
+  <section id="quiz">
+    <h2>Check yourself</h2>
+    <form id="quizForm">
+
+      <div class="q" data-qid="q1" data-type="mc">
+        <p><strong>1.</strong> The balance sheet describes a company's financial position:</p>
+        <div class="opts">
+          <label><input type="radio" name="q1" value="a"> Over a period of time, like a year.</label>
+          <label><input type="radio" name="q1" value="b"> At a single point in time, as of a specific date.</label>
+          <label><input type="radio" name="q1" value="c"> Only at the moment the company is sold.</label>
+          <label><input type="radio" name="q1" value="d"> As a forecast of next year's performance.</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q2" data-type="mc">
+        <p><strong>2.</strong> Which of these is a <em>current</em> asset?</p>
+        <div class="opts">
+          <label><input type="radio" name="q2" value="a"> A factory building.</label>
+          <label><input type="radio" name="q2" value="b"> A patent held for 15 years.</label>
+          <label><input type="radio" name="q2" value="c"> Accounts receivable due in 30 days.</label>
+          <label><input type="radio" name="q2" value="d"> A 10-year bank loan the company took out.</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q3" data-type="mc">
+        <p><strong>3.</strong> Within the asset section, items are conventionally listed:</p>
+        <div class="opts">
+          <label><input type="radio" name="q3" value="a"> Alphabetically.</label>
+          <label><input type="radio" name="q3" value="b"> By dollar size, largest first.</label>
+          <label><input type="radio" name="q3" value="c"> In order of liquidity, most liquid (cash) first.</label>
+          <label><input type="radio" name="q3" value="d"> In the order they were purchased.</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q4" data-type="mc">
+        <p><strong>4.</strong> Retained earnings appears in which section, and represents what?</p>
+        <div class="opts">
+          <label><input type="radio" name="q4" value="a"> Assets — cash the company has saved up.</label>
+          <label><input type="radio" name="q4" value="b"> Liabilities — money owed back to investors.</label>
+          <label><input type="radio" name="q4" value="c"> Equity — cumulative profits kept in the business rather than paid out.</label>
+          <label><input type="radio" name="q4" value="d"> Assets — the resale value of equipment.</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q5" data-type="num">
+        <p><strong>5.</strong> A firm has current assets of $120,000 and current liabilities of $40,000. What is its working capital, in dollars?</p>
+        <input type="number" name="q5" step="any" placeholder="dollars" />
+      </div>
+
+      <div class="q" data-qid="q6" data-type="num">
+        <p><strong>6.</strong> Same firm: current assets $120,000, current liabilities $40,000. What is the current ratio? (Give the number, e.g. 2.5.)</p>
+        <input type="number" name="q6" step="any" placeholder="ratio" />
+      </div>
+
+      <div class="q" data-qid="q7" data-type="num">
+        <p><strong>7.</strong> Total assets are $200,000 and total liabilities are $100,000. What is total equity, in dollars?</p>
+        <input type="number" name="q7" step="any" placeholder="dollars" />
+      </div>
+
+      <div class="q" data-qid="q8" data-type="text">
+        <p><strong>8.</strong> One word: the other common name for the balance sheet is the "statement of financial ____."</p>
+        <input type="text" name="q8" placeholder="one word" />
+      </div>
+
+      <button type="submit">Submit answers</button>
+    </form>
+    <div id="result"></div>
+  </section>
+
+</div>
+
+<script>
+  const LESSON_ADDRESS = "101.2";
+
+  /* ---------- Visual: double-entry transaction simulator ---------- */
+  (function () {
+    // side: A = asset, C = claim (liab/equity); class: cur/noncur/eq
+    const ACCTS = [
+      { id:"cash",  label:"Cash",                short:"Cash",    side:"A", cls:"cur",    color:"#2d6a4f" },
+      { id:"ar",    label:"Accounts receivable", short:"AR",      side:"A", cls:"cur",    color:"#52b788" },
+      { id:"inv",   label:"Inventory",           short:"Inv",     side:"A", cls:"cur",    color:"#95d5b2" },
+      { id:"ppe",   label:"Equipment (PP&E)",    short:"PP&E",    side:"A", cls:"noncur", color:"#64748b" },
+      { id:"ap",    label:"Accounts payable",    short:"AP",      side:"C", cls:"cur",    color:"#f59e0b" },
+      { id:"std",   label:"Short-term debt",     short:"ST debt", side:"C", cls:"cur",    color:"#fbbf24" },
+      { id:"ltl",   label:"Long-term loan",      short:"LT loan", side:"C", cls:"noncur", color:"#b45309" },
+      { id:"stock", label:"Common stock",        short:"Stock",   side:"C", cls:"eq",     color:"#1d4ed8" },
+      { id:"re",    label:"Retained earnings",   short:"RE",      side:"C", cls:"eq",     color:"#60a5fa" },
+    ];
+    const INIT = { cash:40000, ar:30000, inv:50000, ppe:80000,
+                   ap:25000, std:15000, ltl:60000, stock:50000, re:50000 };
+
+    const TXNS = [
+      { id:"invest",  label:"Owners invest $25k cash",
+        fx:{ cash:25000, stock:25000 },
+        note:"Both sides grow by $25k — financing with equity." },
+      { id:"borrow",  label:"Borrow $20k long-term",
+        fx:{ cash:20000, ltl:20000 },
+        note:"Both sides grow by $20k. The cash is current but the claim is non-current, so working capital and the current ratio improve." },
+      { id:"buyinv",  label:"Buy $10k inventory on credit",
+        fx:{ inv:10000, ap:10000 },
+        note:"Both sides grow, and both items are current — working capital is unchanged, but the current ratio drifts toward 1." },
+      { id:"equip",   label:"Buy $30k equipment with cash",
+        fx:{ ppe:30000, cash:-30000 },
+        note:"Totals untouched — a shuffle within assets. Cash (current) became PP&E (non-current), so working capital falls." },
+      { id:"collect", label:"Collect $15k of receivables",
+        fx:{ cash:15000, ar:-15000 },
+        note:"A shuffle inside current assets. Totals, working capital, current ratio: all unchanged. One asset simply became another." },
+      { id:"paystd",  label:"Pay off $10k short-term debt",
+        fx:{ cash:-10000, std:-10000 },
+        note:"Both sides shrink by $10k. Working capital is unchanged (both items are current), but the current ratio rises." },
+      { id:"refi",    label:"Refinance $15k short-term → long-term",
+        fx:{ std:-15000, ltl:15000 },
+        note:"Totals untouched and it's the same debt — but it left the current bucket, so working capital and the current ratio improve. Same company, better-looking photograph." },
+      { id:"earn",    label:"Earn $12k revenue in cash",
+        fx:{ cash:12000, re:12000 },
+        note:"Profit enters the balance sheet through retained earnings — the hinge to the income statement (101.3)." },
+      { id:"divid",   label:"Pay an $8k dividend",
+        fx:{ cash:-8000, re:-8000 },
+        note:"Both sides shrink — cash leaves to the owners, and their residual claim shrinks with it." },
+    ];
+
+    const fmt = n => "$" + n.toLocaleString("en-US");
+    const SUB = { cur:"Current", noncur:"Non-current", eq:"Equity" };
+    const BAR_H = 240;
+
+    let bal = { ...INIT };
+    let history = [];   // applied TXN objects, in order
+    let lastFx = null;  // { title, fx, note } for flash + caption
+
+    const byId = id => ACCTS.find(a => a.id === id);
+    const legal = t => Object.entries(t.fx).every(([k, v]) => bal[k] + v >= 0);
+    const pairs = fx => Object.entries(fx)
+      .map(([k, v]) => `${byId(k).label} ${v > 0 ? "+" : "−"}${fmt(Math.abs(v))}`)
+      .join(" · ");
+
+    function apply(t) {
+      Object.entries(t.fx).forEach(([k, v]) => { bal[k] += v; });
+      history.push(t);
+      lastFx = { title: t.label, fx: t.fx, note: t.note };
+      render();
+    }
+
+    function undo() {
+      const t = history.pop();
+      if (!t) return;
+      const rev = {};
+      Object.entries(t.fx).forEach(([k, v]) => { bal[k] -= v; rev[k] = -v; });
+      lastFx = { title: "Undo: " + t.label, fx: rev,
+                 note: "Reversed — both entries backed out together. Even an undo is double-entry." };
+      render();
+    }
+
+    function reset() {
+      bal = { ...INIT };
+      history = [];
+      lastFx = null;
+      render();
+    }
+
+    function renderTxns() {
+      const box = document.getElementById("txns");
+      box.innerHTML = "";
+      TXNS.forEach(t => {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.textContent = t.label;
+        if (!legal(t)) {
+          b.disabled = true;
+          b.title = "Blocked: this would drive an account negative.";
+        }
+        b.addEventListener("click", () => apply(t));
+        box.appendChild(b);
+      });
+      const u = document.createElement("button");
+      u.type = "button"; u.className = "util"; u.textContent = "Undo";
+      u.disabled = !history.length;
+      u.addEventListener("click", undo);
+      box.appendChild(u);
+      const r = document.createElement("button");
+      r.type = "button"; r.className = "util"; r.textContent = "Reset";
+      r.addEventListener("click", reset);
+      box.appendChild(r);
+    }
+
+    function sideHTML(side) {
+      const order = side === "A" ? ["cur","noncur"] : ["cur","noncur","eq"];
+      let html = "";
+      order.forEach(cls => {
+        const rows = ACCTS.filter(a => a.side === side && a.cls === cls);
+        html += `<div class="sub">${SUB[cls]}</div>`;
+        rows.forEach(a => {
+          const d = lastFx ? lastFx.fx[a.id] : undefined;
+          const mark = d
+            ? `<span class="d ${d > 0 ? "up" : "dn"}">${d > 0 ? "▲" : "▼"}${fmt(Math.abs(d))}</span>`
+            : "";
+          html += `<div class="row${d ? " chg" : ""}"><span>${a.label}</span><span>${mark}${fmt(bal[a.id])}</span></div>`;
+        });
+      });
+      return html;
+    }
+
+    function renderBar(side, elId, total) {
+      const scale = BAR_H / Math.max(320000, total * 1.1);
+      const el = document.getElementById(elId);
+      let html = "", curPx = 0;
+      ACCTS.filter(a => a.side === side).forEach(a => {
+        const h = bal[a.id] * scale;
+        if (a.cls === "cur") curPx += h;
+        html += `<div class="seg" style="height:${h.toFixed(1)}px;background:${a.color}" `
+              + `title="${a.label}: ${fmt(bal[a.id])}">${h >= 15 ? a.short : ""}</div>`;
+      });
+      html += `<div class="curline" style="bottom:${curPx.toFixed(1)}px"></div>`;
+      el.style.height = (total * scale).toFixed(1) + "px";
+      el.innerHTML = html;
+    }
+
+    function sum(pred) {
+      return ACCTS.filter(pred).reduce((s, a) => s + bal[a.id], 0);
+    }
+
+    function render() {
+      renderTxns();
+      document.getElementById("assetsBody").innerHTML = sideHTML("A");
+      document.getElementById("claimsBody").innerHTML = sideHTML("C");
+
+      const totA = sum(a => a.side === "A");
+      const totC = sum(a => a.side === "C");
+      document.getElementById("totA").textContent = fmt(totA);
+      document.getElementById("totC").textContent = fmt(totC);
+      renderBar("A", "barA", totA);
+      renderBar("C", "barC", totC);
+
+      const curA = sum(a => a.side === "A" && a.cls === "cur");
+      const curL = sum(a => a.side === "C" && a.cls === "cur");
+      const debt = sum(a => a.side === "C" && a.cls !== "eq");
+      const eq   = sum(a => a.cls === "eq");
+      document.getElementById("wc").textContent = fmt(curA - curL);
+      document.getElementById("cr").textContent = curL ? (curA / curL).toFixed(2) : "∞";
+      document.getElementById("de").textContent = eq ? (debt / eq).toFixed(2) : "∞";
+
+      document.getElementById("lastfx").innerHTML = lastFx
+        ? `<b>${lastFx.title}.</b> ${pairs(lastFx.fx)} — ${lastFx.note}`
+        : "Post a transaction above. Every one touches two accounts — that's why the photograph can't go out of balance.";
+
+      const el = document.getElementById("balstate");
+      el.className = "balstate balanced";
+      el.textContent = `Balanced ✓  ${fmt(totA)} = ${fmt(totC)}` +
+        (history.length ? `  (${history.length} transaction${history.length > 1 ? "s" : ""} posted — still can't break it)` : "");
+
+      document.getElementById("log").innerHTML = history.length
+        ? history.map((t, i) => `<div>${i + 1}. ${t.label} — ${pairs(t.fx)}</div>`).reverse().join("")
+        : `<div class="hint">Transaction log — entries appear here as you post.</div>`;
+    }
+    render();
+  })();
+
+  /* ---------- Quiz: collect answers, grade server-side ---------- */
+  document.getElementById("quizForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const fd = new FormData(e.target);
+    const answers = {};
+    document.querySelectorAll(".q").forEach(q => {
+      answers[q.dataset.qid] = fd.get(q.dataset.qid);
+    });
+    const payload = { address: LESSON_ADDRESS, answers, ts: Date.now() };
+
+    try {
+      const res = await fetch("http://127.0.0.1:8753/record", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      document.getElementById("result").textContent =
+        `Score: ${data.correct}/${data.total}. ` +
+        (data.weak_topics?.length ? `Review: ${data.weak_topics.join(", ")}` : "Nice work.");
+    } catch (err) {
+      const blob = new Blob([JSON.stringify(payload, null, 2)], {type:"application/json"});
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = `${LESSON_ADDRESS}.attempt.json`;
+      a.click();
+      document.getElementById("result").textContent =
+        "Recorder offline — downloaded attempt JSON. Run scripts/serve.py and import it.";
+    }
+  });
+</script>
+</body>
+</html>

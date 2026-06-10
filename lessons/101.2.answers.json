@@ -1,0 +1,65 @@
+{
+  "address": "101.2",
+  "title": "The balance sheet: assets, liabilities, equity",
+  "questions": [
+    {
+      "qid": "q1",
+      "type": "mc",
+      "correct": "b",
+      "topic": "balance sheet basics",
+      "explanation": "The balance sheet is a point-in-time snapshot ('as of' a date) — a stock, not a flow. The income and cash flow statements cover a period."
+    },
+    {
+      "qid": "q2",
+      "type": "mc",
+      "correct": "c",
+      "topic": "asset classification",
+      "explanation": "Accounts receivable due in 30 days converts to cash within a year, so it's a current asset. A building and a patent are non-current assets; a 10-year loan is a non-current liability."
+    },
+    {
+      "qid": "q3",
+      "type": "mc",
+      "correct": "c",
+      "topic": "balance sheet structure",
+      "explanation": "Items are ordered by liquidity — how quickly they turn into cash — with cash listed first."
+    },
+    {
+      "qid": "q4",
+      "type": "mc",
+      "correct": "c",
+      "topic": "equity",
+      "explanation": "Retained earnings is an equity item: cumulative profits the business kept rather than paying out as dividends. It links the income statement back to the balance sheet."
+    },
+    {
+      "qid": "q5",
+      "type": "num",
+      "correct": 80000,
+      "tolerance": 0,
+      "topic": "liquidity measures",
+      "explanation": "Working capital = current assets − current liabilities = 120,000 − 40,000 = 80,000."
+    },
+    {
+      "qid": "q6",
+      "type": "num",
+      "correct": 3.0,
+      "tolerance": 0.05,
+      "topic": "liquidity measures",
+      "explanation": "Current ratio = current assets ÷ current liabilities = 120,000 ÷ 40,000 = 3.0."
+    },
+    {
+      "qid": "q7",
+      "type": "num",
+      "correct": 100000,
+      "tolerance": 0,
+      "topic": "accounting equation",
+      "explanation": "Equity = Assets − Liabilities = 200,000 − 100,000 = 100,000."
+    },
+    {
+      "qid": "q8",
+      "type": "text",
+      "correct": ["position", "financial position"],
+      "topic": "balance sheet basics",
+      "explanation": "The balance sheet is also called the statement of financial position."
+    }
+  ]
+}
