@@ -1,0 +1,65 @@
+{
+  "address": "101.9",
+  "title": "Closing the Books & Preparing Financial Statements",
+  "questions": [
+    {
+      "qid": "q1",
+      "type": "mc",
+      "correct": "a",
+      "topic": "temporary vs permanent accounts",
+      "explanation": "Temporary accounts measure one period's activity and are closed to zero: revenues, expenses, and dividends. The traps in the other options: Unearned revenue is a LIABILITY (permanent) despite the word 'revenue'; wages payable and prepaid rent are balance-sheet accounts; cash and retained earnings carry forward forever."
+    },
+    {
+      "qid": "q2",
+      "type": "num",
+      "correct": 65000,
+      "tolerance": 1,
+      "topic": "retained earnings",
+      "explanation": "Ending RE = beginning RE + net income − dividends = 40,000 + (120,000 − 85,000) − 10,000 = 40,000 + 35,000 − 10,000 = $65,000. This single equation IS the statement of retained earnings, and the closing entries are its mechanical execution."
+    },
+    {
+      "qid": "q3",
+      "type": "num",
+      "correct": 35000,
+      "tolerance": 1,
+      "topic": "closing entries",
+      "explanation": "After entry 1, Income Summary holds a $120,000 credit (the closed revenues); after entry 2 it absorbs an $85,000 debit (the closed expenses), leaving a credit balance of $35,000 — which is exactly net income. That's the elegance of the clearing account: if its pre-close balance doesn't equal the income statement's bottom line, something was missed."
+    },
+    {
+      "qid": "q4",
+      "type": "mc",
+      "correct": "b",
+      "topic": "post-closing trial balance",
+      "explanation": "Closing zeros every temporary account, so the post-closing trial balance lists only permanent (balance sheet) accounts — assets, liabilities, and equity including the updated retained earnings. A revenue, expense, or dividend balance appearing on it is the standard signal that a closing entry was missed."
+    },
+    {
+      "qid": "q5",
+      "type": "mc",
+      "correct": "b",
+      "topic": "statement articulation",
+      "explanation": "The order is forced by data dependencies: the income statement produces net income; the statement of retained earnings consumes net income and produces ending RE; the balance sheet consumes ending RE to make assets = liabilities + equity hold. This chaining of shared numbers across statements is called articulation."
+    },
+    {
+      "qid": "q6",
+      "type": "num",
+      "correct": 180000,
+      "tolerance": 1,
+      "topic": "multi-step income statement",
+      "explanation": "Gross profit = net sales − cost of goods sold = 500,000 − 320,000 = $180,000. It's the first stage of the multi-step income statement and a key margin: it isolates how profitably the firm buys/makes and sells its product, before operating overhead enters the picture."
+    },
+    {
+      "qid": "q7",
+      "type": "mc",
+      "correct": "a",
+      "topic": "closing entries",
+      "explanation": "Income Summary exists to compute net income — revenues earned minus the expenses of earning them. Dividends are neither: they're a distribution of already-earned profits to owners. Routing them through Income Summary would understate net income. So entry 4 debits Retained Earnings and credits Dividends directly. (Dividends is still a temporary account — it gets closed, just by its own road.)"
+    },
+    {
+      "qid": "q8",
+      "type": "mc",
+      "correct": "b",
+      "topic": "closing entries",
+      "explanation": "Closing does two jobs in one motion: reset the period's meters (revenues, expenses, dividends) to zero so next period's statements measure only next period, and bank the period's net effect permanently in retained earnings. Error correction, bank reconciliation, and December depreciation are different procedures (the last is an adjusting entry, which precedes closing)."
+    }
+  ]
+}

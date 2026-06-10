@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>101.8 — Adjusting Entries: Accruals, Deferrals, Depreciation</title>
+<style>
+  :root { --ink:#1a1a2e; --paper:#fdfdfb; --accent:#2d6a4f; --muted:#6b7280; }
+  body { margin:0; font:16px/1.6 system-ui,sans-serif; color:var(--ink);
+         background:var(--paper); }
+  .wrap { max-width:820px; margin:0 auto; padding:32px 20px 80px; }
+  header .addr { font:600 13px ui-monospace,monospace; color:var(--accent);
+                 letter-spacing:.05em; }
+  h1 { font-size:30px; margin:.2em 0 .1em; }
+  .why { color:var(--muted); font-style:italic; margin-bottom:2em; }
+  section { margin:2.5em 0; }
+  h2 { border-bottom:2px solid var(--accent); padding-bottom:4px; }
+  h3 { margin:1.6em 0 .4em; }
+  .visual { border:1px solid #e5e7eb; border-radius:12px; padding:16px;
+            background:#fff; }
+  table.t { border-collapse:collapse; width:100%; font-size:14px; margin:1em 0; }
+  table.t th, table.t td { border:1px solid #e5e7eb; padding:6px 9px; text-align:left; }
+  table.t th { background:#f3f4f6; }
+  table.t td.num { text-align:right; font-family:ui-monospace,monospace; }
+  .ex { background:#f0f7f4; border-left:4px solid var(--accent); padding:12px 16px;
+        border-radius:0 8px 8px 0; margin:1.2em 0; }
+  .ex .lbl { font:600 12px ui-monospace,monospace; color:var(--accent);
+             text-transform:uppercase; letter-spacing:.06em; }
+  code { background:#f3f4f6; padding:1px 5px; border-radius:4px; font-size:14px; }
+  .formula { text-align:center; font-size:18px; margin:14px 0;
+             font-family:Georgia,serif; }
+  .je { font:14px ui-monospace,monospace; background:#f9fafb; border:1px solid #e5e7eb;
+        border-radius:8px; padding:10px 14px; margin:.6em 0; }
+  .je .cr { padding-left:34px; }
+  .q { margin:1.2em 0; padding:14px; border:1px solid #e5e7eb;
+       border-radius:10px; }
+  .q .opts label { display:block; margin:4px 0; cursor:pointer; }
+  .q.right { border-color:var(--accent); background:#f0f7f4; }
+  .q.wrong { border-color:#b91c1c; background:#fef2f2; }
+  .q .fb { margin-top:10px; padding-top:8px; border-top:1px dashed #d1d5db;
+       font-size:14px; }
+  .q.right .fb b { color:var(--accent); }
+  .q.wrong .fb b { color:#b91c1c; }
+  button { background:var(--accent); color:#fff; border:0; padding:10px 18px;
+           border-radius:8px; font-size:15px; cursor:pointer; }
+  button.small { padding:6px 12px; font-size:13px; }
+  button.ghost { background:#fff; color:var(--accent); border:1px solid var(--accent); }
+  #result { margin-top:1em; font-weight:600; }
+  .lesson-nav { display:flex; justify-content:space-between; margin-top:3em;
+       padding-top:1em; border-top:1px solid #e5e7eb; }
+  .lesson-nav a { color:var(--accent); font-weight:600; text-decoration:none; }
+  .lesson-nav a:hover { text-decoration:underline; }
+  .ctrl { display:flex; flex-wrap:wrap; gap:10px 18px; align-items:center;
+          margin:10px 0; font-size:14px; }
+  .ctrl label { display:flex; align-items:center; gap:6px; }
+  .readout { font:600 13px ui-monospace,monospace; }
+  .verdict { margin-top:8px; padding:9px 12px; background:#fffbeb;
+             border:1px solid #fde68a; border-radius:8px; font-size:14px; }
+  .panel { margin-top:10px; padding:12px; background:#f9fafb; border:1px solid #e5e7eb;
+           border-radius:8px; font-size:14px; }
+  .typeBtns button { margin:3px 4px 3px 0; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="addr">101.8</div>
+    <h1>Adjusting Entries: Accruals, Deferrals, Depreciation</h1>
+    <p class="why">Between the trial balance and honest financial statements stands one disciplined ritual: the period-end entries that drag every account from cash timing to economic timing.</p>
+  </header>
+
+  <!-- 1. LEARN -->
+  <section id="learn">
+    <h2>Learn</h2>
+
+    <h3>1. Why the books need adjusting</h3>
+    <p>During the period, bookkeeping records transactions as they visibly happen — cash paid, invoices issued. But by period end, time itself has changed the economics: insurance has quietly been consumed, wages have been earned but not paid, customer advances have been partly worked off, equipment has aged. <strong>Adjusting entries</strong>, made at the end of each accounting period, update the accounts so revenues sit in the period earned and expenses in the period incurred (101.7's accrual principle, executed).</p>
+    <p>Two structural facts about every adjusting entry:</p>
+    <ul>
+      <li>It always pairs <strong>one income statement account with one balance sheet account</strong> — that's what “moving the economics into the right period” mechanically means.</li>
+      <li>It <strong>never touches Cash.</strong> Cash already moved (or will move) on its own date; the adjustment fixes recognition, not money.</li>
+    </ul>
+
+    <h3>2. The four types — one 2×2</h3>
+    <p>Classify by two questions: revenue or expense? And did cash move <em>before</em> or <em>after</em> recognition? Cash-first items are <strong>deferrals</strong> (the entry defers recognition until earned/used); recognition-first items are <strong>accruals</strong>.</p>
+    <table class="t">
+      <tr><th></th><th>Cash moved FIRST (deferral)</th><th>Recognition FIRST (accrual)</th></tr>
+      <tr><th>Expense</th>
+          <td><strong>Prepaid expense</strong> — insurance, rent, supplies<br>Adjust: Dr Expense / Cr Asset</td>
+          <td><strong>Accrued expense</strong> — wages, interest, utilities<br>Adjust: Dr Expense / Cr Liability</td></tr>
+      <tr><th>Revenue</th>
+          <td><strong>Unearned revenue</strong> — advances, subscriptions<br>Adjust: Dr Liability / Cr Revenue</td>
+          <td><strong>Accrued revenue</strong> — work done, unbilled<br>Adjust: Dr Receivable / Cr Revenue</td></tr>
+    </table>
+
+    <div class="ex">
+      <span class="lbl">Worked example — one year-end, four adjustments (Dec 31)</span>
+      <p><strong>(a) Prepaid insurance.</strong> Paid $2,400 on Oct 1 for 12 months. By Dec 31, 3 months (3/12 × 2,400 = $600) are used:</p>
+      <div class="je">Dr Insurance expense 600<br><span class="cr">Cr Prepaid insurance 600</span></div>
+      <p>Prepaid insurance now shows the $1,800 of coverage still owned.</p>
+      <p><strong>(b) Unearned revenue.</strong> Collected $9,000 on Dec 1 for a 3-month service contract; one month is delivered:</p>
+      <div class="je">Dr Unearned service revenue 3,000<br><span class="cr">Cr Service revenue 3,000</span></div>
+      <p><strong>(c) Accrued wages.</strong> Employees earned $1,500 in the last days of December, payable Jan 5:</p>
+      <div class="je">Dr Wages expense 1,500<br><span class="cr">Cr Wages payable 1,500</span></div>
+      <p><strong>(d) Depreciation.</strong> A delivery truck (below) contributes $500/month:</p>
+      <div class="je">Dr Depreciation expense 500<br><span class="cr">Cr Accumulated depreciation — truck 500</span></div>
+    </div>
+
+    <h3>3. Depreciation: allocation, not valuation</h3>
+    <p>A long-lived asset is a bundle of future service paid for up front; depreciation spreads that cost over the periods served. It is <em>not</em> an attempt to track market value. <strong>Straight-line</strong>, the default:</p>
+    <div class="formula">annual depreciation = (cost − salvage value) / useful life</div>
+    <p>The truck: cost $36,000, salvage $6,000, life 5 years → (36,000 − 6,000)/5 = <strong>$6,000/year</strong> ($500/month). The credit goes not to the asset but to <strong>accumulated depreciation</strong>, a <em>contra-asset</em> shown beneath the asset, so readers always see both the original cost and how much has been allocated. <strong>Book (carrying) value</strong> = cost − accumulated depreciation: after 2 years, 36,000 − 12,000 = $24,000 — and it floors at salvage, never below.</p>
+    <p>An accelerated alternative you'll meet in practice: <strong>double-declining balance</strong> applies twice the straight-line rate (2/life) to each year's <em>book value</em>, front-loading expense onto the asset's most productive years — total depreciation over the life is the same; only the shape differs.</p>
+
+    <h3>4. What breaks if you skip an adjustment</h3>
+    <p>Every omitted adjustment misstates both statements at once — by exactly the entry's amount. The reasoning pattern (worth practicing until automatic): name the two accounts the entry would touch; whatever wasn't recorded is over- or understated accordingly.</p>
+    <table class="t">
+      <tr><th>Omitted adjustment</th><th>Net income</th><th>Assets</th><th>Liabilities</th><th>Equity</th></tr>
+      <tr><td>Prepaid expense used (a)</td><td>overstated</td><td>overstated</td><td>—</td><td>overstated</td></tr>
+      <tr><td>Unearned revenue earned (b)</td><td>understated</td><td>—</td><td>overstated</td><td>understated</td></tr>
+      <tr><td>Accrued wages (c)</td><td>overstated</td><td>—</td><td>understated</td><td>overstated</td></tr>
+      <tr><td>Accrued revenue</td><td>understated</td><td>understated</td><td>—</td><td>understated</td></tr>
+    </table>
+
+    <h3>5. Where this sits in the cycle</h3>
+    <p>From 101.6's cycle: journalize → post → <strong>unadjusted trial balance</strong> → <em>adjusting entries</em> → <strong>adjusted trial balance</strong> → financial statements (101.9 closes the loop). The adjusted trial balance is the direct source of the statements — which is why auditors and exam graders care so much about this step: every error here flows straight into what the world sees.</p>
+  </section>
+
+  <!-- 2. VISUALS -->
+  <section id="see-1" class="see">
+    <h2>See it: the four adjustments, anatomized</h2>
+    <p>Pick a type. The timeline shows cash vs. recognition; the entry and T-accounts show exactly which income-statement account pairs with which balance-sheet account. Note that Cash appears on no entry.</p>
+    <div class="visual" id="viz-1">
+      <div class="ctrl typeBtns">
+        <button class="small" id="t0">Prepaid expense</button>
+        <button class="small ghost" id="t1">Unearned revenue</button>
+        <button class="small ghost" id="t2">Accrued expense</button>
+        <button class="small ghost" id="t3">Accrued revenue</button>
+      </div>
+      <canvas id="adjCanvas" width="760" height="250" style="width:100%;max-width:760px;"></canvas>
+      <div class="verdict" id="adjNote"></div>
+    </div>
+  </section>
+
+  <section id="see-2" class="see">
+    <h2>See it: depreciation paths</h2>
+    <p>Set cost, salvage, and life. Straight-line walks book value down a ramp; double-declining dives early then flattens — both land on salvage, allocating the identical total. The yearly expense table updates live.</p>
+    <div class="visual" id="viz-2">
+      <div class="ctrl">
+        <label>Cost: <input type="range" id="cost" min="10000" max="80000" step="1000" value="36000" />
+          <span class="readout" id="costV">$36,000</span></label>
+        <label>Salvage: <input type="range" id="salv" min="0" max="20000" step="500" value="6000" />
+          <span class="readout" id="salvV">$6,000</span></label>
+        <label>Life: <input type="range" id="life" min="3" max="10" value="5" />
+          <span class="readout" id="lifeV">5 yr</span></label>
+      </div>
+      <canvas id="depCanvas" width="760" height="260" style="width:100%;max-width:760px;"></canvas>
+      <div class="verdict" id="depNote"></div>
+    </div>
+  </section>
+
+  <section id="see-3" class="see">
+    <h2>See it: what skipping an adjustment does to the statements</h2>
+    <p>Uncheck adjustments to “forget” them at year-end. The statements recompute against the correct baseline — watch net income, assets, liabilities, and equity each misstate by exactly the skipped amounts.</p>
+    <div class="visual" id="viz-3">
+      <div class="ctrl" id="skipToggles"></div>
+      <div class="panel" id="missPanel"></div>
+      <div class="verdict" id="missNote"></div>
+    </div>
+  </section>
+
+  <!-- 3. QUIZ -->
+  <section id="quiz">
+    <h2>Check yourself</h2>
+    <form id="quizForm">
+
+      <div class="q" data-qid="q1" data-type="mc">
+        <p><strong>1.</strong> Which account never appears in an adjusting entry?</p>
+        <div class="opts">
+          <label><input type="radio" name="q1" value="a"> Cash</label>
+          <label><input type="radio" name="q1" value="b"> Accumulated depreciation</label>
+          <label><input type="radio" name="q1" value="c"> Wages payable</label>
+          <label><input type="radio" name="q1" value="d"> Service revenue</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q2" data-type="mc">
+        <p><strong>2.</strong> On November 1 a firm pays $6,000 for six months of rent in advance. The December 31 adjusting entry for this item is classified as adjusting a:</p>
+        <div class="opts">
+          <label><input type="radio" name="q2" value="a"> Deferred (prepaid) expense</label>
+          <label><input type="radio" name="q2" value="b"> Accrued expense</label>
+          <label><input type="radio" name="q2" value="c"> Deferred (unearned) revenue</label>
+          <label><input type="radio" name="q2" value="d"> Accrued revenue</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q3" data-type="num">
+        <p><strong>3.</strong> A company pays $2,400 on October 1 for a 12-month insurance policy. Its fiscal year ends December 31. What is the dollar amount of the December 31 adjusting entry to insurance expense?</p>
+        <input type="number" name="q3" step="any" />
+      </div>
+
+      <div class="q" data-qid="q4" data-type="num">
+        <p><strong>4.</strong> A delivery truck costs $36,000, has an estimated salvage value of $6,000, and a 5-year useful life. Under straight-line depreciation, what is the <strong>annual</strong> depreciation expense, in dollars?</p>
+        <input type="number" name="q4" step="any" />
+      </div>
+
+      <div class="q" data-qid="q5" data-type="num">
+        <p><strong>5.</strong> For the same truck, what is its <strong>book value</strong> after exactly two years, in dollars?</p>
+        <input type="number" name="q5" step="any" />
+      </div>
+
+      <div class="q" data-qid="q6" data-type="mc">
+        <p><strong>6.</strong> At year-end, $1,500 of wages have been earned by employees but will be paid January 5. If the accountant <em>forgets</em> this adjusting entry, the year's financial statements will show:</p>
+        <div class="opts">
+          <label><input type="radio" name="q6" value="a"> Net income overstated and liabilities understated</label>
+          <label><input type="radio" name="q6" value="b"> Net income understated and liabilities overstated</label>
+          <label><input type="radio" name="q6" value="c"> Net income overstated and assets overstated</label>
+          <label><input type="radio" name="q6" value="d"> No misstatement, since the wages will be paid in January anyway</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q7" data-type="mc">
+        <p><strong>7.</strong> A gym collected a $9,000 advance on December 1 for three months of corporate memberships. The correct December 31 adjusting entry is:</p>
+        <div class="opts">
+          <label><input type="radio" name="q7" value="a"> Dr Cash 3,000 / Cr Membership revenue 3,000</label>
+          <label><input type="radio" name="q7" value="b"> Dr Unearned membership revenue 3,000 / Cr Membership revenue 3,000</label>
+          <label><input type="radio" name="q7" value="c"> Dr Membership revenue 3,000 / Cr Unearned membership revenue 3,000</label>
+          <label><input type="radio" name="q7" value="d"> Dr Unearned membership revenue 9,000 / Cr Membership revenue 9,000</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q8" data-type="num">
+        <p><strong>8.</strong> An office building costs $480,000 with a $80,000 salvage value and a 25-year life. Under straight-line depreciation, what is the <strong>monthly</strong> depreciation expense, in dollars? (Round to the nearest dollar if needed.)</p>
+        <input type="number" name="q8" step="any" />
+      </div>
+
+      <button type="submit">Submit answers</button>
+    </form>
+    <div id="result"></div>
+  </section>
+
+  <!-- 4. NAV -->
+  <nav class="lesson-nav">
+    <a href="index.html">← All lessons</a>
+    <a href="../harness/results.html">Results &amp; mastery →</a>
+  </nav>
+
+</div>
+
+<script>
+  const LESSON_ADDRESS = "101.8";
+
+  /* ---------- Visual 1: four adjustments ---------- */
+  (function(){
+    const TYPES = [
+      {btn:"t0", name:"Prepaid (deferred) expense — insurance",
+       cashM:0, cashLbl:"Oct 1: pay $2,400", recM:3, recLbl:"Dec 31: $600 used",
+       je:["Dr Insurance expense 600","Cr Prepaid insurance 600"],
+       is:"Insurance expense (+600)", bs:"Prepaid insurance asset (−600 → $1,800 left)",
+       note:"Cash moved first, creating an asset of future coverage. The adjustment expenses the 3 months consumed (Oct–Dec) and leaves the remaining 9 months on the balance sheet."},
+      {btn:"t1", name:"Unearned (deferred) revenue — service advance",
+       cashM:2, cashLbl:"Dec 1: collect $9,000", recM:3, recLbl:"Dec 31: $3,000 earned",
+       je:["Dr Unearned service revenue 3,000","Cr Service revenue 3,000"],
+       is:"Service revenue (+3,000)", bs:"Unearned revenue liability (−3,000 → $6,000 owed)",
+       note:"Cash arrived first as a liability — an obligation to perform. One of three months is delivered, so one-third of the obligation converts to earned revenue."},
+      {btn:"t2", name:"Accrued expense — year-end wages",
+       cashM:4, cashLbl:"Jan 5: pay $1,500", recM:3, recLbl:"Dec 31: $1,500 incurred",
+       je:["Dr Wages expense 1,500","Cr Wages payable 1,500"],
+       is:"Wages expense (+1,500)", bs:"Wages payable liability (+1,500)",
+       note:"Recognition comes first: December consumed the labor, so December bears the expense, with a liability standing in until January's payday."},
+      {btn:"t3", name:"Accrued revenue — unbilled consulting",
+       cashM:4, cashLbl:"Jan: client pays $4,000", recM:3, recLbl:"Dec 31: $4,000 earned",
+       je:["Dr Accounts receivable 4,000","Cr Consulting revenue 4,000"],
+       is:"Consulting revenue (+4,000)", bs:"Accounts receivable asset (+4,000)",
+       note:"The work is done but no invoice has gone out. Accrual accounting books the revenue now and a receivable to bridge to January's cash."}
+    ];
+    const MONTHS=["Oct","Nov","Dec","Dec 31","Jan"];
+    const cv=document.getElementById("adjCanvas"), cx=cv.getContext("2d");
+    let cur=0;
+    function draw(){
+      const t=TYPES[cur];
+      TYPES.forEach((x,i)=>document.getElementById(x.btn).classList.toggle("ghost", i!==cur));
+      cx.clearRect(0,0,cv.width,cv.height);
+      const X=m=>80+m*(cv.width-130)/(MONTHS.length-1);
+      // timeline
+      cx.strokeStyle="#d1d5db"; cx.beginPath();
+      cx.moveTo(70,60); cx.lineTo(cv.width-40,60); cx.stroke();
+      MONTHS.forEach((m,i)=>{
+        cx.fillStyle = i===3 ? "#2d6a4f" : "#6b7280";
+        cx.font = i===3 ? "600 11px system-ui" : "11px system-ui";
+        cx.fillText(m, X(i)-12, 82);
+        cx.strokeStyle="#e5e7eb"; cx.beginPath();
+        cx.moveTo(X(i),54); cx.lineTo(X(i),66); cx.stroke();
+      });
+      cx.fillStyle="#b45309"; cx.beginPath(); cx.arc(X(t.cashM),60,8,0,7); cx.fill();
+      cx.font="600 11px system-ui"; cx.fillText("CASH: "+t.cashLbl, X(t.cashM)-40, 38);
+      cx.fillStyle="#2d6a4f"; cx.beginPath(); cx.arc(X(t.recM),60,8,0,7); cx.fill();
+      cx.fillText("ADJUST: "+t.recLbl, Math.min(X(t.recM)-40, cv.width-220), 104);
+      // journal entry box
+      cx.fillStyle="#f9fafb"; cx.strokeStyle="#e5e7eb";
+      cx.fillRect(40,130,330,72); cx.strokeRect(40,130,330,72);
+      cx.fillStyle="#1a1a2e"; cx.font="600 13px ui-monospace,monospace";
+      cx.fillText(t.je[0], 56, 158);
+      cx.fillText("    "+t.je[1], 56, 182);
+      // effect boxes
+      cx.fillStyle="#f0f7f4"; cx.strokeStyle="#2d6a4f";
+      cx.fillRect(400,124,330,38); cx.strokeRect(400,124,330,38);
+      cx.fillStyle="#2d6a4f"; cx.font="600 12px system-ui";
+      cx.fillText("Income statement: "+t.is, 410, 147);
+      cx.fillStyle="#fffbeb"; cx.strokeStyle="#b45309";
+      cx.fillRect(400,170,330,38); cx.strokeRect(400,170,330,38);
+      cx.fillStyle="#b45309";
+      cx.fillText("Balance sheet: "+t.bs, 410, 193);
+      cx.fillStyle="#6b7280"; cx.font="11px system-ui";
+      cx.fillText("(Cash appears nowhere in the entry)", 56, 220);
+      document.getElementById("adjNote").textContent=t.note;
+    }
+    TYPES.forEach((t,i)=>document.getElementById(t.btn).addEventListener("click",
+      e=>{e.preventDefault(); cur=i; draw();}));
+    draw();
+  })();
+
+  /* ---------- Visual 2: depreciation paths ---------- */
+  (function(){
+    const cv=document.getElementById("depCanvas"), cx=cv.getContext("2d");
+    function draw(){
+      const C=+cost.value, S=Math.min(+salv.value, C-1000), L=+life.value;
+      costV.textContent="$"+C.toLocaleString();
+      salvV.textContent="$"+S.toLocaleString();
+      lifeV.textContent=L+" yr";
+      // straight line book values
+      const sl=[C], dd=[C];
+      const slAnnual=(C-S)/L, rate=2/L;
+      for(let y=1;y<=L;y++){
+        sl.push(Math.max(S, C - slAnnual*y));
+        const prev=dd[y-1];
+        let exp=prev*rate;
+        if (prev-exp < S) exp = prev-S;          // floor at salvage
+        if (y===L) exp = prev-S;                  // final true-up
+        dd.push(prev-exp);
+      }
+      cx.clearRect(0,0,cv.width,cv.height);
+      const PL=70, PB=36, PT=16;
+      const X=y=>PL+y*(cv.width-PL-20)/L;
+      const Y=v=>cv.height-PB-(v/C)*(cv.height-PB-PT);
+      cx.strokeStyle="#9ca3af"; cx.beginPath();
+      cx.moveTo(PL,PT); cx.lineTo(PL,cv.height-PB); cx.lineTo(cv.width-20,cv.height-PB); cx.stroke();
+      cx.fillStyle="#6b7280"; cx.font="11px system-ui";
+      for(let y=0;y<=L;y++) cx.fillText("yr "+y, X(y)-10, cv.height-PB+16);
+      cx.fillText("$"+C.toLocaleString(), 6, Y(C)+4);
+      cx.fillText("$"+S.toLocaleString(), 6, Y(S)+4);
+      // salvage floor
+      cx.strokeStyle="#b91c1c"; cx.setLineDash([5,4]); cx.beginPath();
+      cx.moveTo(PL,Y(S)); cx.lineTo(cv.width-20,Y(S)); cx.stroke(); cx.setLineDash([]);
+      cx.fillStyle="#b91c1c"; cx.fillText("salvage floor", cv.width-110, Y(S)-6);
+      function line(data,color,label,ly){
+        cx.strokeStyle=color; cx.lineWidth=2.4; cx.beginPath();
+        data.forEach((v,y)=> y? cx.lineTo(X(y),Y(v)) : cx.moveTo(X(y),Y(v)));
+        cx.stroke(); cx.lineWidth=1;
+        cx.fillStyle=color; cx.font="600 12px system-ui";
+        cx.fillText(label, PL+10, ly);
+      }
+      line(sl, "#2d6a4f", "straight-line book value", PT+16);
+      line(dd, "#7c3aed", "double-declining book value", PT+34);
+      document.getElementById("depNote").textContent =
+        `Straight-line: ($${C.toLocaleString()} − $${S.toLocaleString()}) / ${L} = $${slAnnual.toLocaleString(undefined,{maximumFractionDigits:0})} per year ($${(slAnnual/12).toLocaleString(undefined,{maximumFractionDigits:0})}/month). `+
+        `Double-declining: ${(rate*100).toFixed(0)}% of each year's book value (year 1: $${(C*rate).toLocaleString(undefined,{maximumFractionDigits:0})}), clamped so book value never drops below salvage. Both allocate exactly $${(C-S).toLocaleString()} over the life — only the timing differs.`;
+    }
+    const cost=document.getElementById("cost"), salv=document.getElementById("salv"),
+          life=document.getElementById("life"), costV=document.getElementById("costV"),
+          salvV=document.getElementById("salvV"), lifeV=document.getElementById("lifeV");
+    [cost,salv,life].forEach(el=>el.addEventListener("input",draw));
+    draw();
+  })();
+
+  /* ---------- Visual 3: omission impact ---------- */
+  (function(){
+    // correct adjusted baseline (from the worked example firm)
+    const BASE = { ni: 20000, assets: 120000, liab: 45000 };
+    const ADJ = [
+      {name:"(a) Expense $600 of used insurance", ni:+600, assets:+600, liab:0,
+       desc:"Skipping it leaves the used coverage sitting as an asset: expenses too low."},
+      {name:"(b) Recognize $3,000 earned of the advance", ni:-3000, assets:0, liab:+3000,
+       desc:"Skipping it hides earned revenue inside the liability: income too low."},
+      {name:"(c) Accrue $1,500 of year-end wages", ni:+1500, assets:0, liab:-1500,
+       desc:"Skipping it omits an expense and a debt simultaneously."},
+      {name:"(d) Record $500 December depreciation", ni:+500, assets:+500, liab:0,
+       desc:"Skipping it overstates the truck's carrying value and the month's income."}
+    ];
+    const tog=document.getElementById("skipToggles");
+    ADJ.forEach((a,i)=>{
+      const l=document.createElement("label");
+      l.innerHTML=`<input type="checkbox" data-i="${i}" checked /> ${a.name}`;
+      tog.appendChild(l);
+    });
+    function money(v){ return (v<0?"−$":"$")+Math.abs(v).toLocaleString(); }
+    function render(){
+      const on=[...tog.querySelectorAll("input")].map(c=>c.checked);
+      let ni=BASE.ni, assets=BASE.assets, liab=BASE.liab;
+      const missed=[];
+      ADJ.forEach((a,i)=>{
+        if (on[i]) return;
+        ni+=a.ni; assets+=a.assets; liab+=a.liab;
+        missed.push(a);
+      });
+      const eq = assets - liab, eqBase = BASE.assets - BASE.liab;
+      const d = (v,b)=> v===b ? "correct" :
+        (v>b? `overstated by ${money(v-b)}` : `understated by ${money(b-v)}`);
+      document.getElementById("missPanel").innerHTML =
+        `<b>As reported:</b><br>`+
+        `Net income: ${money(ni)} — ${d(ni,BASE.ni)}<br>`+
+        `Assets: ${money(assets)} — ${d(assets,BASE.assets)}<br>`+
+        `Liabilities: ${money(liab)} — ${d(liab,BASE.liab)}<br>`+
+        `Equity: ${money(eq)} — ${d(eq,eqBase)}`;
+      document.getElementById("missNote").textContent = missed.length
+        ? missed.map(m=>m.desc).join(" ")
+        : "All adjustments recorded: the statements agree with economic reality. Uncheck one to see exactly what its omission would misstate.";
+    }
+    tog.addEventListener("change",render);
+    render();
+  })();
+
+  /* ---------- quiz submit (server-graded) ---------- */
+  document.getElementById("quizForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const fd = new FormData(e.target);
+    const answers = {};
+    document.querySelectorAll(".q").forEach(q => {
+      const qid = q.dataset.qid;
+      answers[qid] = fd.get(qid);
+    });
+
+    const payload = { address: LESSON_ADDRESS, answers, ts: Date.now() };
+
+    try {
+      const res = await fetch(location.protocol === "file:"
+          ? "http://127.0.0.1:8753/record" : "/record", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (data.error) {
+        document.getElementById("result").textContent = "Recorder error: " + data.error;
+        return;
+      }
+      document.getElementById("result").textContent =
+        `Score: ${data.correct}/${data.total}. ` +
+        (data.weak_topics?.length ? `Review: ${data.weak_topics.join(", ")}` : "Nice work.");
+      (data.results || []).forEach(r => {
+        const q = document.querySelector(`.q[data-qid="${r.qid}"]`);
+        if (!q) return;
+        q.classList.remove("right", "wrong");
+        q.classList.add(r.is_correct ? "right" : "wrong");
+        let fb = q.querySelector(".fb");
+        if (!fb) { fb = document.createElement("div"); fb.className = "fb"; q.appendChild(fb); }
+        fb.textContent = "";
+        const mark = document.createElement("b");
+        mark.textContent = r.is_correct ? "✓ Correct" : "✗ Incorrect";
+        fb.appendChild(mark);
+        if (!r.is_correct && r.explanation) fb.append(" — " + r.explanation);
+      });
+    } catch (err) {
+      const blob = new Blob([JSON.stringify(payload, null, 2)],
+                            {type:"application/json"});
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = `${LESSON_ADDRESS}.attempt.json`;
+      a.click();
+      document.getElementById("result").textContent =
+        "Recorder offline — downloaded attempt JSON. Run scripts/serve.py and import it.";
+    }
+  });
+</script>
+</body>
+</html>

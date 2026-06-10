@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>101.9 — Closing the Books &amp; Preparing Financial Statements</title>
+<style>
+  :root { --ink:#1a1a2e; --paper:#fdfdfb; --accent:#2d6a4f; --muted:#6b7280; }
+  body { margin:0; font:16px/1.6 system-ui,sans-serif; color:var(--ink);
+         background:var(--paper); }
+  .wrap { max-width:820px; margin:0 auto; padding:32px 20px 80px; }
+  header .addr { font:600 13px ui-monospace,monospace; color:var(--accent);
+                 letter-spacing:.05em; }
+  h1 { font-size:30px; margin:.2em 0 .1em; }
+  .why { color:var(--muted); font-style:italic; margin-bottom:2em; }
+  section { margin:2.5em 0; }
+  h2 { border-bottom:2px solid var(--accent); padding-bottom:4px; }
+  h3 { margin:1.6em 0 .4em; }
+  .visual { border:1px solid #e5e7eb; border-radius:12px; padding:16px;
+            background:#fff; }
+  table.t { border-collapse:collapse; width:100%; font-size:14px; margin:1em 0; }
+  table.t th, table.t td { border:1px solid #e5e7eb; padding:6px 9px; text-align:left; }
+  table.t th { background:#f3f4f6; }
+  table.t td.num { text-align:right; font-family:ui-monospace,monospace; }
+  .ex { background:#f0f7f4; border-left:4px solid var(--accent); padding:12px 16px;
+        border-radius:0 8px 8px 0; margin:1.2em 0; }
+  .ex .lbl { font:600 12px ui-monospace,monospace; color:var(--accent);
+             text-transform:uppercase; letter-spacing:.06em; }
+  code { background:#f3f4f6; padding:1px 5px; border-radius:4px; font-size:14px; }
+  .je { font:14px ui-monospace,monospace; background:#f9fafb; border:1px solid #e5e7eb;
+        border-radius:8px; padding:10px 14px; margin:.6em 0; }
+  .je .cr { padding-left:34px; }
+  .q { margin:1.2em 0; padding:14px; border:1px solid #e5e7eb;
+       border-radius:10px; }
+  .q .opts label { display:block; margin:4px 0; cursor:pointer; }
+  .q.right { border-color:var(--accent); background:#f0f7f4; }
+  .q.wrong { border-color:#b91c1c; background:#fef2f2; }
+  .q .fb { margin-top:10px; padding-top:8px; border-top:1px dashed #d1d5db;
+       font-size:14px; }
+  .q.right .fb b { color:var(--accent); }
+  .q.wrong .fb b { color:#b91c1c; }
+  button { background:var(--accent); color:#fff; border:0; padding:10px 18px;
+           border-radius:8px; font-size:15px; cursor:pointer; }
+  button.small { padding:6px 12px; font-size:13px; }
+  button.ghost { background:#fff; color:var(--accent); border:1px solid var(--accent); }
+  #result { margin-top:1em; font-weight:600; }
+  .lesson-nav { display:flex; justify-content:space-between; margin-top:3em;
+       padding-top:1em; border-top:1px solid #e5e7eb; }
+  .lesson-nav a { color:var(--accent); font-weight:600; text-decoration:none; }
+  .lesson-nav a:hover { text-decoration:underline; }
+  .ctrl { display:flex; flex-wrap:wrap; gap:10px 18px; align-items:center;
+          margin:10px 0; font-size:14px; }
+  .ctrl label { display:flex; align-items:center; gap:6px; }
+  .readout { font:600 13px ui-monospace,monospace; }
+  .verdict { margin-top:8px; padding:9px 12px; background:#fffbeb;
+             border:1px solid #fde68a; border-radius:8px; font-size:14px; }
+  .panel { margin-top:10px; padding:12px; background:#f9fafb; border:1px solid #e5e7eb;
+           border-radius:8px; font-size:14px; }
+  .chips { display:flex; flex-wrap:wrap; gap:8px; margin:10px 0; }
+  .chip { padding:6px 12px; border:2px solid #d1d5db; border-radius:999px;
+          font-size:13px; background:#fff; cursor:pointer; user-select:none;
+          transition:all .15s; }
+  .chip.temp { border-color:#b45309; background:#fff7ed; }
+  .chip.perm { border-color:#2d6a4f; background:#f0f7f4; }
+  .chip .tag { font:600 10px ui-monospace,monospace; margin-left:6px; }
+  .chip.temp .tag { color:#b45309; } .chip.perm .tag { color:#2d6a4f; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="addr">101.9</div>
+    <h1>Closing the Books &amp; Preparing Financial Statements</h1>
+    <p class="why">Every period the income statement's accounts must die and be reborn at zero — closing is how their lifetime of activity becomes a permanent entry in retained earnings, and how the four statements lock together.</p>
+  </header>
+
+  <!-- 1. LEARN -->
+  <section id="learn">
+    <h2>Learn</h2>
+
+    <h3>1. Temporary vs. permanent accounts</h3>
+    <p>The ledger splits into two populations with different lifespans:</p>
+    <ul>
+      <li><strong>Temporary (nominal) accounts</strong> — revenues, expenses, and dividends (withdrawals). They measure activity <em>for one period</em> and must restart at zero each period, or next year's income statement would report this year's sales again. “Net income for 2026” only means something if the meters were zeroed on January 1.</li>
+      <li><strong>Permanent (real) accounts</strong> — every balance sheet account: assets, liabilities, and equity (including Retained Earnings). They carry their balances forward forever; the balance sheet is a running total since the company's birth.</li>
+    </ul>
+    <p><strong>Closing entries</strong>, made after the adjusted trial balance and the statements, do two jobs at once: reset every temporary account to zero, and transfer its lifetime-of-the-period contents into <strong>Retained Earnings</strong>, the permanent account that accumulates all earnings ever kept.</p>
+
+    <h3>2. The four closing entries</h3>
+    <p>The traditional procedure routes everything through <strong>Income Summary</strong> — a scratch account that exists for one day a year, holding net income while it's in transit:</p>
+    <ol>
+      <li><strong>Close revenues:</strong> debit each revenue account (zeroing its credit balance), credit Income Summary.</li>
+      <li><strong>Close expenses:</strong> credit each expense account (zeroing its debit balance), debit Income Summary.</li>
+      <li><strong>Close Income Summary:</strong> its balance now <em>equals net income</em> (credit balance if profitable). Close it to Retained Earnings.</li>
+      <li><strong>Close Dividends:</strong> credit Dividends, debit Retained Earnings — <em>directly</em>, never through Income Summary, because dividends are a distribution of earnings, not an expense of earning them.</li>
+    </ol>
+
+    <div class="ex">
+      <span class="lbl">Worked example — full close</span>
+      <p>Adjusted balances at Dec 31: Service revenue $120,000 (credit); total expenses $85,000 (debit); Dividends $10,000 (debit); Retained Earnings, beginning $40,000 (credit).</p>
+      <div class="je">1) Dr Service revenue 120,000<br><span class="cr">Cr Income summary 120,000</span></div>
+      <div class="je">2) Dr Income summary 85,000<br><span class="cr">Cr (various) expenses 85,000</span></div>
+      <p>Income Summary now holds a credit of 120,000 − 85,000 = <strong>$35,000 = net income</strong>. Then:</p>
+      <div class="je">3) Dr Income summary 35,000<br><span class="cr">Cr Retained earnings 35,000</span></div>
+      <div class="je">4) Dr Retained earnings 10,000<br><span class="cr">Cr Dividends 10,000</span></div>
+      <p>Ending Retained Earnings = 40,000 + 35,000 − 10,000 = <strong>$65,000</strong> — exactly what the statement of retained earnings reports: <em>beginning RE + net income − dividends = ending RE</em>.</p>
+    </div>
+
+    <p>After closing, a <strong>post-closing trial balance</strong> is prepared. It contains <em>only permanent accounts</em> — if any revenue, expense, or dividend account still shows a balance, a closing entry was missed.</p>
+
+    <h3>3. Statement preparation: the order is forced</h3>
+    <p>The statements are prepared from the adjusted trial balance in a sequence dictated by who feeds whom:</p>
+    <ol>
+      <li><strong>Income statement</strong> — revenues − expenses = net income.</li>
+      <li><strong>Statement of retained earnings</strong> — needs net income from step 1.</li>
+      <li><strong>Balance sheet</strong> — needs ending RE from step 2 to make A = L + E balance.</li>
+      <li><strong>Statement of cash flows</strong> — explains the change in the cash account between balance sheets (101.4).</li>
+    </ol>
+    <p>This chaining is called <strong>articulation</strong>: the statements aren't four reports, they're one model viewed from four angles, sharing numbers at the seams. Net income appears on the income statement <em>and</em> inside the retained-earnings bridge; ending RE appears on that statement <em>and</em> in the balance sheet's equity; ending cash appears on the balance sheet <em>and</em> as the bottom line of the cash flow statement. Lesson 101.10 uses those seams to audit a real filing.</p>
+
+    <h3>4. Presentation formats worth knowing</h3>
+    <p>The <strong>classified balance sheet</strong> sorts assets and liabilities by liquidity: current assets (cash within a year — cash, receivables, inventory, prepaids) before long-term (PP&amp;E net of accumulated depreciation, intangibles); current liabilities (due within a year) before long-term debt. The current/current pairing feeds the <em>current ratio</em>, a first solvency check.</p>
+    <p>The <strong>multi-step income statement</strong> computes profit in stages, each a meaningful margin: net sales − cost of goods sold = <strong>gross profit</strong>; − operating expenses = <strong>operating income</strong>; ± non-operating items (interest, gains) − tax = <strong>net income</strong>. A single-step statement lumps all revenues against all expenses — same bottom line, less diagnostic power.</p>
+
+    <h3>5. The accounting cycle, complete</h3>
+    <p>You now hold the whole loop from 101.5–101.9: (1) analyze transactions → (2) journalize → (3) post to ledger → (4) unadjusted trial balance → (5) adjusting entries → (6) adjusted trial balance → (7) prepare statements → (8) closing entries → (9) post-closing trial balance → (10) next period begins at zero. Steps 5 and 8 are the two places judgment and discipline enter; everything else is mechanical.</p>
+  </section>
+
+  <!-- 2. VISUALS -->
+  <section id="see-1" class="see">
+    <h2>See it: the four closing entries, step by step</h2>
+    <p>Step through the close. Watch each temporary account zero out and its contents flow through Income Summary into Retained Earnings — and note dividends taking their own direct road.</p>
+    <div class="visual" id="viz-1">
+      <div class="ctrl">
+        <button class="small" id="stepBtn">Next entry →</button>
+        <button class="small ghost" id="resetClose">Start over</button>
+        <span class="readout" id="stepLbl"></span>
+      </div>
+      <canvas id="closeCanvas" width="760" height="290" style="width:100%;max-width:760px;"></canvas>
+      <div class="verdict" id="closeNote"></div>
+    </div>
+  </section>
+
+  <section id="see-2" class="see">
+    <h2>See it: articulation — one model, three statements</h2>
+    <p>Edit the inputs and watch the numbers flow: net income leaves the income statement, crosses the retained-earnings bridge, and lands in the balance sheet's equity — which is what keeps A = L + E true.</p>
+    <div class="visual" id="viz-2">
+      <div class="ctrl">
+        <label>Revenues: <input type="range" id="rev" min="50000" max="200000" step="5000" value="120000" />
+          <span class="readout" id="revV"></span></label>
+        <label>Expenses: <input type="range" id="exp" min="30000" max="180000" step="5000" value="85000" />
+          <span class="readout" id="expV"></span></label>
+        <label>Dividends: <input type="range" id="div" min="0" max="40000" step="2500" value="10000" />
+          <span class="readout" id="divV"></span></label>
+      </div>
+      <canvas id="artCanvas" width="760" height="300" style="width:100%;max-width:760px;"></canvas>
+      <div class="verdict" id="artNote"></div>
+    </div>
+  </section>
+
+  <section id="see-3" class="see">
+    <h2>See it: temporary or permanent?</h2>
+    <p>Click each account to classify it (temporary → closed at year-end; permanent → carries forward). Click again to flip. The readout grades your sort.</p>
+    <div class="visual" id="viz-3">
+      <div class="chips" id="acctChips"></div>
+      <div class="verdict" id="sortNote">Click accounts to mark them temporary (orange) or permanent (green).</div>
+    </div>
+  </section>
+
+  <!-- 3. QUIZ -->
+  <section id="quiz">
+    <h2>Check yourself</h2>
+    <form id="quizForm">
+
+      <div class="q" data-qid="q1" data-type="mc">
+        <p><strong>1.</strong> Which group lists only <strong>temporary</strong> accounts?</p>
+        <div class="opts">
+          <label><input type="radio" name="q1" value="a"> Service revenue, rent expense, dividends</label>
+          <label><input type="radio" name="q1" value="b"> Cash, accounts payable, retained earnings</label>
+          <label><input type="radio" name="q1" value="c"> Service revenue, unearned revenue, dividends</label>
+          <label><input type="radio" name="q1" value="d"> Wages expense, wages payable, prepaid rent</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q2" data-type="num">
+        <p><strong>2.</strong> Beginning retained earnings $40,000; revenues for the year $120,000; expenses $85,000; dividends declared and paid $10,000. What is <strong>ending retained earnings</strong>, in dollars?</p>
+        <input type="number" name="q2" step="any" />
+      </div>
+
+      <div class="q" data-qid="q3" data-type="num">
+        <p><strong>3.</strong> In the same scenario, immediately after closing entries 1 and 2 (revenues and expenses closed) but <em>before</em> Income Summary is closed, what is the balance in <strong>Income Summary</strong>, in dollars?</p>
+        <input type="number" name="q3" step="any" />
+      </div>
+
+      <div class="q" data-qid="q4" data-type="mc">
+        <p><strong>4.</strong> A post-closing trial balance should contain:</p>
+        <div class="opts">
+          <label><input type="radio" name="q4" value="a"> All accounts, with temporary accounts at their year-end balances</label>
+          <label><input type="radio" name="q4" value="b"> Only permanent (balance sheet) accounts, with all temporary accounts at zero</label>
+          <label><input type="radio" name="q4" value="c"> Only the income statement accounts</label>
+          <label><input type="radio" name="q4" value="d"> Only accounts with debit balances</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q5" data-type="mc">
+        <p><strong>5.</strong> The financial statements must be prepared in a particular order because:</p>
+        <div class="opts">
+          <label><input type="radio" name="q5" value="a"> Regulators require alphabetical filing</label>
+          <label><input type="radio" name="q5" value="b"> Net income feeds the statement of retained earnings, whose ending balance the balance sheet needs to balance</label>
+          <label><input type="radio" name="q5" value="c"> The balance sheet must be audited before the income statement</label>
+          <label><input type="radio" name="q5" value="d"> Cash flows must be known before revenue can be recognized</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q6" data-type="num">
+        <p><strong>6.</strong> A retailer reports net sales of $500,000 and cost of goods sold of $320,000. On a multi-step income statement, what is <strong>gross profit</strong>, in dollars?</p>
+        <input type="number" name="q6" step="any" />
+      </div>
+
+      <div class="q" data-qid="q7" data-type="mc">
+        <p><strong>7.</strong> Dividends are closed directly to Retained Earnings rather than through Income Summary because:</p>
+        <div class="opts">
+          <label><input type="radio" name="q7" value="a"> Dividends are a distribution of earnings to owners, not an expense of generating them</label>
+          <label><input type="radio" name="q7" value="b"> Dividends are a permanent account</label>
+          <label><input type="radio" name="q7" value="c"> Income Summary can only hold credit balances</label>
+          <label><input type="radio" name="q7" value="d"> Dividends are recorded on the income statement below net income</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q8" data-type="mc">
+        <p><strong>8.</strong> The fundamental purpose of closing entries is to:</p>
+        <div class="opts">
+          <label><input type="radio" name="q8" value="a"> Correct errors discovered during the period</label>
+          <label><input type="radio" name="q8" value="b"> Zero out the temporary accounts for the new period and transfer their net effect into retained earnings</label>
+          <label><input type="radio" name="q8" value="c"> Bring the cash account into agreement with the bank statement</label>
+          <label><input type="radio" name="q8" value="d"> Record depreciation for the final month of the year</label>
+        </div>
+      </div>
+
+      <button type="submit">Submit answers</button>
+    </form>
+    <div id="result"></div>
+  </section>
+
+  <!-- 4. NAV -->
+  <nav class="lesson-nav">
+    <a href="index.html">← All lessons</a>
+    <a href="../harness/results.html">Results &amp; mastery →</a>
+  </nav>
+
+</div>
+
+<script>
+  const LESSON_ADDRESS = "101.9";
+
+  /* ---------- Visual 1: closing stepper ---------- */
+  (function(){
+    const cv=document.getElementById("closeCanvas"), cx=cv.getContext("2d");
+    // accounts: [name, x, balance label per step]
+    let step=0;
+    const STEPS=[
+      {lbl:"Adjusted balances, ready to close",
+       note:"Revenues carry a $120,000 credit; expenses an $85,000 debit; dividends $10,000. Retained Earnings still shows its beginning balance — nothing has flowed yet.",
+       bal:{rev:120000, exp:85000, div:10000, is:0, re:40000}},
+      {lbl:"Entry 1 — close revenues",
+       note:"Dr Service revenue 120,000 / Cr Income summary 120,000. The revenue meter reads zero; its lifetime now lives in Income Summary.",
+       bal:{rev:0, exp:85000, div:10000, is:120000, re:40000}},
+      {lbl:"Entry 2 — close expenses",
+       note:"Dr Income summary 85,000 / Cr expenses 85,000. Income Summary's balance is now 120,000 − 85,000 = $35,000 credit — that IS net income, sitting in transit.",
+       bal:{rev:0, exp:0, div:10000, is:35000, re:40000}},
+      {lbl:"Entry 3 — close Income Summary to RE",
+       note:"Dr Income summary 35,000 / Cr Retained earnings 35,000. Net income lands in equity. Income Summary dies for another year.",
+       bal:{rev:0, exp:0, div:10000, is:0, re:75000}},
+      {lbl:"Entry 4 — close Dividends directly to RE",
+       note:"Dr Retained earnings 10,000 / Cr Dividends 10,000. Note the direct route — dividends never pass through Income Summary because they're a distribution, not an expense. Ending RE: 40,000 + 35,000 − 10,000 = $65,000.",
+       bal:{rev:0, exp:0, div:0, is:0, re:65000}}
+    ];
+    const BOXES=[
+      {key:"rev", name:"Revenues", x:30, y:30},
+      {key:"exp", name:"Expenses", x:30, y:120},
+      {key:"div", name:"Dividends", x:30, y:210},
+      {key:"is", name:"Income Summary", x:300, y:75},
+      {key:"re", name:"Retained Earnings", x:560, y:120}
+    ];
+    function money(v){ return "$"+v.toLocaleString(); }
+    function draw(){
+      const s=STEPS[step];
+      document.getElementById("stepLbl").textContent=`${step}/4 — ${s.lbl}`;
+      cx.clearRect(0,0,cv.width,cv.height);
+      // flow arrows
+      function arrow(x1,y1,x2,y2,on){
+        cx.strokeStyle = on ? "#2d6a4f" : "#e5e7eb"; cx.lineWidth = on?3:1.4;
+        cx.beginPath(); cx.moveTo(x1,y1); cx.lineTo(x2,y2); cx.stroke(); cx.lineWidth=1;
+      }
+      arrow(200,55,300,95,step===1);
+      arrow(200,145,300,115,step===2);
+      arrow(470,105,560,140,step===3);
+      arrow(200,235,560,160,step===4);
+      BOXES.forEach(b=>{
+        const v=s.bal[b.key];
+        const zero = v===0;
+        cx.fillStyle = zero ? "#f3f4f6" : (b.key==="re" ? "#f0f7f4" : "#fff");
+        cx.strokeStyle = zero ? "#d1d5db" : (b.key==="re" ? "#2d6a4f" : "#9ca3af");
+        cx.lineWidth = b.key==="re" ? 2.4 : 1.6;
+        cx.fillRect(b.x,b.y,170,52); cx.strokeRect(b.x,b.y,170,52); cx.lineWidth=1;
+        cx.fillStyle = zero ? "#9ca3af" : "#1a1a2e";
+        cx.font="600 13px system-ui"; cx.fillText(b.name, b.x+10, b.y+20);
+        cx.font="600 14px ui-monospace,monospace";
+        cx.fillText(zero ? "0" : money(s.bal[b.key]), b.x+10, b.y+42);
+      });
+      document.getElementById("closeNote").textContent=s.note;
+    }
+    document.getElementById("stepBtn").onclick=e=>{e.preventDefault();
+      step=Math.min(4,step+1); draw();};
+    document.getElementById("resetClose").onclick=e=>{e.preventDefault(); step=0; draw();};
+    draw();
+  })();
+
+  /* ---------- Visual 2: articulation ---------- */
+  (function(){
+    const cv=document.getElementById("artCanvas"), cx=cv.getContext("2d");
+    const BEG_RE=40000, OTHER_EQ=50000, LIAB=45000;
+    function money(v){ return (v<0?"−$":"$")+Math.abs(v).toLocaleString(); }
+    function draw(){
+      const R=+rev.value, E=+exp.value, D=+dv.value;
+      revV.textContent=money(R); expV.textContent=money(E); divV.textContent=money(D);
+      const NI=R-E, endRE=BEG_RE+NI-D;
+      const assets=LIAB+OTHER_EQ+endRE;
+      cx.clearRect(0,0,cv.width,cv.height);
+      function box(x,y,w,h,title,lines,hl){
+        cx.fillStyle="#fff"; cx.strokeStyle= hl?"#2d6a4f":"#9ca3af"; cx.lineWidth=hl?2.2:1.4;
+        cx.fillRect(x,y,w,h); cx.strokeRect(x,y,w,h); cx.lineWidth=1;
+        cx.fillStyle="#2d6a4f"; cx.font="600 13px system-ui"; cx.fillText(title,x+10,y+20);
+        cx.fillStyle="#1a1a2e"; cx.font="12px ui-monospace,monospace";
+        lines.forEach((l,i)=>cx.fillText(l,x+10,y+40+i*17));
+      }
+      box(20,16,230,112,"Income statement",
+        [`Revenues   ${money(R)}`,`Expenses   ${money(E)}`,`──────────`,`Net income ${money(NI)}`]);
+      box(270,98,230,112,"Retained earnings",
+        [`Beginning  ${money(BEG_RE)}`,`+ Net inc  ${money(NI)}`,`− Divid.   ${money(D)}`,`Ending     ${money(endRE)}`]);
+      box(520,180,230,112,"Balance sheet (equity)",
+        [`Liabilities ${money(LIAB)}`,`Stock       ${money(OTHER_EQ)}`,`Retained E. ${money(endRE)}`,`Assets =    ${money(assets)}`]);
+      // arrows
+      function arrow(x1,y1,x2,y2,label){
+        cx.strokeStyle="#b45309"; cx.lineWidth=2.4; cx.beginPath();
+        cx.moveTo(x1,y1); cx.lineTo(x2,y2); cx.stroke(); cx.lineWidth=1;
+        cx.fillStyle="#b45309"; cx.font="600 11px system-ui";
+        cx.fillText(label,(x1+x2)/2-30,(y1+y2)/2-6);
+      }
+      arrow(250,100,270,128,"net income");
+      arrow(500,182,520,212,"ending RE");
+      document.getElementById("artNote").textContent =
+        `Net income ${money(NI)} flows into the RE bridge; ending RE ${money(endRE)} flows into equity; assets of ${money(assets)} = liabilities ${money(LIAB)} + equity ${money(OTHER_EQ+endRE)}. Change any input and the seam values move together — that's articulation. (Raise dividends above net income and watch RE shrink: distributions can exceed a single year's earnings, eating prior years' accumulation.)`;
+    }
+    const rev=document.getElementById("rev"), exp=document.getElementById("exp"),
+          dv=document.getElementById("div"), revV=document.getElementById("revV"),
+          expV=document.getElementById("expV"), divV=document.getElementById("divV");
+    [rev,exp,dv].forEach(el=>el.addEventListener("input",draw));
+    draw();
+  })();
+
+  /* ---------- Visual 3: temp vs permanent sorter ---------- */
+  (function(){
+    const ACCTS=[
+      ["Service revenue","t"],["Cash","p"],["Wages expense","t"],["Accounts payable","p"],
+      ["Dividends","t"],["Retained earnings","p"],["Prepaid insurance","p"],
+      ["Depreciation expense","t"],["Unearned revenue","p"],["Accumulated depreciation","p"],
+      ["Interest revenue","t"],["Equipment","p"]
+    ];
+    const chipsDiv=document.getElementById("acctChips");
+    const state={};
+    ACCTS.forEach(([name])=>state[name]=null);
+    ACCTS.forEach(([name])=>{
+      const c=document.createElement("span"); c.className="chip"; c.textContent=name;
+      const tag=document.createElement("span"); tag.className="tag"; c.appendChild(tag);
+      c.addEventListener("click",()=>{
+        state[name]=state[name]==="t"?"p":(state[name]==="p"?null:"t");
+        c.classList.toggle("temp", state[name]==="t");
+        c.classList.toggle("perm", state[name]==="p");
+        tag.textContent=state[name]==="t"?"TEMP":(state[name]==="p"?"PERM":"");
+        grade();
+      });
+      chipsDiv.appendChild(c);
+    });
+    function grade(){
+      const done=ACCTS.filter(([n])=>state[n]!==null);
+      if(done.length<ACCTS.length){
+        document.getElementById("sortNote").textContent=
+          `${done.length}/${ACCTS.length} classified. Temporary = closed to zero at year-end (revenues, expenses, dividends); permanent = carries forward (all balance sheet accounts).`;
+        return;
+      }
+      const wrong=ACCTS.filter(([n,k])=>state[n]!==k).map(([n,k])=>
+        `${n} is ${k==="t"?"temporary":"permanent"}`);
+      document.getElementById("sortNote").textContent= wrong.length
+        ? `Almost — ${wrong.length} to fix: ${wrong.join("; ")}. Hint: Unearned revenue and Accumulated depreciation are balance-sheet accounts despite their income-statement-sounding names.`
+        : "12/12 — perfect sort. The traps: Unearned revenue (a liability, permanent), Accumulated depreciation (contra-asset, permanent), and Dividends (temporary, but closed straight to RE).";
+    }
+  })();
+
+  /* ---------- quiz submit (server-graded) ---------- */
+  document.getElementById("quizForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const fd = new FormData(e.target);
+    const answers = {};
+    document.querySelectorAll(".q").forEach(q => {
+      const qid = q.dataset.qid;
+      answers[qid] = fd.get(qid);
+    });
+
+    const payload = { address: LESSON_ADDRESS, answers, ts: Date.now() };
+
+    try {
+      const res = await fetch(location.protocol === "file:"
+          ? "http://127.0.0.1:8753/record" : "/record", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (data.error) {
+        document.getElementById("result").textContent = "Recorder error: " + data.error;
+        return;
+      }
+      document.getElementById("result").textContent =
+        `Score: ${data.correct}/${data.total}. ` +
+        (data.weak_topics?.length ? `Review: ${data.weak_topics.join(", ")}` : "Nice work.");
+      (data.results || []).forEach(r => {
+        const q = document.querySelector(`.q[data-qid="${r.qid}"]`);
+        if (!q) return;
+        q.classList.remove("right", "wrong");
+        q.classList.add(r.is_correct ? "right" : "wrong");
+        let fb = q.querySelector(".fb");
+        if (!fb) { fb = document.createElement("div"); fb.className = "fb"; q.appendChild(fb); }
+        fb.textContent = "";
+        const mark = document.createElement("b");
+        mark.textContent = r.is_correct ? "✓ Correct" : "✗ Incorrect";
+        fb.appendChild(mark);
+        if (!r.is_correct && r.explanation) fb.append(" — " + r.explanation);
+      });
+    } catch (err) {
+      const blob = new Blob([JSON.stringify(payload, null, 2)],
+                            {type:"application/json"});
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = `${LESSON_ADDRESS}.attempt.json`;
+      a.click();
+      document.getElementById("result").textContent =
+        "Recorder offline — downloaded attempt JSON. Run scripts/serve.py and import it.";
+    }
+  });
+</script>
+</body>
+</html>

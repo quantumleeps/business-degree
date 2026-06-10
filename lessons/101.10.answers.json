@@ -1,0 +1,65 @@
+{
+  "address": "101.10",
+  "title": "Reading a Real 10-K: Tying the Four Statements Together",
+  "questions": [
+    {
+      "qid": "q1",
+      "type": "mc",
+      "correct": "d",
+      "topic": "10-K structure",
+      "explanation": "Item 8 (Financial Statements and Supplementary Data) holds the audited statements, the notes, and the auditor's report — the legally accountable core of the filing. Item 1 describes the business, 1A lists risks, and Item 7 is management's narrative (MD&A), which should be read against Item 8, not instead of it."
+    },
+    {
+      "qid": "q2",
+      "type": "num",
+      "correct": 285,
+      "tolerance": 0.5,
+      "topic": "statement articulation",
+      "explanation": "Ending RE = beginning RE + net income − dividends = 220 + 95 − 30 = $285M. This is the seam between the statement of stockholders' equity and the balance sheet: the same 285 must appear in both, or the model doesn't close."
+    },
+    {
+      "qid": "q3",
+      "type": "num",
+      "correct": 75,
+      "tolerance": 0.5,
+      "topic": "statement articulation",
+      "explanation": "Ending cash = beginning cash + CFO + CFI + CFF = 64 + 118 − 85 − 22 = $75M. The cash flow statement exists precisely to explain this change, and its bottom line must equal the balance sheet's cash — the easiest articulation check in the filing."
+    },
+    {
+      "qid": "q4",
+      "type": "mc",
+      "correct": "b",
+      "topic": "earnings quality",
+      "explanation": "Income rising while operating cash falls, with receivables growing four times faster than revenue, is the classic earnings-quality red flag: sales are being recognized that customers aren't paying for — the signature of aggressive revenue recognition or channel stuffing. Net income is an accrual opinion; cash is a fact. When they diverge for years, trust the cash."
+    },
+    {
+      "qid": "q5",
+      "type": "mc",
+      "correct": "b",
+      "topic": "auditor's report",
+      "explanation": "An unqualified opinion says the statements present fairly, in all material respects, in conformity with GAAP. It is assurance about the REPORTING, not the business: not a fraud guarantee (audits provide reasonable, not absolute, assurance), not an investment recommendation, and not a solvency promise — going-concern doubt is a separate, explicit paragraph."
+    },
+    {
+      "qid": "q6",
+      "type": "mc",
+      "correct": "a",
+      "topic": "notes to financial statements",
+      "explanation": "Accounting policies (including the revenue recognition method), lease obligations, and debt maturities all live in the notes to the financial statements within Item 8. The statement faces are summaries; the notes are the contract. Skipping them is reading the headlines and skipping the article."
+    },
+    {
+      "qid": "q7",
+      "type": "num",
+      "correct": 1.6,
+      "tolerance": 0.05,
+      "topic": "ratio basics",
+      "explanation": "Current ratio = current assets / current liabilities = 240/150 = 1.6: the company holds $1.60 of within-a-year assets for every $1 of within-a-year obligations. Both inputs come straight off the classified balance sheet in Item 8 — a first-pass solvency check."
+    },
+    {
+      "qid": "q8",
+      "type": "mc",
+      "correct": "c",
+      "topic": "statement articulation",
+      "explanation": "The statement of cash flows reconciles beginning cash to ending cash through operating, investing, and financing activities — it is the bridge between two consecutive balance sheets' cash lines. The income statement explains accrual performance (not cash); the retained earnings statement bridges equity, not cash."
+    }
+  ]
+}

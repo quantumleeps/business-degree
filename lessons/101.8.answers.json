@@ -1,0 +1,66 @@
+{
+  "address": "101.8",
+  "title": "Adjusting Entries: Accruals, Deferrals, Depreciation",
+  "questions": [
+    {
+      "qid": "q1",
+      "type": "mc",
+      "correct": "a",
+      "topic": "adjusting entry mechanics",
+      "explanation": "Adjusting entries fix recognition timing, not money: cash already moved (or will move) on its own date and was recorded then. Every adjusting entry pairs one income-statement account with one balance-sheet account — and Cash is never one of them. If your 'adjusting entry' touches Cash, it's a regular transaction entry."
+    },
+    {
+      "qid": "q2",
+      "type": "mc",
+      "correct": "a",
+      "topic": "adjustment types",
+      "explanation": "Cash was paid BEFORE the expense is incurred, so this is a deferral on the expense side: a prepaid expense. The asset (prepaid rent) is consumed month by month, with the year-end adjustment expensing the two months used (Nov–Dec: $2,000) and leaving four months ($4,000) as an asset. Accruals are the opposite ordering — recognition before cash."
+    },
+    {
+      "qid": "q3",
+      "type": "num",
+      "correct": 600,
+      "tolerance": 1,
+      "topic": "prepaid expenses",
+      "explanation": "The policy costs $2,400/12 = $200 per month. From October 1 to December 31, three months of coverage have been consumed: 3 × $200 = $600 → Dr Insurance expense 600 / Cr Prepaid insurance 600, leaving $1,800 of future coverage as an asset."
+    },
+    {
+      "qid": "q4",
+      "type": "num",
+      "correct": 6000,
+      "tolerance": 1,
+      "topic": "depreciation",
+      "explanation": "Straight-line depreciation = (cost − salvage) / useful life = (36,000 − 6,000)/5 = $6,000 per year. Remember to subtract salvage first — only the depreciable base (the cost that will actually be consumed) gets allocated, not the full purchase price."
+    },
+    {
+      "qid": "q5",
+      "type": "num",
+      "correct": 24000,
+      "tolerance": 1,
+      "topic": "depreciation",
+      "explanation": "Book value = cost − accumulated depreciation. After two years, accumulated depreciation = 2 × $6,000 = $12,000, so book value = 36,000 − 12,000 = $24,000. Note this is an allocation artifact, not the truck's market value — depreciation allocates cost; it doesn't appraise."
+    },
+    {
+      "qid": "q6",
+      "type": "mc",
+      "correct": "a",
+      "topic": "omission effects",
+      "explanation": "The skipped entry is Dr Wages expense / Cr Wages payable. Without it, expenses are understated → net income (and through it, equity) overstated by $1,500 — and the obligation to employees is missing, so liabilities are understated by $1,500. Assets are untouched; that January will pay anyway doesn't matter, because December consumed the labor."
+    },
+    {
+      "qid": "q7",
+      "type": "mc",
+      "correct": "b",
+      "topic": "unearned revenue",
+      "explanation": "One of the three months has been delivered, so one-third of the $9,000 advance ($3,000) has been earned: Dr Unearned membership revenue 3,000 / Cr Membership revenue 3,000 — the liability shrinks, revenue is recognized. (c) runs backwards; (d) recognizes all three months when only one is delivered; (a) touches Cash, which adjusting entries never do."
+    },
+    {
+      "qid": "q8",
+      "type": "num",
+      "correct": 1333,
+      "tolerance": 1,
+      "topic": "depreciation",
+      "explanation": "Annual straight-line = (480,000 − 80,000)/25 = 400,000/25 = $16,000 per year. Monthly = 16,000/12 ≈ $1,333. Two-step problems like this are where dropped salvage values and skipped unit conversions hide — write the formula, then convert."
+    }
+  ]
+}

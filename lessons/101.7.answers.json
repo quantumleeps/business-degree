@@ -1,0 +1,66 @@
+{
+  "address": "101.7",
+  "title": "Accrual vs. Cash Basis; Revenue Recognition",
+  "questions": [
+    {
+      "qid": "q1",
+      "type": "mc",
+      "correct": "b",
+      "topic": "accrual basis",
+      "explanation": "Accrual accounting recognizes revenue when it is EARNED — when the performance obligation is satisfied and control passes to the customer — regardless of when cash, invoices, or signatures happen. Cash receipt is the cash-basis trigger; invoicing and contract signing are administrative events, not earnings events."
+    },
+    {
+      "qid": "q2",
+      "type": "mc",
+      "correct": "b",
+      "topic": "unearned revenue",
+      "explanation": "Selling a gift card creates an obligation to deliver goods later (or refund), so the $100 is unearned revenue — a liability. Revenue is recognized when the card is redeemed, i.e., when the performance obligation is satisfied. Cash received is never by itself revenue under accrual accounting."
+    },
+    {
+      "qid": "q3",
+      "type": "num",
+      "correct": 80,
+      "tolerance": 0.5,
+      "topic": "revenue recognition",
+      "explanation": "The subscription earns $240/12 = $20 per month as issues are delivered. From September 1 to December 31 is four months (Sep, Oct, Nov, Dec): 4 × $20 = $80 of revenue recognized. The cash arrived all at once, but the earning happens issue by issue."
+    },
+    {
+      "qid": "q4",
+      "type": "num",
+      "correct": 160,
+      "tolerance": 0.5,
+      "topic": "unearned revenue",
+      "explanation": "Unearned revenue = cash collected − revenue earned to date = $240 − $80 = $160, representing the eight months of issues (Jan–Aug) still owed. The liability and the recognized revenue always sum to the cash collected — that's the bridge-account arithmetic."
+    },
+    {
+      "qid": "q5",
+      "type": "mc",
+      "correct": "c",
+      "topic": "bridge accounts",
+      "explanation": "Revenue earned before cash is collected sits in accounts receivable — an asset, since it's a legal claim to future cash. Unearned revenue is the mirror image (cash before earning, a liability); prepaid expense is cash paid before an expense is incurred; wages payable is an expense incurred before paying."
+    },
+    {
+      "qid": "q6",
+      "type": "num",
+      "correct": 540,
+      "tolerance": 1,
+      "topic": "transaction price allocation",
+      "explanation": "Allocate the $720 in proportion to standalone selling prices. Standalone total = $600 + $200 = $800. License share: $720 × 600/800 = $540, recognized at delivery (point in time). Support gets $720 × 200/800 = $180, recognized at $15/month over the year as that obligation is satisfied."
+    },
+    {
+      "qid": "q7",
+      "type": "mc",
+      "correct": "b",
+      "topic": "cash basis",
+      "explanation": "The cash basis records revenue when cash is received — January 2027 — even though the work was done in December. That's precisely the distortion accrual accounting exists to fix: under GAAP the revenue belongs to December 2026, the period that earned it."
+    },
+    {
+      "qid": "q8",
+      "type": "num",
+      "correct": 7000,
+      "tolerance": 1,
+      "topic": "accrual income",
+      "explanation": "Accrual net income = revenue EARNED − expenses INCURRED = $18,000 − $11,000 = $7,000. Collection status is irrelevant (the $5,000 uncollected is in receivables; the $2,000 unpaid is in payables), and the $3,000 advance is unearned revenue — a liability, not income, because no work has been performed for it yet."
+    }
+  ]
+}

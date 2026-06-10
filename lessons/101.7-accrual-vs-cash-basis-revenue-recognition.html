@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>101.7 — Accrual vs. Cash Basis; Revenue Recognition</title>
+<style>
+  :root { --ink:#1a1a2e; --paper:#fdfdfb; --accent:#2d6a4f; --muted:#6b7280; }
+  body { margin:0; font:16px/1.6 system-ui,sans-serif; color:var(--ink);
+         background:var(--paper); }
+  .wrap { max-width:820px; margin:0 auto; padding:32px 20px 80px; }
+  header .addr { font:600 13px ui-monospace,monospace; color:var(--accent);
+                 letter-spacing:.05em; }
+  h1 { font-size:30px; margin:.2em 0 .1em; }
+  .why { color:var(--muted); font-style:italic; margin-bottom:2em; }
+  section { margin:2.5em 0; }
+  h2 { border-bottom:2px solid var(--accent); padding-bottom:4px; }
+  h3 { margin:1.6em 0 .4em; }
+  .visual { border:1px solid #e5e7eb; border-radius:12px; padding:16px;
+            background:#fff; }
+  table.t { border-collapse:collapse; width:100%; font-size:14px; margin:1em 0; }
+  table.t th, table.t td { border:1px solid #e5e7eb; padding:6px 9px; text-align:left; }
+  table.t th { background:#f3f4f6; }
+  table.t td.num { text-align:right; font-family:ui-monospace,monospace; }
+  .ex { background:#f0f7f4; border-left:4px solid var(--accent); padding:12px 16px;
+        border-radius:0 8px 8px 0; margin:1.2em 0; }
+  .ex .lbl { font:600 12px ui-monospace,monospace; color:var(--accent);
+             text-transform:uppercase; letter-spacing:.06em; }
+  code { background:#f3f4f6; padding:1px 5px; border-radius:4px; font-size:14px; }
+  .q { margin:1.2em 0; padding:14px; border:1px solid #e5e7eb;
+       border-radius:10px; }
+  .q .opts label { display:block; margin:4px 0; cursor:pointer; }
+  .q.right { border-color:var(--accent); background:#f0f7f4; }
+  .q.wrong { border-color:#b91c1c; background:#fef2f2; }
+  .q .fb { margin-top:10px; padding-top:8px; border-top:1px dashed #d1d5db;
+       font-size:14px; }
+  .q.right .fb b { color:var(--accent); }
+  .q.wrong .fb b { color:#b91c1c; }
+  button { background:var(--accent); color:#fff; border:0; padding:10px 18px;
+           border-radius:8px; font-size:15px; cursor:pointer; }
+  button.small { padding:6px 12px; font-size:13px; }
+  button.ghost { background:#fff; color:var(--accent); border:1px solid var(--accent); }
+  #result { margin-top:1em; font-weight:600; }
+  .lesson-nav { display:flex; justify-content:space-between; margin-top:3em;
+       padding-top:1em; border-top:1px solid #e5e7eb; }
+  .lesson-nav a { color:var(--accent); font-weight:600; text-decoration:none; }
+  .lesson-nav a:hover { text-decoration:underline; }
+  .ctrl { display:flex; flex-wrap:wrap; gap:10px 18px; align-items:center;
+          margin:10px 0; font-size:14px; }
+  .ctrl label { display:flex; align-items:center; gap:6px; }
+  .readout { font:600 13px ui-monospace,monospace; }
+  .verdict { margin-top:8px; padding:9px 12px; background:#fffbeb;
+             border:1px solid #fde68a; border-radius:8px; font-size:14px; }
+  .panel { margin-top:10px; padding:12px; background:#f9fafb; border:1px solid #e5e7eb;
+           border-radius:8px; font-size:14px; }
+  .cols { display:flex; flex-wrap:wrap; gap:14px; }
+  .col { flex:1; min-width:280px; border:1px solid #e5e7eb; border-radius:8px; padding:10px; }
+  .col h4 { margin:.1em 0 .4em; }
+  .line { display:flex; justify-content:space-between; font-size:14px; padding:3px 0;
+          border-bottom:1px dotted #e5e7eb; }
+  .line.tot { font-weight:700; border-top:2px solid #1a1a2e; border-bottom:none; }
+  .step { padding:9px 12px; margin:6px 0; border:1px solid #e5e7eb; border-radius:8px;
+          font-size:14px; }
+  .step.on { border-color:var(--accent); background:#f0f7f4; }
+  .step b.n { display:inline-block; width:22px; height:22px; border-radius:50%;
+              background:var(--accent); color:#fff; text-align:center; line-height:22px;
+              font-size:12px; margin-right:8px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="addr">101.7</div>
+    <h1>Accrual vs. Cash Basis; Revenue Recognition</h1>
+    <p class="why">When you record a sale is a more consequential question than how big it is — accrual accounting exists because cash timing lies about performance, and revenue recognition is where most accounting frauds live.</p>
+  </header>
+
+  <!-- 1. LEARN -->
+  <section id="learn">
+    <h2>Learn</h2>
+
+    <h3>1. Two answers to “when did it happen?”</h3>
+    <p>Every transaction has two dates that may differ: when the economic event occurs, and when cash moves. The two accounting bases pick different dates:</p>
+    <ul>
+      <li><strong>Cash basis</strong> — record revenue when cash is <em>received</em>, expenses when cash is <em>paid</em>. Simple, objective, and how your checking account already thinks.</li>
+      <li><strong>Accrual basis</strong> — record revenue when it is <strong>earned</strong> (the performance obligation is satisfied) and expenses when they are <strong>incurred</strong> (the benefit is consumed), regardless of cash. This is what GAAP and IFRS require for external reporting; cash basis survives mainly in very small businesses and some tax contexts.</li>
+    </ul>
+    <p>The case for accrual is the <strong>periodicity problem</strong>: businesses run continuously but must report in slices (months, quarters, years). Cash timing scatters a single economic story across periods — a December sale collected in January makes December look worse and January better than either really was. Accrual accounting reassembles the story: revenues in the period earned, and — by the <strong>expense recognition (matching) principle</strong> — the expenses that produced them in the same period.</p>
+
+    <div class="ex">
+      <span class="lbl">Worked example — same quarter, two verdicts</span>
+      <p>Quarter 1 (Jan–Mar) at a consulting firm:</p>
+      <ul>
+        <li>Jan 1: collects <strong>$12,000 in advance</strong> for a four-month engagement (Jan–Apr).</li>
+        <li>Feb 1: pays <strong>$3,600</strong> for a 12-month insurance policy (Feb–Jan).</li>
+        <li>March: bills a client <strong>$30,000</strong> for March work; payment arrives in April.</li>
+        <li>Pays staff <strong>$8,000 cash per month</strong>, each month, for that month's work.</li>
+      </ul>
+      <table class="t">
+        <tr><th></th><th>Cash basis</th><th>Accrual basis</th></tr>
+        <tr><td>Advance engagement</td><td class="num">+12,000</td><td class="num">+9,000 (3 of 4 months earned)</td></tr>
+        <tr><td>March billing</td><td class="num">0 (cash in April)</td><td class="num">+30,000 (earned in March)</td></tr>
+        <tr><td>Insurance</td><td class="num">−3,600</td><td class="num">−600 (2 of 12 months used)</td></tr>
+        <tr><td>Staff wages</td><td class="num">−24,000</td><td class="num">−24,000 (paid as incurred)</td></tr>
+        <tr><td><strong>Quarterly income</strong></td><td class="num"><strong>−15,600</strong></td><td class="num"><strong>+14,400</strong></td></tr>
+      </table>
+      <p>One firm, one quarter: a $15,600 loss or a $14,400 profit depending on the basis. The accrual figure is the honest performance report; the cash figure is an honest <em>liquidity</em> report. You need both — which is why the statement of cash flows (101.4) exists alongside the accrual income statement.</p>
+    </div>
+
+    <h3>2. The bridge accounts</h3>
+    <p>Whenever recognition and cash part company, a balance sheet account holds the difference until they reunite:</p>
+    <table class="t">
+      <tr><th>Timing</th><th>Bridge account</th><th>Type</th></tr>
+      <tr><td>Revenue earned <em>before</em> cash</td><td>Accounts receivable</td><td>Asset (a claim to cash)</td></tr>
+      <tr><td>Cash received <em>before</em> revenue earned</td><td>Unearned (deferred) revenue</td><td>Liability (an obligation to perform)</td></tr>
+      <tr><td>Expense incurred <em>before</em> cash paid</td><td>Accrued liability (e.g., wages payable)</td><td>Liability</td></tr>
+      <tr><td>Cash paid <em>before</em> expense incurred</td><td>Prepaid expense</td><td>Asset (future benefit)</td></tr>
+    </table>
+    <p>Note the counterintuitive one: <strong>unearned revenue is a liability</strong>, not revenue. Taking a customer's cash creates an obligation to deliver — you owe either the service or the money back. The next lesson (101.8) covers the period-end adjusting entries that move balances across these bridges.</p>
+
+    <h3>3. The revenue recognition principle — and the five-step model</h3>
+    <p>The core rule: <strong>recognize revenue when (or as) the performance obligation is satisfied</strong> — when control of the good or service passes to the customer — in the amount you expect to be entitled to. The current standard (ASC 606 / IFRS 15) operationalizes this in five steps:</p>
+    <ol>
+      <li><strong>Identify the contract</strong> with the customer.</li>
+      <li><strong>Identify the performance obligations</strong> — the distinct promises in it.</li>
+      <li><strong>Determine the transaction price.</strong></li>
+      <li><strong>Allocate</strong> the price to the obligations, in proportion to their standalone selling prices.</li>
+      <li><strong>Recognize revenue when (or as) each obligation is satisfied</strong> — at a point in time (delivery of a good) or over time (a subscription, a support contract).</li>
+    </ol>
+    <div class="ex">
+      <span class="lbl">Worked example — a bundled sale</span>
+      <p>A software firm sells a perpetual license bundled with one year of support for <strong>$720</strong>. Sold separately, the license goes for $600 and support for $200 (standalone total $800).</p>
+      <p><strong>Allocate by relative standalone prices:</strong> license = 720 × 600/800 = <strong>$540</strong>, recognized at delivery (point in time); support = 720 × 200/800 = <strong>$180</strong>, recognized at $15/month over the year (over time). After three months the firm has recognized 540 + 45 = $585, with $135 still sitting in unearned revenue.</p>
+    </div>
+    <p>Standard cases to know on sight: a <strong>magazine subscription</strong> collected up front is recognized month by month; a <strong>gift card</strong> is a liability until redeemed (with breakage — expected never-redeemed value — recognized per pattern of redemption); a long-term <strong>construction contract</strong> typically recognizes over time by progress toward completion.</p>
+
+    <h3>4. Matching: three ways expenses attach to periods</h3>
+    <ul>
+      <li><strong>Direct (cause-and-effect) matching</strong> — cost of goods sold is recognized in the same period as the sale it enabled.</li>
+      <li><strong>Systematic allocation</strong> — assets serving many periods (equipment, prepaid insurance) are expensed over their useful lives: depreciation and amortization (mechanics in 101.8).</li>
+      <li><strong>Immediate recognition</strong> — period costs with no traceable future benefit (most advertising, administrative salaries) are expensed as incurred.</li>
+    </ul>
+    <p><strong>Why this is the fraud chapter:</strong> because revenue timing is judgment, it is manipulable — recognizing shipments early (“channel stuffing”), recording sales with side agreements to return goods, or booking long-term contracts up front. The discipline of asking <em>which performance obligation was satisfied, and when?</em> is the auditor's first line of defense, and yours as a reader of statements (101.10 returns to the warning signs).</p>
+  </section>
+
+  <!-- 2. VISUALS -->
+  <section id="see-1" class="see">
+    <h2>See it: two clocks for the same transaction</h2>
+    <p>Pick a scenario. The top row shows when <em>cash</em> moves; the bottom row shows when <em>accrual accounting</em> recognizes the revenue or expense — and the bridge account that holds the gap in between.</p>
+    <div class="visual" id="viz-1">
+      <div class="ctrl">
+        <label>Scenario: <select id="scnSel"></select></label>
+      </div>
+      <canvas id="timeCanvas" width="760" height="220" style="width:100%;max-width:760px;"></canvas>
+      <div class="verdict" id="timeNote"></div>
+    </div>
+  </section>
+
+  <section id="see-2" class="see">
+    <h2>See it: the quarter that flips sign</h2>
+    <p>The worked example, live. Toggle each event in or out and watch the two income statements diverge. Then notice what they always agree on: over the contract's full life, total income is identical — the bases disagree about <em>when</em>, never about <em>how much</em>.</p>
+    <div class="visual" id="viz-2">
+      <div class="ctrl" id="evToggles"></div>
+      <div class="cols">
+        <div class="col"><h4>Cash basis — Q1</h4><div id="cashCol"></div></div>
+        <div class="col"><h4>Accrual basis — Q1</h4><div id="accCol"></div></div>
+      </div>
+      <div class="verdict" id="basisNote"></div>
+    </div>
+  </section>
+
+  <section id="see-3" class="see">
+    <h2>See it: the five steps on a real bundle</h2>
+    <p>Walk the software-plus-support sale through ASC 606. Use the month slider in step 5 to watch revenue move out of the unearned-revenue liability as the support obligation is satisfied over time.</p>
+    <div class="visual" id="viz-3">
+      <div id="steps"></div>
+      <div class="ctrl">
+        <label>Months elapsed since sale: <input type="range" id="moSlider" min="0" max="12" value="3" />
+          <span class="readout" id="moV">3</span></label>
+      </div>
+      <canvas id="allocCanvas" width="760" height="120" style="width:100%;max-width:760px;"></canvas>
+      <div class="verdict" id="allocNote"></div>
+    </div>
+  </section>
+
+  <!-- 3. QUIZ -->
+  <section id="quiz">
+    <h2>Check yourself</h2>
+    <form id="quizForm">
+
+      <div class="q" data-qid="q1" data-type="mc">
+        <p><strong>1.</strong> Under the accrual basis, revenue is recognized when:</p>
+        <div class="opts">
+          <label><input type="radio" name="q1" value="a"> Cash is received from the customer</label>
+          <label><input type="radio" name="q1" value="b"> The performance obligation is satisfied — control passes to the customer</label>
+          <label><input type="radio" name="q1" value="c"> The invoice is sent</label>
+          <label><input type="radio" name="q1" value="d"> The contract is signed</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q2" data-type="mc">
+        <p><strong>2.</strong> A retailer sells a $100 gift card in November. Under GAAP, the $100 is recorded in November as:</p>
+        <div class="opts">
+          <label><input type="radio" name="q2" value="a"> Revenue, since cash was received</label>
+          <label><input type="radio" name="q2" value="b"> A liability (unearned revenue), with revenue recognized when the card is redeemed</label>
+          <label><input type="radio" name="q2" value="c"> An asset (gift cards receivable)</label>
+          <label><input type="radio" name="q2" value="d"> Equity, since the customer prepaid</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q3" data-type="num">
+        <p><strong>3.</strong> A publisher collects $240 on September 1 for a 12-month magazine subscription beginning that day. How much subscription <strong>revenue</strong> is recognized by December 31 of the same year, in dollars?</p>
+        <input type="number" name="q3" step="any" />
+      </div>
+
+      <div class="q" data-qid="q4" data-type="num">
+        <p><strong>4.</strong> In the same subscription scenario, what is the balance of <strong>unearned revenue</strong> on the December 31 balance sheet, in dollars?</p>
+        <input type="number" name="q4" step="any" />
+      </div>
+
+      <div class="q" data-qid="q5" data-type="mc">
+        <p><strong>5.</strong> A firm performs services in March and will be paid in May. Between March and May, the bridge account on its balance sheet is:</p>
+        <div class="opts">
+          <label><input type="radio" name="q5" value="a"> Unearned revenue (a liability)</label>
+          <label><input type="radio" name="q5" value="b"> Prepaid expense (an asset)</label>
+          <label><input type="radio" name="q5" value="c"> Accounts receivable (an asset)</label>
+          <label><input type="radio" name="q5" value="d"> Wages payable (a liability)</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q6" data-type="num">
+        <p><strong>6.</strong> A software company sells a license bundled with one year of support for $720. Standalone prices: license $600, support $200. Using relative standalone selling prices, how much revenue is recognized for the <strong>license at delivery</strong>, in dollars?</p>
+        <input type="number" name="q6" step="any" />
+      </div>
+
+      <div class="q" data-qid="q7" data-type="mc">
+        <p><strong>7.</strong> A company performs services in December 2026 and collects payment in January 2027. Under the <strong>cash basis</strong>, the revenue appears in:</p>
+        <div class="opts">
+          <label><input type="radio" name="q7" value="a"> December 2026, when the work was done</label>
+          <label><input type="radio" name="q7" value="b"> January 2027, when the cash arrived</label>
+          <label><input type="radio" name="q7" value="c"> Both periods, split evenly</label>
+          <label><input type="radio" name="q7" value="d"> Whichever period management prefers</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q8" data-type="num">
+        <p><strong>8.</strong> During its first month, a firm: earned $18,000 of service revenue (of which $5,000 is still uncollected); incurred $11,000 of expenses (of which $2,000 is still unpaid); and additionally collected $3,000 in advance for work not yet started. What is <strong>accrual-basis net income</strong> for the month, in dollars?</p>
+        <input type="number" name="q8" step="any" />
+      </div>
+
+      <button type="submit">Submit answers</button>
+    </form>
+    <div id="result"></div>
+  </section>
+
+  <!-- 4. NAV -->
+  <nav class="lesson-nav">
+    <a href="index.html">← All lessons</a>
+    <a href="../harness/results.html">Results &amp; mastery →</a>
+  </nav>
+
+</div>
+
+<script>
+  const LESSON_ADDRESS = "101.7";
+
+  /* ---------- Visual 1: two clocks ---------- */
+  (function(){
+    const MONTHS = ["Sep","Oct","Nov","Dec","Jan","Feb"];
+    const SCN = [
+      {name:"Service performed in Dec, cash collected in Jan",
+       cash:[{m:4,amt:"+$5,000"}], rec:[{m:3,amt:"+$5,000"}],
+       bridge:"Accounts receivable holds the $5,000 from December until January's collection.",
+       note:"Accrual puts the revenue in December — the month the work happened. The cash basis would award it to January, flattering a month that did nothing to earn it."},
+      {name:"$240 collected Sep 1 for a 12-month subscription",
+       cash:[{m:0,amt:"+$240"}], rec:[{m:0,amt:"+$20"},{m:1,amt:"+$20"},{m:2,amt:"+$20"},{m:3,amt:"+$20"},{m:4,amt:"+$20"},{m:5,amt:"+$20"}],
+       bridge:"Unearned revenue starts at $240 and falls $20 each month as issues are delivered (shown through Feb).",
+       note:"One cash event, twelve recognition events. The liability is the publisher's promise of future issues, melting one month at a time."},
+      {name:"Supplies bought (cash) in Oct, used in Nov",
+       cash:[{m:1,amt:"−$800"}], rec:[{m:2,amt:"−$800"}],
+       bridge:"Prepaid supplies (an asset) carries the $800 of future benefit from October until consumption in November.",
+       note:"Paying isn't the expense — consuming is. October swaps one asset (cash) for another (supplies); November's use is what hits income."},
+      {name:"December wages paid on Jan 5",
+       cash:[{m:4,amt:"−$6,000"}], rec:[{m:3,amt:"−$6,000"}],
+       bridge:"Wages payable (a liability) records December's obligation until the January payday settles it.",
+       note:"The work benefited December, so December bears the expense — matching in action."}
+    ];
+    const sel = document.getElementById("scnSel");
+    SCN.forEach((s,i)=>{ const o=document.createElement("option"); o.value=i;
+      o.textContent=s.name; sel.appendChild(o); });
+    const cv = document.getElementById("timeCanvas"), cx = cv.getContext("2d");
+    function draw(){
+      const s = SCN[+sel.value];
+      cx.clearRect(0,0,cv.width,cv.height);
+      const X = m => 90 + m*(cv.width-140)/(MONTHS.length-1);
+      [["CASH moves", 70, "#b45309", s.cash], ["ACCRUAL recognizes", 150, "#2d6a4f", s.rec]].forEach(row=>{
+        const [lbl, y, color, marks] = row;
+        cx.strokeStyle="#d1d5db"; cx.beginPath();
+        cx.moveTo(80,y); cx.lineTo(cv.width-40,y); cx.stroke();
+        cx.fillStyle=color; cx.font="600 12px system-ui";
+        cx.fillText(lbl, 8, y-18);
+        MONTHS.forEach((m,i)=>{
+          cx.fillStyle="#6b7280"; cx.font="11px system-ui";
+          cx.fillText(m, X(i)-10, y+22);
+          cx.strokeStyle="#e5e7eb"; cx.beginPath();
+          cx.moveTo(X(i), y-5); cx.lineTo(X(i), y+5); cx.stroke();
+        });
+        marks.forEach(mk=>{
+          cx.fillStyle=color; cx.beginPath(); cx.arc(X(mk.m), y, 8, 0, 7); cx.fill();
+          cx.font="600 11px ui-monospace,monospace";
+          cx.fillText(mk.amt, X(mk.m)-22, y-12);
+        });
+      });
+      cx.fillStyle="#7c3aed"; cx.font="600 12px system-ui";
+      cx.fillText("bridge: " + s.bridge, 8, 200);
+      document.getElementById("timeNote").textContent = s.note;
+    }
+    sel.addEventListener("change", draw);
+    draw();
+  })();
+
+  /* ---------- Visual 2: quarter simulator ---------- */
+  (function(){
+    const EVENTS = [
+      {name:"$12,000 advance for 4-month engagement (Jan–Apr)", cash:12000, acc:9000,
+       cl:"Advance engagement", al:"3 of 4 months earned"},
+      {name:"$30,000 billed for March work, collected April", cash:0, acc:30000,
+       cl:"March billing (no cash yet)", al:"Earned in March"},
+      {name:"$3,600 insurance for 12 months, paid Feb 1", cash:-3600, acc:-600,
+       cl:"Insurance paid", al:"2 of 12 months used"},
+      {name:"Staff wages $8,000/month, paid monthly", cash:-24000, acc:-24000,
+       cl:"Wages paid", al:"Wages incurred"}
+    ];
+    const tog = document.getElementById("evToggles");
+    EVENTS.forEach((ev,i)=>{
+      const l = document.createElement("label");
+      l.innerHTML = `<input type="checkbox" data-i="${i}" checked /> ${ev.name}`;
+      tog.appendChild(l);
+    });
+    function money(v){ return (v<0?"−$":"$")+Math.abs(v).toLocaleString(); }
+    function render(){
+      const on = [...tog.querySelectorAll("input")].map(c=>c.checked);
+      let cash=0, acc=0, ch="", ah="";
+      EVENTS.forEach((ev,i)=>{
+        if (!on[i]) return;
+        cash += ev.cash; acc += ev.acc;
+        if (ev.cash!==0) ch += `<div class="line"><span>${ev.cl}</span><span>${money(ev.cash)}</span></div>`;
+        ah += `<div class="line"><span>${ev.al}</span><span>${money(ev.acc)}</span></div>`;
+      });
+      ch += `<div class="line tot"><span>Cash-basis income</span><span>${money(cash)}</span></div>`;
+      ah += `<div class="line tot"><span>Accrual net income</span><span>${money(acc)}</span></div>`;
+      document.getElementById("cashCol").innerHTML = ch;
+      document.getElementById("accCol").innerHTML = ah;
+      document.getElementById("basisNote").textContent =
+        `Gap this quarter: ${money(acc-cash)}. Every dollar of it lives on the balance sheet — receivables ($30,000), unearned revenue ($3,000 still owed), prepaid insurance ($3,000 unused) — and will reverse in later periods. Total lifetime income is the same under both bases; only the timing differs.`;
+    }
+    tog.addEventListener("change", render);
+    render();
+  })();
+
+  /* ---------- Visual 3: five-step model ---------- */
+  (function(){
+    const STEPS = [
+      "1. Identify the contract — one signed order: license + 12 months of support for $720.",
+      "2. Identify performance obligations — TWO distinct promises: deliver the license; stand ready with support for a year.",
+      "3. Determine the transaction price — $720.",
+      "4. Allocate by relative standalone prices — license $600/$800 → $540; support $200/$800 → $180.",
+      "5. Recognize when (or as) satisfied — license: at delivery (point in time). Support: $15/month (over time)."
+    ];
+    const stepsDiv = document.getElementById("steps");
+    STEPS.forEach((s,i)=>{
+      const d = document.createElement("div"); d.className="step"+(i===4?" on":"");
+      d.innerHTML = `<b class="n">${i+1}</b>${s.slice(3)}`;
+      stepsDiv.appendChild(d);
+    });
+    const cv = document.getElementById("allocCanvas"), cx = cv.getContext("2d");
+    function draw(){
+      const mo = +document.getElementById("moSlider").value;
+      document.getElementById("moV").textContent = mo;
+      cx.clearRect(0,0,cv.width,cv.height);
+      const total=720, lic=540, sup=180;
+      const supEarned = sup*mo/12;
+      const earned = lic + supEarned, unearned = total-earned;
+      const W = cv.width-60, x0=30, y=42, h=30;
+      // earned segment
+      cx.fillStyle="#2d6a4f";
+      cx.fillRect(x0, y, W*earned/total, h);
+      cx.fillStyle="#fde68a";
+      cx.fillRect(x0+W*earned/total, y, W*unearned/total, h);
+      cx.strokeStyle="#9ca3af"; cx.strokeRect(x0,y,W,h);
+      // license/support divider
+      cx.strokeStyle="#fff"; cx.lineWidth=2; cx.beginPath();
+      cx.moveTo(x0+W*lic/total, y); cx.lineTo(x0+W*lic/total, y+h); cx.stroke(); cx.lineWidth=1;
+      cx.fillStyle="#1a1a2e"; cx.font="600 12px system-ui";
+      cx.fillText(`recognized: $${earned.toFixed(0)}`, x0, y-8);
+      cx.fillText(`unearned revenue (liability): $${unearned.toFixed(0)}`, x0+W*0.6, y-8);
+      cx.fillStyle="#6b7280"; cx.font="11px system-ui";
+      cx.fillText(`license $540 at delivery`, x0+4, y+h+16);
+      cx.fillText(`support $15 × ${mo} = $${supEarned.toFixed(0)} of $180`, x0+W*lic/total+4, y+h+16);
+      document.getElementById("allocNote").textContent =
+        mo===0 ? "At the moment of sale: $540 recognized immediately (license delivered); the full $180 of support sits in unearned revenue."
+        : mo<12 ? `After ${mo} month${mo>1?"s":""}: $540 + $${supEarned.toFixed(0)} = $${earned.toFixed(0)} recognized; $${unearned.toFixed(0)} of support remains a liability — the firm still owes ${12-mo} months of standing ready.`
+        : "After 12 months the obligation is fully satisfied: all $720 recognized, unearned revenue at zero. Recognition caught up with cash — it always does; only the path differs.";
+    }
+    document.getElementById("moSlider").addEventListener("input", draw);
+    draw();
+  })();
+
+  /* ---------- quiz submit (server-graded) ---------- */
+  document.getElementById("quizForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const fd = new FormData(e.target);
+    const answers = {};
+    document.querySelectorAll(".q").forEach(q => {
+      const qid = q.dataset.qid;
+      answers[qid] = fd.get(qid);
+    });
+
+    const payload = { address: LESSON_ADDRESS, answers, ts: Date.now() };
+
+    try {
+      const res = await fetch(location.protocol === "file:"
+          ? "http://127.0.0.1:8753/record" : "/record", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (data.error) {
+        document.getElementById("result").textContent = "Recorder error: " + data.error;
+        return;
+      }
+      document.getElementById("result").textContent =
+        `Score: ${data.correct}/${data.total}. ` +
+        (data.weak_topics?.length ? `Review: ${data.weak_topics.join(", ")}` : "Nice work.");
+      (data.results || []).forEach(r => {
+        const q = document.querySelector(`.q[data-qid="${r.qid}"]`);
+        if (!q) return;
+        q.classList.remove("right", "wrong");
+        q.classList.add(r.is_correct ? "right" : "wrong");
+        let fb = q.querySelector(".fb");
+        if (!fb) { fb = document.createElement("div"); fb.className = "fb"; q.appendChild(fb); }
+        fb.textContent = "";
+        const mark = document.createElement("b");
+        mark.textContent = r.is_correct ? "✓ Correct" : "✗ Incorrect";
+        fb.appendChild(mark);
+        if (!r.is_correct && r.explanation) fb.append(" — " + r.explanation);
+      });
+    } catch (err) {
+      const blob = new Blob([JSON.stringify(payload, null, 2)],
+                            {type:"application/json"});
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = `${LESSON_ADDRESS}.attempt.json`;
+      a.click();
+      document.getElementById("result").textContent =
+        "Recorder offline — downloaded attempt JSON. Run scripts/serve.py and import it.";
+    }
+  });
+</script>
+</body>
+</html>
