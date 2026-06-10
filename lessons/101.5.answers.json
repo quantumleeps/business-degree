@@ -1,0 +1,65 @@
+{
+  "address": "101.5",
+  "title": "Double-entry bookkeeping: debits, credits, T-accounts",
+  "questions": [
+    {
+      "qid": "q1",
+      "type": "mc",
+      "correct": "c",
+      "topic": "debit credit rules",
+      "explanation": "Debit means an entry on the left side of an account; credit means the right side. Whether it increases or decreases the balance depends on the account type."
+    },
+    {
+      "qid": "q2",
+      "type": "mc",
+      "correct": "d",
+      "topic": "normal balances",
+      "explanation": "Debit-normal accounts are assets, expenses, and dividends (DEA). Cash (asset), Dividends, and Utilities Expense all qualify. The other groups each contain a credit-normal account (Accounts Payable, Service Revenue, Common Stock)."
+    },
+    {
+      "qid": "q3",
+      "type": "mc",
+      "correct": "b",
+      "topic": "journal entries",
+      "explanation": "Services performed on account: debit Accounts Receivable (asset up) and credit Service Revenue (revenue up). Cash is not involved until the client pays."
+    },
+    {
+      "qid": "q4",
+      "type": "mc",
+      "correct": "a",
+      "topic": "contra accounts",
+      "explanation": "Accumulated Depreciation is a contra-asset: it offsets Equipment, so it carries the opposite (credit) normal balance and grows with credits."
+    },
+    {
+      "qid": "q5",
+      "type": "mc",
+      "correct": "b",
+      "topic": "error detection",
+      "explanation": "Both sides were recorded at the same wrong amount ($980), so debits still equal credits. The equality check is necessary but not sufficient; this transposition slips through. Cash is understated (credited $90 too much), not overstated."
+    },
+    {
+      "qid": "q6",
+      "type": "num",
+      "correct": 10900,
+      "tolerance": 0.5,
+      "topic": "t-accounts",
+      "explanation": "Debit footing = 12,400 + 8,300 + 1,250 = 21,950. Credit footing = 6,700 + 3,900 + 450 = 11,050. Ending balance = 21,950 − 11,050 = $10,900 on the debit side."
+    },
+    {
+      "qid": "q7",
+      "type": "num",
+      "correct": 19750,
+      "tolerance": 0.5,
+      "topic": "t-accounts",
+      "explanation": "Accounts Payable is credit-normal. Credits: 9,800 beginning + 4,650 + 12,500 = 26,950. Debit (payment): 7,200. Ending balance = 26,950 − 7,200 = $19,750 credit."
+    },
+    {
+      "qid": "q8",
+      "type": "num",
+      "correct": 30400,
+      "tolerance": 0.5,
+      "topic": "journal entries",
+      "explanation": "Cash debits: 25,000 + 10,000 + 5,000 = 40,000. Cash credits: 6,000 + 3,100 + 500 = 9,600. Ending Cash = 40,000 − 9,600 = $30,400. The $3,200 billed on account and the $9,000 equipment balance owed never touch Cash."
+    }
+  ]
+}

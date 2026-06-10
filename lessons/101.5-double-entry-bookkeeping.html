@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>101.5 — Double-entry bookkeeping: debits, credits, T-accounts</title>
+<style>
+  :root { --ink:#1a1a2e; --paper:#fdfdfb; --accent:#2d6a4f; --accent2:#1d4ed8;
+          --muted:#6b7280; --warn:#b45309; --bad:#b91c1c; }
+  body { margin:0; font:16px/1.6 system-ui,sans-serif; color:var(--ink);
+         background:var(--paper); }
+  .wrap { max-width:860px; margin:0 auto; padding:32px 20px 80px; }
+  header .addr { font:600 13px ui-monospace,monospace; color:var(--accent);
+                 letter-spacing:.05em; }
+  h1 { font-size:30px; margin:.2em 0 .1em; line-height:1.2; }
+  .why { color:var(--muted); font-style:italic; margin-bottom:2em; }
+  section { margin:2.5em 0; }
+  h2 { border-bottom:2px solid var(--accent); padding-bottom:4px; }
+  h3 { margin:1.6em 0 .3em; font-size:18px; }
+  .lead { font-size:17px; }
+  .memo { background:#f0f7f4; border-left:4px solid var(--accent);
+          padding:12px 16px; border-radius:0 8px 8px 0; margin:1.2em 0; }
+  .eq { font:600 17px ui-monospace,monospace; text-align:center;
+        background:#fff; border:1px solid #e5e7eb; border-radius:10px;
+        padding:14px; margin:1.2em 0; }
+  .eq small { font:400 13px system-ui; color:var(--muted); display:block; margin-top:4px; }
+  table.book { border-collapse:collapse; width:100%; margin:1em 0; font-size:15px; }
+  table.book th, table.book td { border:1px solid #e5e7eb; padding:8px 10px;
+        text-align:left; }
+  table.book th { background:#f9fafb; }
+  table.book td.num { text-align:right; font-family:ui-monospace,monospace; }
+  table.book td.c { text-align:center; font-weight:600; }
+
+  /* journal entries */
+  .je { font:14px ui-monospace,monospace; background:#fff; border:1px solid #e5e7eb;
+        border-radius:8px; padding:10px 14px; margin:.8em 0; overflow-x:auto; }
+  .je table { border-collapse:collapse; width:100%; }
+  .je td { padding:2px 8px; white-space:nowrap; }
+  .je td.acct { width:60%; }
+  .je td.cr-acct { padding-left:38px; }
+  .je td.dr, .je td.cr { text-align:right; width:20%; }
+  .je .cap { font:italic 13px system-ui; color:var(--muted); padding-top:4px; }
+
+  /* T-accounts (static, in Learn) */
+  .tgrid { display:flex; flex-wrap:wrap; gap:14px; margin:1em 0; }
+  .tacct { border:1px solid #d1d5db; border-radius:8px; background:#fff;
+           min-width:200px; flex:1 1 200px; max-width:262px; font-size:13px; }
+  .tacct h4 { margin:0; text-align:center; padding:5px 8px; font-size:13.5px;
+              border-bottom:2px solid var(--ink); background:#f9fafb;
+              border-radius:8px 8px 0 0; }
+  .tacct .cols { display:grid; grid-template-columns:1fr 1fr; }
+  .tacct .col { padding:4px 8px 6px; font-family:ui-monospace,monospace; }
+  .tacct .col.dr { border-right:2px solid var(--ink); }
+  .tacct .col div { display:flex; justify-content:space-between; gap:6px; }
+  .tacct .col .ft { border-top:1px solid #9ca3af; font-weight:700; margin-top:3px; }
+  .tacct .bal { padding:4px 8px 6px; font:600 12.5px ui-monospace,monospace;
+                border-top:1px dashed #d1d5db; display:flex;
+                justify-content:space-between; }
+  .tacct .bal.ab { color:var(--bad); }
+  .tag { font:600 10.5px system-ui; color:var(--muted); }
+
+  /* visuals */
+  .visual { border:1px solid #e5e7eb; border-radius:12px; padding:16px;
+            background:#fff; }
+  .controls { display:flex; flex-wrap:wrap; gap:8px; margin:10px 0;
+              align-items:center; }
+  .controls button { background:var(--accent2); font-size:13.5px; padding:7px 12px; }
+  .controls button.alt { background:var(--muted); }
+  .controls select, .controls input[type=number] {
+      font-size:14px; padding:6px 8px; border:1px solid #d1d5db;
+      border-radius:6px; background:#fff; }
+  .scen { background:#eef6ff; border-left:3px solid var(--accent2);
+          padding:10px 14px; border-radius:0 8px 8px 0; margin:8px 0;
+          font-size:15px; }
+  .fb { margin:8px 0; padding:9px 12px; border-radius:8px; font-size:14px;
+        display:none; }
+  .fb.ok { display:block; background:#ecfdf5; border:1px solid #6ee7b7; }
+  .fb.no { display:block; background:#fef2f2; border:1px solid #fca5a5; }
+  .eqbar { font:600 14px ui-monospace,monospace; text-align:center;
+           background:#f9fafb; border:1px solid #e5e7eb; border-radius:8px;
+           padding:8px; margin-top:12px; }
+  .eqbar .good { color:var(--accent); }
+  .scorebox { display:flex; gap:10px; font-size:14px; margin:8px 0; flex-wrap:wrap; }
+  .scorebox .m { border:1px solid #e5e7eb; border-radius:8px; padding:6px 12px;
+                 background:#f9fafb; }
+  .scorebox .m b { font-family:ui-monospace,monospace; font-size:17px; }
+  .bigcard { text-align:center; font-size:22px; font-weight:700; padding:18px;
+             border:2px solid var(--accent2); border-radius:10px; margin:10px 0;
+             background:#f8fafc; }
+  .bigcard small { display:block; font:400 13px system-ui; color:var(--muted); }
+  .choice2 { display:flex; gap:10px; justify-content:center; margin:10px 0; }
+  .choice2 button { font-size:15px; padding:12px 22px; }
+  .choice2 button.drbtn { background:#7c3aed; }
+  .hint { font-size:13px; color:var(--muted); }
+
+  /* quiz */
+  .q { margin:1.2em 0; padding:14px; border:1px solid #e5e7eb; border-radius:10px; }
+  .q .opts label { display:block; margin:4px 0; cursor:pointer; }
+  .q input[type=number], .q input[type=text] { font-size:15px; padding:6px 8px;
+        border:1px solid #d1d5db; border-radius:6px; width:160px; }
+  .q.right { border-color:var(--accent); background:#f0f7f4; }
+  .q.wrong { border-color:#b91c1c; background:#fef2f2; }
+  .q .fb { margin-top:10px; padding-top:8px; border-top:1px dashed #d1d5db;
+        font-size:14px; }
+  .q.right .fb b { color:var(--accent); }
+  .q.wrong .fb b { color:#b91c1c; }
+  button { background:var(--accent); color:#fff; border:0; padding:10px 18px;
+           border-radius:8px; font-size:15px; cursor:pointer; }
+  button:hover { filter:brightness(1.07); }
+  button:disabled { background:#e5e7eb; color:#9ca3af; cursor:not-allowed; }
+  #result { margin-top:1em; font-weight:600; }
+  ul.tight li { margin:.25em 0; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="addr">101.5</div>
+    <h1>Double-entry bookkeeping: debits, credits, T-accounts</h1>
+    <p class="why">Debits and credits are the grammar of accounting — every statement you studied in 101.2–101.4 was assembled one balanced entry at a time.</p>
+  </header>
+
+  <!-- 1. WRITTEN / TEACHING SECTION -->
+  <section id="learn">
+    <h2>Learn</h2>
+
+    <p class="lead">So far you've read the finished products: the balance
+    sheet, the income statement, the statement of cash flows. This lesson is
+    about the <strong>recording system</strong> that produces them.
+    Double-entry bookkeeping is a five-century-old convention (Luca Pacioli
+    described it in print in 1494) with one organizing idea: <strong>every
+    transaction is recorded in at least two accounts, and the debits must
+    equal the credits in every entry.</strong></p>
+
+    <h3>Why every transaction has two sides</h3>
+    <p>The accounting equation, <strong>Assets&nbsp;=&nbsp;Liabilities&nbsp;+&nbsp;Equity</strong>,
+    must hold after every transaction — not just at year end. That is only
+    possible if each transaction is recorded in a way that keeps both sides
+    equal. Consider what a single transaction can do:</p>
+    <ul class="tight">
+      <li>Borrow cash from a bank → an asset (Cash) goes up <em>and</em> a
+        liability (Notes Payable) goes up. Both sides rise by the same amount.</li>
+      <li>Buy equipment with cash → one asset (Equipment) goes up <em>and</em>
+        another asset (Cash) goes down. The left side reshuffles; totals
+        unchanged.</li>
+      <li>Pay off a supplier → an asset (Cash) goes down <em>and</em> a
+        liability (Accounts Payable) goes down. Both sides fall together.</li>
+    </ul>
+    <p>In every case, at least <strong>two</strong> accounts move. Double-entry
+    bookkeeping doesn't impose this duality — it <em>records</em> it. The
+    bookkeeping rule "total debits = total credits for every entry" is the
+    mechanical expression of the equation holding, and it gives the system a
+    built-in arithmetic check: if the debits and credits you've recorded don't
+    add up to the same total, you know with certainty that an error exists
+    somewhere.</p>
+
+    <h3>Debit and credit: left and right — nothing more</h3>
+    <p>This is where most beginners go wrong, so let's get it exactly right:</p>
+    <div class="memo">
+      <b>Definition.</b> A <strong>debit (Dr.)</strong> is an entry on the
+      <strong>left side</strong> of an account. A <strong>credit (Cr.)</strong>
+      is an entry on the <strong>right side</strong> of an account.
+      That is the <em>entire</em> definition. Debit does not mean increase,
+      decrease, good, or bad — and neither does credit. Whether a debit
+      increases or decreases an account depends entirely on <em>which type of
+      account</em> it is.
+    </div>
+    <p>The everyday meanings will mislead you. Your bank says it "credits your
+    account" when you deposit money — but that's the <em>bank's</em>
+    bookkeeping: your deposit is a liability <em>to the bank</em> (it owes you
+    that money), and liabilities increase with credits. From your own books'
+    perspective, the same deposit is a <em>debit</em> to your Cash account.
+    Same event, opposite labels, because the two parties hold mirror-image
+    positions.</p>
+
+    <h3>The expanded accounting equation generates the rules</h3>
+    <p>Equity isn't one undifferentiated lump. It changes through four
+    channels: owners put capital in (contributed capital), the business earns
+    revenues, it incurs expenses, and it pays dividends. Writing those out:</p>
+    <div class="eq">Assets = Liabilities + Contributed Capital + Retained Earnings + Revenues − Expenses − Dividends
+      <small>the expanded accounting equation</small>
+    </div>
+    <p>Now move the two negative terms to the left side so that everything
+    carries a plus sign:</p>
+    <div class="eq">Assets + Expenses + Dividends&nbsp; = &nbsp;Liabilities + Contributed Capital + Retained Earnings + Revenues
+      <small>every account on the left increases with a <b>debit</b>; every account on the right increases with a <b>credit</b></small>
+    </div>
+    <p>This rearrangement <em>is</em> the rulebook. The convention is: accounts
+    on the left side of this equation are <strong>debit-normal</strong> —
+    they increase with debits (left-side entries) and decrease with credits.
+    Accounts on the right side are <strong>credit-normal</strong> — they
+    increase with credits and decrease with debits. Nothing needs to be
+    memorized account-by-account; the rules all fall out of where the account
+    sits in the rearranged equation.</p>
+    <div class="memo">
+      <b>Mnemonic — DEA / LER.</b> <strong>D</strong>ividends,
+      <strong>E</strong>xpenses, <strong>A</strong>ssets increase with
+      <strong>debits</strong>; <strong>L</strong>iabilities,
+      <strong>E</strong>quity, <strong>R</strong>evenues increase with
+      <strong>credits</strong>. (Some courses teach the same thing as
+      "DEAD CLIC": Debits increase Expenses, Assets, Dividends; Credits
+      increase Liabilities, Income, Capital.)
+    </div>
+    <p>Pause on why revenues and expenses land where they do. Revenues
+    <em>increase</em> retained earnings — they sit on the equity side, so they
+    grow with credits, like equity. Expenses <em>decrease</em> retained
+    earnings; a deduction from a credit-normal item behaves like its opposite,
+    so expenses are debit-normal. Dividends, likewise a reduction of retained
+    earnings, are debit-normal too. This is why "debiting an expense" — which
+    sounds like jargon — is just the standard way of saying the expense grew.</p>
+
+    <h3>Normal balances</h3>
+    <p>An account's <strong>normal balance</strong> is the side on which it
+    increases — and the side where its balance ordinarily ends up:</p>
+    <table class="book">
+      <tr><th>Account type</th><th>Increase with…</th><th>Decrease with…</th><th>Normal balance</th><th>Examples</th></tr>
+      <tr><td>Assets</td><td class="c">Debit</td><td class="c">Credit</td><td class="c">Debit</td><td>Cash, Accounts Receivable, Inventory, Equipment</td></tr>
+      <tr><td>Liabilities</td><td class="c">Credit</td><td class="c">Debit</td><td class="c">Credit</td><td>Accounts Payable, Notes Payable, Unearned Revenue</td></tr>
+      <tr><td>Equity (contributed capital, retained earnings)</td><td class="c">Credit</td><td class="c">Debit</td><td class="c">Credit</td><td>Common Stock, Retained Earnings</td></tr>
+      <tr><td>Revenues</td><td class="c">Credit</td><td class="c">Debit</td><td class="c">Credit</td><td>Service Revenue, Sales Revenue</td></tr>
+      <tr><td>Expenses</td><td class="c">Debit</td><td class="c">Credit</td><td class="c">Debit</td><td>Rent Expense, Salaries Expense</td></tr>
+      <tr><td>Dividends</td><td class="c">Debit</td><td class="c">Credit</td><td class="c">Debit</td><td>Dividends (or "Drawings" in a proprietorship)</td></tr>
+    </table>
+    <p>Watch out for names that lie about their type. <strong>Unearned
+    Revenue</strong> is a <em>liability</em> (cash received for work not yet
+    performed — you owe the customer the service), so it's credit-normal like
+    any liability, not because of the word "revenue." <strong>Prepaid
+    Rent</strong> is an <em>asset</em> (a right to future use), not an
+    expense. Classify by what the account <em>is</em>, then the debit/credit
+    rules follow.</p>
+
+    <h3>Contra accounts: the standard exception</h3>
+    <p>A <strong>contra account</strong> is paired with another account and
+    carries the <em>opposite</em> normal balance, because its job is to reduce
+    its partner without erasing the partner's recorded history. The classic
+    example is <strong>Accumulated Depreciation</strong>, a
+    <em>contra-asset</em>: Equipment keeps showing its original cost
+    (debit-normal), and Accumulated Depreciation piles up <em>credits</em>
+    alongside it. The balance sheet reports the net "book value"
+    (cost&nbsp;−&nbsp;accumulated depreciation), but the reader can still see
+    both the original cost and how much has been used up. Other examples:
+    Allowance for Doubtful Accounts (contra to Accounts Receivable) and Sales
+    Returns &amp; Allowances (contra to Sales Revenue, hence debit-normal).
+    The rule of thumb: a contra account always takes the normal balance
+    <em>opposite</em> to the account it offsets.</p>
+
+    <h3>The T-account</h3>
+    <p>A <strong>T-account</strong> is the working sketch of a ledger account:
+    the account name on top, debits on the left, credits on the right.</p>
+    <div class="tgrid">
+      <div class="tacct" style="max-width:300px">
+        <h4>Cash <span class="tag">(asset — debit-normal)</span></h4>
+        <div class="cols">
+          <div class="col dr">
+            <div><span>Beg. bal.</span><span>5,000</span></div>
+            <div><span></span><span>3,200</span></div>
+            <div><span></span><span>1,000</span></div>
+            <div class="ft"><span></span><span>9,200</span></div>
+          </div>
+          <div class="col">
+            <div><span></span><span>2,500</span></div>
+            <div><span></span><span>700</span></div>
+            <div><span></span><span>&nbsp;</span></div>
+            <div class="ft"><span></span><span>3,200</span></div>
+          </div>
+        </div>
+        <div class="bal"><span>End. bal. (debit side)</span><span>6,000</span></div>
+      </div>
+    </div>
+    <p>To <strong>balance</strong> a T-account: total each side (these
+    subtotals are called <em>footings</em>), subtract the smaller footing from
+    the larger, and write the difference on the larger side as the ending
+    balance. Above: debits foot to 9,200, credits to 3,200, so the ending
+    balance is 6,000 on the debit side — exactly where an asset's balance
+    should sit. If an account's balance lands on its <em>abnormal</em> side
+    (a credit balance in Cash, say), that's usually a red flag: either an
+    error, or something unusual like an overdrawn bank account.</p>
+
+    <h3>Journal-entry form: the notation</h3>
+    <p>Before amounts are posted into T-accounts, each transaction is first
+    written as a <strong>journal entry</strong> — accounting's standard
+    notation for "what happened." The conventions:</p>
+    <ul class="tight">
+      <li>Date first.</li>
+      <li><b>Debited account(s) listed first</b>, flush left, with the amount
+        in the debit column.</li>
+      <li><b>Credited account(s) indented</b>, with the amount in the credit
+        column.</li>
+      <li>A short explanation underneath.</li>
+      <li>Total debits must equal total credits — <em>within each entry</em>.</li>
+    </ul>
+    <div class="je"><table>
+      <tr><td class="acct">Mar 3&nbsp;&nbsp;Equipment</td><td class="dr">30,000</td><td class="cr"></td></tr>
+      <tr><td class="acct cr-acct">Cash</td><td class="dr"></td><td class="cr">12,000</td></tr>
+      <tr><td class="acct cr-acct">Accounts Payable</td><td class="dr"></td><td class="cr">18,000</td></tr>
+      <tr><td class="cap" colspan="3">Purchased roasting equipment; paid part cash, rest on account.</td></tr>
+    </table></div>
+    <p>An entry with more than two accounts — like this one — is a
+    <strong>compound entry</strong>. It's still one transaction and still
+    balances: 30,000 of debits against 12,000&nbsp;+&nbsp;18,000 of credits.</p>
+
+    <h3>Worked example: Brightside Design Co., first month</h3>
+    <p>Brightside Design Co. opens in March. Here are its first eight
+    transactions, each analyzed the standard way: <em>(1) which accounts are
+    affected? (2) what type is each? (3) increase or decrease? (4) therefore
+    debit or credit?</em></p>
+
+    <table class="book">
+      <tr><th>#</th><th>Transaction</th><th>Entry</th></tr>
+      <tr><td>1</td><td>Owner invests $50,000 cash in exchange for common stock.</td>
+          <td>Dr. Cash 50,000<br>&nbsp;&nbsp;&nbsp;&nbsp;Cr. Common Stock 50,000</td></tr>
+      <tr><td>2</td><td>Borrows $20,000 from a bank on a note payable.</td>
+          <td>Dr. Cash 20,000<br>&nbsp;&nbsp;&nbsp;&nbsp;Cr. Notes Payable 20,000</td></tr>
+      <tr><td>3</td><td>Buys equipment for $30,000: pays $12,000 cash, owes the rest on account.</td>
+          <td>Dr. Equipment 30,000<br>&nbsp;&nbsp;&nbsp;&nbsp;Cr. Cash 12,000<br>&nbsp;&nbsp;&nbsp;&nbsp;Cr. Accounts Payable 18,000</td></tr>
+      <tr><td>4</td><td>Performs design services for clients, collecting $9,000 cash.</td>
+          <td>Dr. Cash 9,000<br>&nbsp;&nbsp;&nbsp;&nbsp;Cr. Service Revenue 9,000</td></tr>
+      <tr><td>5</td><td>Completes a $7,500 project; the client will pay next month.</td>
+          <td>Dr. Accounts Receivable 7,500<br>&nbsp;&nbsp;&nbsp;&nbsp;Cr. Service Revenue 7,500</td></tr>
+      <tr><td>6</td><td>Pays $2,000 cash for March rent.</td>
+          <td>Dr. Rent Expense 2,000<br>&nbsp;&nbsp;&nbsp;&nbsp;Cr. Cash 2,000</td></tr>
+      <tr><td>7</td><td>Collects $4,000 of the receivable from transaction 5.</td>
+          <td>Dr. Cash 4,000<br>&nbsp;&nbsp;&nbsp;&nbsp;Cr. Accounts Receivable 4,000</td></tr>
+      <tr><td>8</td><td>Pays a $1,000 cash dividend to the shareholder.</td>
+          <td>Dr. Dividends 1,000<br>&nbsp;&nbsp;&nbsp;&nbsp;Cr. Cash 1,000</td></tr>
+    </table>
+
+    <p>Two analyses worth dwelling on. <strong>Transaction 5:</strong> revenue
+    is recorded when the work is <em>performed</em>, even though no cash
+    moved — the asset received is a receivable, not cash. (Much more on this
+    in 101.7.) <strong>Transaction 7:</strong> when the cash finally arrives,
+    there is <em>no revenue</em> — recording it again would double-count. The
+    entry just swaps one asset (Accounts Receivable) for another (Cash).</p>
+
+    <p>Posting every entry to T-accounts and balancing each account:</p>
+
+    <div class="tgrid">
+      <div class="tacct">
+        <h4>Cash <span class="tag">asset</span></h4>
+        <div class="cols">
+          <div class="col dr">
+            <div><span>(1)</span><span>50,000</span></div>
+            <div><span>(2)</span><span>20,000</span></div>
+            <div><span>(4)</span><span>9,000</span></div>
+            <div><span>(7)</span><span>4,000</span></div>
+            <div class="ft"><span></span><span>83,000</span></div>
+          </div>
+          <div class="col">
+            <div><span>(3)</span><span>12,000</span></div>
+            <div><span>(6)</span><span>2,000</span></div>
+            <div><span>(8)</span><span>1,000</span></div>
+            <div><span>&nbsp;</span><span></span></div>
+            <div class="ft"><span></span><span>15,000</span></div>
+          </div>
+        </div>
+        <div class="bal"><span>Bal. (Dr.)</span><span>68,000</span></div>
+      </div>
+      <div class="tacct">
+        <h4>Accounts Receivable <span class="tag">asset</span></h4>
+        <div class="cols">
+          <div class="col dr">
+            <div><span>(5)</span><span>7,500</span></div>
+            <div class="ft"><span></span><span>7,500</span></div>
+          </div>
+          <div class="col">
+            <div><span>(7)</span><span>4,000</span></div>
+            <div class="ft"><span></span><span>4,000</span></div>
+          </div>
+        </div>
+        <div class="bal"><span>Bal. (Dr.)</span><span>3,500</span></div>
+      </div>
+      <div class="tacct">
+        <h4>Equipment <span class="tag">asset</span></h4>
+        <div class="cols">
+          <div class="col dr">
+            <div><span>(3)</span><span>30,000</span></div>
+          </div>
+          <div class="col"><div><span>&nbsp;</span><span></span></div></div>
+        </div>
+        <div class="bal"><span>Bal. (Dr.)</span><span>30,000</span></div>
+      </div>
+      <div class="tacct">
+        <h4>Accounts Payable <span class="tag">liability</span></h4>
+        <div class="cols">
+          <div class="col dr"><div><span>&nbsp;</span><span></span></div></div>
+          <div class="col">
+            <div><span>(3)</span><span>18,000</span></div>
+          </div>
+        </div>
+        <div class="bal"><span>Bal. (Cr.)</span><span>18,000</span></div>
+      </div>
+      <div class="tacct">
+        <h4>Notes Payable <span class="tag">liability</span></h4>
+        <div class="cols">
+          <div class="col dr"><div><span>&nbsp;</span><span></span></div></div>
+          <div class="col">
+            <div><span>(2)</span><span>20,000</span></div>
+          </div>
+        </div>
+        <div class="bal"><span>Bal. (Cr.)</span><span>20,000</span></div>
+      </div>
+      <div class="tacct">
+        <h4>Common Stock <span class="tag">equity</span></h4>
+        <div class="cols">
+          <div class="col dr"><div><span>&nbsp;</span><span></span></div></div>
+          <div class="col">
+            <div><span>(1)</span><span>50,000</span></div>
+          </div>
+        </div>
+        <div class="bal"><span>Bal. (Cr.)</span><span>50,000</span></div>
+      </div>
+      <div class="tacct">
+        <h4>Service Revenue <span class="tag">revenue</span></h4>
+        <div class="cols">
+          <div class="col dr"><div><span>&nbsp;</span><span></span></div></div>
+          <div class="col">
+            <div><span>(4)</span><span>9,000</span></div>
+            <div><span>(5)</span><span>7,500</span></div>
+            <div class="ft"><span></span><span>16,500</span></div>
+          </div>
+        </div>
+        <div class="bal"><span>Bal. (Cr.)</span><span>16,500</span></div>
+      </div>
+      <div class="tacct">
+        <h4>Rent Expense <span class="tag">expense</span></h4>
+        <div class="cols">
+          <div class="col dr">
+            <div><span>(6)</span><span>2,000</span></div>
+          </div>
+          <div class="col"><div><span>&nbsp;</span><span></span></div></div>
+        </div>
+        <div class="bal"><span>Bal. (Dr.)</span><span>2,000</span></div>
+      </div>
+      <div class="tacct">
+        <h4>Dividends <span class="tag">dividends</span></h4>
+        <div class="cols">
+          <div class="col dr">
+            <div><span>(8)</span><span>1,000</span></div>
+          </div>
+          <div class="col"><div><span>&nbsp;</span><span></span></div></div>
+        </div>
+        <div class="bal"><span>Bal. (Dr.)</span><span>1,000</span></div>
+      </div>
+    </div>
+
+    <p>Now verify the system end-to-end:</p>
+    <ul class="tight">
+      <li><b>Debits = credits, in total.</b> Across all eight entries, total
+        debits posted = 50,000 + 20,000 + 30,000 + 9,000 + 7,500 + 2,000 +
+        4,000 + 1,000 = <b>123,500</b>; total credits = 50,000 + 20,000 +
+        12,000 + 18,000 + 9,000 + 7,500 + 2,000 + 4,000 + 1,000 =
+        <b>123,500</b>. ✓</li>
+      <li><b>The equation holds.</b> Assets = 68,000 + 3,500 + 30,000 =
+        <b>101,500</b>. Liabilities = 18,000 + 20,000 = 38,000. Equity =
+        Common Stock 50,000 + (Revenues 16,500 − Expenses 2,000 − Dividends
+        1,000) = 63,500. Liabilities + Equity = <b>101,500</b>. ✓</li>
+    </ul>
+
+    <h3>What balancing catches — and what it can't</h3>
+    <p>"Debits equal credits" is a <strong>necessary</strong> condition for
+    correct books, <strong>not a sufficient</strong> one. Errors it
+    <em>cannot</em> detect:</p>
+    <ul class="tight">
+      <li><b>Right amount, wrong account.</b> Debit Rent Expense instead of
+        Repairs Expense, or debit Cash instead of Accounts Receivable — the
+        entry still balances perfectly, but the accounts are wrong.</li>
+      <li><b>Omitted or duplicated entries.</b> Skip a transaction entirely,
+        or record it twice, and debits still equal credits.</li>
+      <li><b>Consistent wrong amounts.</b> Record a $890 payment as $980 on
+        <em>both</em> sides — balanced, and wrong.</li>
+    </ul>
+    <p>Errors it <em>does</em> expose — by making total debits ≠ total
+    credits — include posting only one half of an entry, or recording
+    different amounts on the two sides. One classic diagnostic:
+    a <strong>transposition error</strong> (writing 980 for 890, swapping
+    adjacent digits) creates a difference that is always <strong>evenly
+    divisible by 9</strong> (980 − 890 = 90). A <strong>slide</strong>
+    (1,000 recorded as 100) also produces a difference divisible by 9. If
+    your books are out of balance and the difference divides by 9, hunt for a
+    transposed or slid number first. The full apparatus for finding and
+    proving these errors — the trial balance — is lesson 101.6; here, the
+    point is simply that the equality check is a smoke detector, not a
+    building inspection.</p>
+  </section>
+
+  <!-- 2. VISUALS -->
+  <section id="see-1" class="see">
+    <h2>See it: build the journal entry</h2>
+    <p>Walk a new company through its first eight transactions. For each one,
+    decide which account to debit and which to credit. Correct entries post to
+    the live T-accounts below, and the accounting equation updates with every
+    posting.</p>
+    <div class="visual" id="viz-1">
+      <div class="scen" id="v1-scen"></div>
+      <div class="controls">
+        <label>Debit:&nbsp;<select id="v1-dr"></select></label>
+        <label>Credit:&nbsp;<select id="v1-cr"></select></label>
+        <button id="v1-post">Post entry</button>
+        <button id="v1-reveal" class="alt" style="display:none">Show me</button>
+        <button id="v1-restart" class="alt" style="display:none">Start over</button>
+      </div>
+      <div class="fb" id="v1-fb"></div>
+      <div class="eqbar" id="v1-eq"></div>
+      <div class="tgrid" id="v1-taccts"></div>
+    </div>
+  </section>
+
+  <section id="see-2" class="see">
+    <h2>See it: normal-balance trainer</h2>
+    <p>An account name appears; click the side that <em>increases</em> it.
+    Covers all six account types plus contra accounts. Build a streak — the
+    goal is for DEA/LER to become reflex.</p>
+    <div class="visual" id="viz-2">
+      <div class="scorebox">
+        <div class="m">Score <b id="v2-score">0/0</b></div>
+        <div class="m">Streak <b id="v2-streak">0</b></div>
+        <div class="m">Best <b id="v2-best">0</b></div>
+      </div>
+      <div class="bigcard" id="v2-card">Press Start<small>&nbsp;</small></div>
+      <div class="choice2">
+        <button class="drbtn" id="v2-dr" disabled>Debit to increase</button>
+        <button id="v2-cr" disabled>Credit to increase</button>
+      </div>
+      <div class="fb" id="v2-fb"></div>
+      <div class="controls" style="justify-content:center">
+        <button id="v2-start" class="alt">Start</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="see-3" class="see">
+    <h2>See it: balance a T-account</h2>
+    <p>Pick an account, post amounts to either side, and watch the footings
+    and ending balance compute. Push the balance onto the wrong side and see
+    the abnormal-balance warning a bookkeeper would react to.</p>
+    <div class="visual" id="viz-3">
+      <div class="controls">
+        <label>Account:&nbsp;<select id="v3-acct"></select></label>
+        <input type="number" id="v3-amt" min="1" step="1" value="500" style="width:110px" />
+        <button id="v3-postdr">Post to debit (left)</button>
+        <button id="v3-postcr">Post to credit (right)</button>
+        <button id="v3-clear" class="alt">Clear</button>
+      </div>
+      <div class="tgrid" id="v3-t"></div>
+      <div class="fb" id="v3-note"></div>
+    </div>
+  </section>
+
+  <!-- 3. QUIZ -->
+  <section id="quiz">
+    <h2>Check yourself</h2>
+    <form id="quizForm">
+
+      <div class="q" data-qid="q1" data-type="mc">
+        <p><strong>1.</strong> In double-entry bookkeeping, a <em>debit</em> is best defined as:</p>
+        <div class="opts">
+          <label><input type="radio" name="q1" value="a"> An increase in an account's balance</label>
+          <label><input type="radio" name="q1" value="b"> A decrease in an account's balance</label>
+          <label><input type="radio" name="q1" value="c"> An entry recorded on the left side of an account</label>
+          <label><input type="radio" name="q1" value="d"> A withdrawal of cash from the company's bank account</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q2" data-type="mc">
+        <p><strong>2.</strong> Which group contains <em>only</em> accounts with normal <strong>debit</strong> balances?</p>
+        <div class="opts">
+          <label><input type="radio" name="q2" value="a"> Cash; Accounts Payable; Rent Expense</label>
+          <label><input type="radio" name="q2" value="b"> Accounts Receivable; Service Revenue; Dividends</label>
+          <label><input type="radio" name="q2" value="c"> Equipment; Common Stock; Salaries Expense</label>
+          <label><input type="radio" name="q2" value="d"> Cash; Dividends; Utilities Expense</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q3" data-type="mc">
+        <p><strong>3.</strong> A firm performs $4,200 of services for a client who will pay next month. The correct journal entry is:</p>
+        <div class="opts">
+          <label><input type="radio" name="q3" value="a"> Debit Cash $4,200; Credit Service Revenue $4,200</label>
+          <label><input type="radio" name="q3" value="b"> Debit Accounts Receivable $4,200; Credit Service Revenue $4,200</label>
+          <label><input type="radio" name="q3" value="c"> Debit Service Revenue $4,200; Credit Accounts Receivable $4,200</label>
+          <label><input type="radio" name="q3" value="d"> Debit Accounts Receivable $4,200; Credit Cash $4,200</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q4" data-type="mc">
+        <p><strong>4.</strong> Which statement about <em>Accumulated Depreciation</em> is correct?</p>
+        <div class="opts">
+          <label><input type="radio" name="q4" value="a"> It is a contra-asset account, so it carries a normal credit balance and is increased by credits</label>
+          <label><input type="radio" name="q4" value="b"> It is an expense account, so it is increased by debits</label>
+          <label><input type="radio" name="q4" value="c"> It is an asset account, so it carries a normal debit balance like Equipment</label>
+          <label><input type="radio" name="q4" value="d"> It is a liability, representing amounts owed to equipment vendors</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q5" data-type="mc">
+        <p><strong>5.</strong> A bookkeeper pays a $890 utility bill but records the entry as <em>Debit Utilities Expense $980; Credit Cash $980</em>. Which statement is true?</p>
+        <div class="opts">
+          <label><input type="radio" name="q5" value="a"> Total debits will no longer equal total credits in the ledger</label>
+          <label><input type="radio" name="q5" value="b"> Debits still equal credits, so checking that equality alone will not catch this error</label>
+          <label><input type="radio" name="q5" value="c"> The accounting equation no longer balances after this entry</label>
+          <label><input type="radio" name="q5" value="d"> The entry overstates Cash by $90</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q6" data-type="num">
+        <p><strong>6.</strong> The Cash T-account begins the month with a debit balance of $12,400. During the month these amounts are posted — debits: $8,300 and $1,250; credits: $6,700, $3,900, and $450. Compute the ending balance (enter dollars, no sign).</p>
+        <input type="number" name="q6" step="any" /> <span class="hint">$</span>
+      </div>
+
+      <div class="q" data-qid="q7" data-type="num">
+        <p><strong>7.</strong> Accounts Payable begins the month with a credit balance of $9,800. During the month the company purchases supplies on account for $4,650, purchases equipment on account for $12,500, and pays suppliers $7,200 in cash. What is the ending balance of Accounts Payable (enter dollars, no sign)?</p>
+        <input type="number" name="q7" step="any" /> <span class="hint">$</span>
+      </div>
+
+      <div class="q" data-qid="q8" data-type="num">
+        <p><strong>8.</strong> In its first month, Harbor Consulting: (1) receives a $25,000 owner investment in exchange for common stock; (2) borrows $10,000 on a note payable; (3) buys equipment for $15,000, paying $6,000 cash with the remainder on account; (4) earns $8,200 of revenue, collecting $5,000 in cash with $3,200 billed on account; (5) pays $3,100 cash for operating expenses; (6) pays a $500 cash dividend. What is the ending balance of Cash (enter dollars, no sign)?</p>
+        <input type="number" name="q8" step="any" /> <span class="hint">$</span>
+      </div>
+
+      <button type="submit">Submit answers</button>
+    </form>
+    <div id="result"></div>
+  </section>
+
+</div>
+
+<script>
+/* ============================================================
+   Viz 1 — transaction builder with live T-accounts + equation
+   ============================================================ */
+(function () {
+  const ACCTS = ["Cash", "Accounts Receivable", "Supplies", "Equipment",
+                 "Accounts Payable", "Common Stock", "Service Revenue",
+                 "Rent Expense"];
+  const TYPE = {
+    "Cash": "asset", "Accounts Receivable": "asset", "Supplies": "asset",
+    "Equipment": "asset", "Accounts Payable": "liability",
+    "Common Stock": "equity", "Service Revenue": "revenue",
+    "Rent Expense": "expense"
+  };
+  const DEBIT_NORMAL = { asset: true, expense: true, dividends: true,
+                         liability: false, equity: false, revenue: false };
+  const TXNS = [
+    { desc: "Owner invests $30,000 cash in exchange for common stock.",
+      amt: 30000, dr: "Cash", cr: "Common Stock",
+      note: "Cash (asset) increases — debit. Common Stock (equity) increases — credit." },
+    { desc: "Buy a workstation (equipment) for $8,000 cash.",
+      amt: 8000, dr: "Equipment", cr: "Cash",
+      note: "One asset up (Equipment, debit), another asset down (Cash, credit). Total assets unchanged." },
+    { desc: "Purchase $1,200 of supplies on account (pay later).",
+      amt: 1200, dr: "Supplies", cr: "Accounts Payable",
+      note: "Supplies (asset) increases — debit. Accounts Payable (liability) increases — credit." },
+    { desc: "Perform design services for a client, collecting $5,500 cash.",
+      amt: 5500, dr: "Cash", cr: "Service Revenue",
+      note: "Cash (asset) up — debit. Service Revenue increases equity — credit." },
+    { desc: "Finish a project and bill a client $3,000; they will pay later.",
+      amt: 3000, dr: "Accounts Receivable", cr: "Service Revenue",
+      note: "Revenue is recorded when earned, even with no cash yet: debit the receivable, credit revenue." },
+    { desc: "Pay $900 cash for this month's rent.",
+      amt: 900, dr: "Rent Expense", cr: "Cash",
+      note: "Rent Expense increases — expenses are debit-normal. Cash (asset) decreases — credit." },
+    { desc: "Collect $1,800 from the client billed in transaction 5.",
+      amt: 1800, dr: "Cash", cr: "Accounts Receivable",
+      note: "No revenue here — it was already recognized in tx 5. This just swaps A/R for Cash." },
+    { desc: "Pay $700 toward the supplies bill from transaction 3.",
+      amt: 700, dr: "Accounts Payable", cr: "Cash",
+      note: "The liability decreases — liabilities decrease with debits. Cash decreases — credit." }
+  ];
+
+  const state = {};
+  ACCTS.forEach(a => state[a] = { dr: [], cr: [] });
+  let idx = 0, wrong = 0;
+
+  const $ = id => document.getElementById(id);
+  const fmt = n => n.toLocaleString("en-US");
+
+  const selDr = $("v1-dr"), selCr = $("v1-cr");
+  ACCTS.forEach(a => {
+    selDr.add(new Option(a, a));
+    selCr.add(new Option(a, a));
+  });
+
+  function balance(a) {
+    const d = state[a].dr.reduce((s, e) => s + e.amt, 0);
+    const c = state[a].cr.reduce((s, e) => s + e.amt, 0);
+    return DEBIT_NORMAL[TYPE[a]] ? d - c : c - d;
+  }
+
+  function renderT() {
+    const grid = $("v1-taccts");
+    grid.innerHTML = ACCTS.map(a => {
+      const dRows = state[a].dr.map(e =>
+        "<div><span>(" + e.tx + ")</span><span>" + fmt(e.amt) + "</span></div>").join("") ||
+        "<div><span>&nbsp;</span><span></span></div>";
+      const cRows = state[a].cr.map(e =>
+        "<div><span>(" + e.tx + ")</span><span>" + fmt(e.amt) + "</span></div>").join("") ||
+        "<div><span>&nbsp;</span><span></span></div>";
+      const bal = balance(a);
+      const side = DEBIT_NORMAL[TYPE[a]] ? "Dr." : "Cr.";
+      return '<div class="tacct"><h4>' + a + ' <span class="tag">' + TYPE[a] +
+        '</span></h4><div class="cols"><div class="col dr">' + dRows +
+        '</div><div class="col">' + cRows + '</div></div>' +
+        '<div class="bal"><span>Bal. (' + side + ')</span><span>' + fmt(bal) +
+        "</span></div></div>";
+    }).join("");
+  }
+
+  function renderEq() {
+    let A = 0, L = 0, E = 0;
+    ACCTS.forEach(a => {
+      const t = TYPE[a], b = balance(a);
+      if (t === "asset") A += b;
+      else if (t === "liability") L += b;
+      else if (t === "equity" || t === "revenue") E += b;
+      else if (t === "expense") E -= b;
+    });
+    $("v1-eq").innerHTML = "Assets " + fmt(A) + " &nbsp;=&nbsp; Liabilities " +
+      fmt(L) + " + Equity " + fmt(E) +
+      (A === L + E ? ' &nbsp;<span class="good">✓ balanced</span>' : "");
+  }
+
+  function renderScen() {
+    if (idx >= TXNS.length) {
+      $("v1-scen").innerHTML = "<b>All eight transactions posted.</b> " +
+        "Every entry balanced, so the books balance: assets equal " +
+        "liabilities plus equity — including the revenue and expense " +
+        "effects folded into equity.";
+      $("v1-post").disabled = true;
+      selDr.disabled = selCr.disabled = true;
+      $("v1-reveal").style.display = "none";
+      $("v1-restart").style.display = "";
+      return;
+    }
+    const t = TXNS[idx];
+    $("v1-scen").innerHTML = "<b>Transaction " + (idx + 1) + " of " +
+      TXNS.length + ":</b> " + t.desc +
+      ' <span class="hint">(amount: $' + fmt(t.amt) + ")</span>";
+  }
+
+  function feedback(ok, msg) {
+    const fb = $("v1-fb");
+    fb.className = "fb " + (ok ? "ok" : "no");
+    fb.innerHTML = msg;
+  }
+
+  $("v1-post").addEventListener("click", () => {
+    if (idx >= TXNS.length) return;
+    const t = TXNS[idx];
+    const dr = selDr.value, cr = selCr.value;
+    if (dr === t.dr && cr === t.cr) {
+      state[dr].dr.push({ tx: idx + 1, amt: t.amt });
+      state[cr].cr.push({ tx: idx + 1, amt: t.amt });
+      feedback(true, "<b>Posted.</b> Dr. " + dr + " $" + fmt(t.amt) +
+        " / Cr. " + cr + " $" + fmt(t.amt) + ". " + t.note);
+      idx++; wrong = 0;
+      $("v1-reveal").style.display = "none";
+      renderT(); renderEq(); renderScen();
+    } else {
+      wrong++;
+      let msg;
+      if (dr === cr) {
+        msg = "You chose the same account for both sides — a journal entry " +
+          "moves value between at least two <em>different</em> accounts.";
+      } else if (dr === t.cr && cr === t.dr) {
+        msg = "Right two accounts — but flipped. Ask: which account " +
+          "<em>increases on its debit side</em> here?";
+      } else {
+        msg = "Not quite. Analyze it in steps: which two accounts are " +
+          "affected, what type is each, does each increase or decrease, " +
+          "and therefore is each one debited or credited?";
+      }
+      if (wrong >= 2) {
+        msg += " (Or press <b>Show me</b>.)";
+        $("v1-reveal").style.display = "";
+      }
+      feedback(false, msg);
+    }
+  });
+
+  $("v1-reveal").addEventListener("click", () => {
+    const t = TXNS[idx];
+    state[t.dr].dr.push({ tx: idx + 1, amt: t.amt });
+    state[t.cr].cr.push({ tx: idx + 1, amt: t.amt });
+    feedback(true, "<b>Answer:</b> Dr. " + t.dr + " $" + fmt(t.amt) +
+      " / Cr. " + t.cr + " $" + fmt(t.amt) + ". " + t.note);
+    idx++; wrong = 0;
+    $("v1-reveal").style.display = "none";
+    renderT(); renderEq(); renderScen();
+  });
+
+  $("v1-restart").addEventListener("click", () => {
+    ACCTS.forEach(a => { state[a].dr = []; state[a].cr = []; });
+    idx = 0; wrong = 0;
+    $("v1-post").disabled = false;
+    selDr.disabled = selCr.disabled = false;
+    $("v1-restart").style.display = "none";
+    $("v1-fb").className = "fb";
+    renderT(); renderEq(); renderScen();
+  });
+
+  renderT(); renderEq(); renderScen();
+})();
+
+/* ============================================================
+   Viz 2 — normal-balance trainer
+   ============================================================ */
+(function () {
+  const POOL = [
+    ["Cash", "asset", "dr"],
+    ["Accounts Receivable", "asset", "dr"],
+    ["Inventory", "asset", "dr"],
+    ["Prepaid Insurance", "asset", "dr",
+     "Prepaid Insurance is an asset (a right to future coverage), not an expense — yet."],
+    ["Equipment", "asset", "dr"],
+    ["Accounts Payable", "liability", "cr"],
+    ["Notes Payable", "liability", "cr"],
+    ["Unearned Revenue", "liability", "cr",
+     "Despite the name, Unearned Revenue is a liability — cash received for work still owed to the customer."],
+    ["Salaries Payable", "liability", "cr"],
+    ["Common Stock", "equity", "cr"],
+    ["Retained Earnings", "equity", "cr"],
+    ["Service Revenue", "revenue", "cr"],
+    ["Sales Revenue", "revenue", "cr"],
+    ["Interest Revenue", "revenue", "cr"],
+    ["Rent Expense", "expense", "dr"],
+    ["Salaries Expense", "expense", "dr"],
+    ["Utilities Expense", "expense", "dr"],
+    ["Advertising Expense", "expense", "dr"],
+    ["Dividends", "dividends", "dr",
+     "Dividends reduce retained earnings, so like expenses they are debit-normal."],
+    ["Accumulated Depreciation", "contra-asset", "cr",
+     "A contra-asset offsets its partner asset, so its rules are flipped: credit to increase."],
+    ["Allowance for Doubtful Accounts", "contra-asset", "cr",
+     "Contra to Accounts Receivable, so it takes the opposite (credit) normal balance."]
+  ];
+  const RULE = {
+    asset: "Assets are debit-normal (the A in DEA).",
+    expense: "Expenses are debit-normal (the E in DEA) — they reduce retained earnings.",
+    dividends: "Dividends are debit-normal (the D in DEA) — they reduce retained earnings.",
+    liability: "Liabilities are credit-normal (the L in LER).",
+    equity: "Equity is credit-normal (the E in LER).",
+    revenue: "Revenues are credit-normal (the R in LER) — they increase retained earnings.",
+    "contra-asset": "Contra accounts take the normal balance opposite to the account they offset."
+  };
+
+  const $ = id => document.getElementById(id);
+  let cur = null, last = -1, right = 0, total = 0, streak = 0, best = 0;
+
+  function next() {
+    let i;
+    do { i = Math.floor(Math.random() * POOL.length); } while (i === last);
+    last = i; cur = POOL[i];
+    $("v2-card").innerHTML = cur[0] +
+      "<small>which side increases this account?</small>";
+    $("v2-dr").disabled = $("v2-cr").disabled = false;
+  }
+
+  function answer(side) {
+    if (!cur) return;
+    $("v2-dr").disabled = $("v2-cr").disabled = true;
+    total++;
+    const fb = $("v2-fb");
+    const correctSide = cur[2] === "dr" ? "Debit" : "Credit";
+    const extra = cur[3] ? " " + cur[3] : "";
+    if (side === cur[2]) {
+      right++; streak++; best = Math.max(best, streak);
+      fb.className = "fb ok";
+      fb.innerHTML = "<b>" + correctSide + " — correct.</b> " + cur[0] +
+        " is a(n) " + cur[1] + " account. " + RULE[cur[1]] + extra;
+    } else {
+      streak = 0;
+      fb.className = "fb no";
+      fb.innerHTML = "<b>No — " + correctSide.toLowerCase() +
+        " increases it.</b> " + cur[0] + " is a(n) " + cur[1] +
+        " account. " + RULE[cur[1]] + extra;
+    }
+    $("v2-score").textContent = right + "/" + total;
+    $("v2-streak").textContent = streak;
+    $("v2-best").textContent = best;
+    setTimeout(next, 1700);
+  }
+
+  $("v2-dr").addEventListener("click", () => answer("dr"));
+  $("v2-cr").addEventListener("click", () => answer("cr"));
+  $("v2-start").addEventListener("click", () => {
+    right = total = streak = 0;
+    $("v2-score").textContent = "0/0";
+    $("v2-streak").textContent = "0";
+    $("v2-fb").className = "fb";
+    $("v2-start").textContent = "Reset";
+    next();
+  });
+})();
+
+/* ============================================================
+   Viz 3 — T-account balancer with abnormal-balance warning
+   ============================================================ */
+(function () {
+  const ACCTS = [
+    ["Cash", "asset", "dr"],
+    ["Accounts Receivable", "asset", "dr"],
+    ["Accounts Payable", "liability", "cr"],
+    ["Common Stock", "equity", "cr"],
+    ["Service Revenue", "revenue", "cr"],
+    ["Rent Expense", "expense", "dr"],
+    ["Dividends", "dividends", "dr"],
+    ["Accumulated Depreciation", "contra-asset", "cr"]
+  ];
+  const $ = id => document.getElementById(id);
+  const fmt = n => n.toLocaleString("en-US");
+  const sel = $("v3-acct");
+  ACCTS.forEach((a, i) => sel.add(new Option(a[0] + " (" + a[1] + ")", i)));
+
+  let drs = [], crs = [];
+
+  function info() { return ACCTS[+sel.value]; }
+
+  function render() {
+    const [name, type, normal] = info();
+    const dTot = drs.reduce((s, x) => s + x, 0);
+    const cTot = crs.reduce((s, x) => s + x, 0);
+    const rows = (list) => list.map(x =>
+      "<div><span></span><span>" + fmt(x) + "</span></div>").join("") ||
+      "<div><span>&nbsp;</span><span></span></div>";
+    const ft = (tot) => '<div class="ft"><span></span><span>' +
+      (tot ? fmt(tot) : "—") + "</span></div>";
+    const balAmt = Math.abs(dTot - cTot);
+    const balSide = dTot >= cTot ? "dr" : "cr";
+    const abnormal = balAmt > 0 && balSide !== normal;
+    const balLabel = balAmt === 0 ? "no balance" :
+      "Bal. (" + (balSide === "dr" ? "Dr." : "Cr.") + ") " + fmt(balAmt);
+    $("v3-t").innerHTML =
+      '<div class="tacct" style="max-width:340px;flex:1 1 280px">' +
+      "<h4>" + name + ' <span class="tag">' + type + " — normal " +
+      (normal === "dr" ? "debit" : "credit") + "</span></h4>" +
+      '<div class="cols"><div class="col dr">' + rows(drs) + ft(dTot) +
+      '</div><div class="col">' + rows(crs) + ft(cTot) + "</div></div>" +
+      '<div class="bal' + (abnormal ? " ab" : "") + '"><span>' + balLabel +
+      "</span><span>" + (abnormal ? "⚠ abnormal" : balAmt > 0 ? "normal side" : "") +
+      "</span></div></div>";
+    const note = $("v3-note");
+    if (abnormal) {
+      note.className = "fb no";
+      note.innerHTML = "<b>Abnormal balance.</b> " + name + " is " +
+        (normal === "dr" ? "debit" : "credit") + "-normal, but its balance " +
+        "has landed on the " + (balSide === "dr" ? "debit" : "credit") +
+        " side. In real books this usually signals an error — or an unusual " +
+        "situation worth investigating (e.g. an overdrawn bank account, or a " +
+        "supplier you have overpaid).";
+    } else if (balAmt > 0) {
+      note.className = "fb ok";
+      note.innerHTML = "Footings: debits " + (dTot ? fmt(dTot) : "0") +
+        ", credits " + (cTot ? fmt(cTot) : "0") + ". The difference, " +
+        fmt(balAmt) + ", sits on the larger side — the account's normal side. ✓";
+    } else {
+      note.className = "fb";
+      note.innerHTML = "";
+    }
+  }
+
+  function post(side) {
+    const v = Math.abs(parseFloat($("v3-amt").value));
+    if (!v || !isFinite(v)) return;
+    (side === "dr" ? drs : crs).push(v);
+    render();
+  }
+
+  $("v3-postdr").addEventListener("click", () => post("dr"));
+  $("v3-postcr").addEventListener("click", () => post("cr"));
+  $("v3-clear").addEventListener("click", () => { drs = []; crs = []; render(); });
+  sel.addEventListener("change", () => { drs = []; crs = []; render(); });
+  render();
+})();
+</script>
+
+<script>
+  // Lesson metadata used by the recorder.
+  const LESSON_ADDRESS = "101.5";
+
+  // Collect answers WITHOUT knowing which are correct. Grading is server-side.
+  document.getElementById("quizForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const fd = new FormData(e.target);
+    const answers = {};
+    document.querySelectorAll(".q").forEach(q => {
+      const qid = q.dataset.qid;
+      answers[qid] = fd.get(qid);
+    });
+
+    const payload = { address: LESSON_ADDRESS, answers, ts: Date.now() };
+
+    try {
+      // record_attempt.py (via serve.py) grades against the gated answer key.
+      const res = await fetch("http://127.0.0.1:8753/record", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (data.error) {
+        document.getElementById("result").textContent = "Recorder error: " + data.error;
+        return;
+      }
+      document.getElementById("result").textContent =
+        `Score: ${data.correct}/${data.total}. ` +
+        (data.weak_topics?.length ? `Review: ${data.weak_topics.join(", ")}` : "Nice work.");
+      // Per-question feedback from the graded response; the page never sees the key.
+      (data.results || []).forEach(r => {
+        const q = document.querySelector(`.q[data-qid="${r.qid}"]`);
+        if (!q) return;
+        q.classList.remove("right", "wrong");
+        q.classList.add(r.is_correct ? "right" : "wrong");
+        let fb = q.querySelector(".fb");
+        if (!fb) { fb = document.createElement("div"); fb.className = "fb"; q.appendChild(fb); }
+        fb.textContent = "";
+        const mark = document.createElement("b");
+        mark.textContent = r.is_correct ? "✓ Correct" : "✗ Incorrect";
+        fb.appendChild(mark);
+        if (!r.is_correct && r.explanation) fb.append(" — " + r.explanation);
+      });
+    } catch (err) {
+      // Offline fallback: stash the attempt for later import.
+      const blob = new Blob([JSON.stringify(payload, null, 2)],
+                            {type:"application/json"});
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = `${LESSON_ADDRESS}.attempt.json`;
+      a.click();
+      document.getElementById("result").textContent =
+        "Recorder offline — downloaded attempt JSON. Run scripts/serve.py and import it.";
+    }
+  });
+</script>
+</body>
+</html>
