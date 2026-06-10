@@ -991,7 +991,8 @@
 
     try {
       // record_attempt.py (via serve.py) grades against the gated answer key.
-      const res = await fetch("http://127.0.0.1:8753/record", {
+      const res = await fetch(location.protocol === "file:"
+          ? "http://127.0.0.1:8753/record" : "/record", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)

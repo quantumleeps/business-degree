@@ -116,7 +116,10 @@ content sections with real teaching material for the specific topic.
 
     try {
       // record_attempt.py (via serve.py) grades against the gated answer key.
-      const res = await fetch("http://127.0.0.1:8753/record", {
+      // Origin-relative when served (works from any device on the LAN);
+      // localhost only as the file:// fallback.
+      const res = await fetch(location.protocol === "file:"
+          ? "http://127.0.0.1:8753/record" : "/record", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
