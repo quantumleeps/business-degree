@@ -1,0 +1,1180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>101.6 — The accounting cycle: journal → ledger → trial balance</title>
+<style>
+  :root { --ink:#1a1a2e; --paper:#fdfdfb; --accent:#2d6a4f; --accent2:#1d4ed8;
+          --muted:#6b7280; --warn:#b45309; --bad:#b91c1c; }
+  body { margin:0; font:16px/1.6 system-ui,sans-serif; color:var(--ink);
+         background:var(--paper); }
+  .wrap { max-width:860px; margin:0 auto; padding:32px 20px 80px; }
+  header .addr { font:600 13px ui-monospace,monospace; color:var(--accent);
+                 letter-spacing:.05em; }
+  h1 { font-size:30px; margin:.2em 0 .1em; line-height:1.2; }
+  .why { color:var(--muted); font-style:italic; margin-bottom:2em; }
+  section { margin:2.5em 0; }
+  h2 { border-bottom:2px solid var(--accent); padding-bottom:4px; }
+  h3 { margin:1.6em 0 .3em; font-size:18px; }
+  h4.subhd { margin:1.2em 0 .3em; font-size:15.5px; }
+  .lead { font-size:17px; }
+  .note { background:#f0f7f4; border-left:4px solid var(--accent);
+          padding:12px 16px; border-radius:0 8px 8px 0; margin:1.2em 0;
+          font-size:15px; }
+  .eq { font:600 17px ui-monospace,monospace; text-align:center;
+        background:#fff; border:1px solid #e5e7eb; border-radius:10px;
+        padding:14px; margin:1.2em 0; }
+  table.book { border-collapse:collapse; width:100%; margin:1em 0; font-size:14.5px; }
+  table.book th, table.book td { border:1px solid #e5e7eb; padding:6px 9px;
+        text-align:left; vertical-align:top; }
+  table.book th { background:#f9fafb; }
+  table.book td.num, table.book th.num { text-align:right;
+        font-family:ui-monospace,monospace; white-space:nowrap; }
+  table.book td.ctr { text-align:center; font-family:ui-monospace,monospace; }
+  table.book tr.tot td { font-weight:700; border-top:2px solid var(--ink); }
+  td.indent { padding-left:34px; }
+  td.expl { font-style:italic; color:var(--muted); font-size:13.5px;
+            padding-left:18px; }
+  .cycle { counter-reset:step; list-style:none; padding:0; margin:1em 0; }
+  .cycle li { position:relative; padding:7px 10px 7px 44px; margin:5px 0;
+        border:1px solid #e5e7eb; border-radius:8px; background:#fff;
+        font-size:15px; }
+  .cycle li::before { counter-increment:step; content:counter(step);
+        position:absolute; left:10px; top:50%; transform:translateY(-50%);
+        width:24px; height:24px; border-radius:50%; background:var(--muted);
+        color:#fff; font:700 13px/24px system-ui; text-align:center; }
+  .cycle li.here { border-color:var(--accent); background:#f0f7f4; }
+  .cycle li.here::before { background:var(--accent); }
+  .cycle li .tag { float:right; font:600 11px ui-monospace,monospace;
+        color:var(--muted); margin-left:8px; }
+  .cycle li.here .tag { color:var(--accent); }
+  ul.tight li { margin:.25em 0; }
+  .hint { font-size:13px; color:var(--muted); }
+  .visual { border:1px solid #e5e7eb; border-radius:12px; padding:16px;
+            background:#fff; }
+  .controls { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:12px; }
+  .controls button { background:var(--accent2); font-size:13px; padding:7px 11px; }
+  .controls button.reset { background:var(--muted); }
+  .controls button:disabled { background:#e5e7eb; color:#9ca3af; cursor:not-allowed; }
+  button { background:var(--accent); color:#fff; border:0; padding:10px 18px;
+           border-radius:8px; font-size:15px; cursor:pointer; }
+  button:hover:not(:disabled) { filter:brightness(1.07); }
+  /* viz-1 journal + ledger */
+  #viz-1 { position:relative; }
+  .vjcols { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  @media (max-width:720px){ .vjcols { grid-template-columns:1fr; } }
+  .vjpane h4 { margin:0 0 6px; font-size:14px; }
+  .vjournal { max-height:430px; overflow:auto; border:1px solid #e5e7eb;
+        border-radius:8px; }
+  table.vj { border-collapse:collapse; width:100%; font-size:12.5px; }
+  table.vj th, table.vj td { border-bottom:1px solid #f3f4f6; padding:3px 6px; }
+  table.vj th { background:#f9fafb; position:sticky; top:0; text-align:left; }
+  table.vj td.num { text-align:right; font-family:ui-monospace,monospace;
+        white-space:nowrap; }
+  table.vj td.pr { text-align:center; font-family:ui-monospace,monospace;
+        color:var(--accent2); width:34px; }
+  table.vj tbody.entry.active td { background:#fef9c3; }
+  table.vj tbody.entry.posted td { color:#9ca3af; }
+  table.vj tbody.entry.posted td.pr { color:var(--accent); font-weight:700; }
+  table.vj td.cr-acct { padding-left:26px; }
+  table.vj td.memo { font-style:italic; color:var(--muted); font-size:11.5px;
+        padding-left:14px; }
+  .vledger { max-height:430px; overflow:auto; display:grid; gap:8px;
+        grid-template-columns:1fr; align-content:start; padding-right:2px; }
+  .acard { border:1px solid #e5e7eb; border-radius:8px; overflow:hidden; }
+  .acard h5 { margin:0; padding:4px 8px; background:#f9fafb; font-size:12.5px;
+        border-bottom:1px solid #e5e7eb; font-family:ui-monospace,monospace; }
+  .acard h5 .bal { float:right; color:var(--accent); }
+  table.lg { border-collapse:collapse; width:100%; font-size:12px; }
+  table.lg td, table.lg th { padding:2px 7px; border-bottom:1px dashed #f3f4f6;
+        text-align:right; font-family:ui-monospace,monospace; white-space:nowrap; }
+  table.lg th { font-family:system-ui; color:var(--muted); font-weight:600;
+        font-size:11px; }
+  table.lg td:first-child, table.lg th:first-child { text-align:left; }
+  table.lg tr.new td { animation:flash 1.4s ease-out; }
+  @keyframes flash { from { background:#fef9c3; } to { background:transparent; } }
+  .chip { position:absolute; z-index:30; padding:3px 8px; border-radius:999px;
+        font:700 11.5px ui-monospace,monospace; color:#fff; pointer-events:none;
+        transition:transform .65s cubic-bezier(.4,.1,.3,1), opacity .65s;
+        box-shadow:0 2px 8px rgba(0,0,0,.25); }
+  .chip.dr { background:var(--accent); }
+  .chip.cr { background:var(--warn); }
+  .vstatus { margin-top:10px; font:600 13px ui-monospace,monospace; }
+  /* viz-2 trial-balance builder */
+  table.tbb { border-collapse:collapse; width:100%; font-size:13.5px; }
+  table.tbb th, table.tbb td { border-bottom:1px solid #f3f4f6; padding:5px 8px; }
+  table.tbb th { background:#f9fafb; text-align:left; }
+  table.tbb th.num { text-align:right; }
+  table.tbb td.num { text-align:right; font-family:ui-monospace,monospace;
+        white-space:nowrap; }
+  table.tbb td.cell { width:90px; }
+  table.tbb td.cell.ok { background:#ecfdf5; color:var(--accent); font-weight:700; }
+  table.tbb td.cell.bad { background:#fef2f2; color:var(--bad); font-weight:700; }
+  table.tbb .sidebtns button { font-size:11.5px; padding:3px 9px; margin-right:4px;
+        background:#e5e7eb; color:#374151; border-radius:6px; }
+  table.tbb .sidebtns button.dr.on { background:var(--accent); color:#fff; }
+  table.tbb .sidebtns button.cr.on { background:var(--warn); color:#fff; }
+  table.tbb tr.tot td { font-weight:700; border-top:2px solid var(--ink);
+        font-family:ui-monospace,monospace; }
+  #tbb-status { margin-top:10px; font-weight:600; font-size:14px; }
+  /* viz-3 error detective */
+  .det-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  @media (max-width:720px){ .det-grid { grid-template-columns:1fr; } }
+  table.det { border-collapse:collapse; width:100%; font-size:13px; }
+  table.det th, table.det td { border-bottom:1px solid #f3f4f6; padding:4px 8px; }
+  table.det th { background:#f9fafb; text-align:left; }
+  table.det th.num { text-align:right; }
+  table.det td.num { text-align:right; font-family:ui-monospace,monospace;
+        white-space:nowrap; }
+  table.det tr.tot td { font-weight:700; border-top:2px solid var(--ink);
+        font-family:ui-monospace,monospace; }
+  .det-math { font:600 13px ui-monospace,monospace; background:#f9fafb;
+        border:1px solid #e5e7eb; border-radius:8px; padding:10px 12px;
+        margin:8px 0; }
+  .det-math .yes { color:var(--accent); }
+  .det-math .no { color:var(--bad); }
+  .det-step { margin:10px 0; }
+  .det-step .lbl { font-weight:700; font-size:13.5px; }
+  .det-feedback { font-size:13.5px; margin-top:6px; padding:8px 10px;
+        border-radius:8px; display:none; }
+  .det-feedback.good { display:block; background:#ecfdf5; color:#065f46; }
+  .det-feedback.bad { display:block; background:#fef2f2; color:#7f1d1d; }
+  .det-feedback.info { display:block; background:#eff6ff; color:#1e3a8a; }
+  .acctbtns { display:flex; flex-wrap:wrap; gap:5px; }
+  .acctbtns button { background:#e5e7eb; color:#374151; font-size:12px;
+        padding:5px 9px; border-radius:6px; }
+  .acctbtns button.found { background:var(--accent); color:#fff; }
+  .acctbtns button.no { background:#fee2e2; color:#7f1d1d; }
+  /* quiz */
+  .q { margin:1.2em 0; padding:14px; border:1px solid #e5e7eb; border-radius:10px; }
+  .q .opts label { display:block; margin:4px 0; cursor:pointer; }
+  .q input[type=number], .q input[type=text] { font-size:15px; padding:6px 8px;
+        border:1px solid #d1d5db; border-radius:6px; width:180px; }
+  .q.right { border-color:var(--accent); background:#f0f7f4; }
+  .q.wrong { border-color:#b91c1c; background:#fef2f2; }
+  .q .fb { margin-top:10px; padding-top:8px; border-top:1px dashed #d1d5db;
+        font-size:14px; }
+  .q.right .fb b { color:var(--accent); }
+  .q.wrong .fb b { color:#b91c1c; }
+  .q table.book { font-size:13.5px; }
+  #result { margin-top:1em; font-weight:600; }
+  code.je { font:600 13px ui-monospace,monospace; background:#f9fafb;
+        padding:1px 5px; border-radius:4px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="addr">101.6</div>
+    <h1>The accounting cycle: journal → ledger → trial balance</h1>
+    <p class="why">Financial statements don't appear by magic — every number on them rode a paper trail from source document to journal to ledger, and the trial balance is the checkpoint that proves the arithmetic survived the trip.</p>
+  </header>
+
+  <!-- 1. WRITTEN / TEACHING SECTION -->
+  <section id="learn">
+    <h2>Learn</h2>
+
+    <p class="lead">In 101.5 you learned the grammar of double-entry: every
+    transaction is expressed as debits and credits that must be equal. The
+    <strong>accounting cycle</strong> is the sentence structure built from that
+    grammar — the standardized sequence of steps a business repeats every
+    accounting period to turn raw transactions into financial statements. This
+    lesson covers the <em>front half</em> of the cycle in full working detail:
+    analyzing transactions, journalizing them, posting to the ledger, and
+    proving the books with an unadjusted trial balance.</p>
+
+    <h3>The whole cycle at a glance</h3>
+    <p>Most textbooks present the cycle as nine steps. The first four happen
+    continuously during the period (or at least monthly); the rest happen at
+    the end of the period:</p>
+    <ol class="cycle">
+      <li class="here"><span class="tag">THIS LESSON</span><strong>Analyze transactions</strong> from source documents — decide whether, what, and how much to record.</li>
+      <li class="here"><span class="tag">THIS LESSON</span><strong>Journalize</strong> — record each transaction chronologically in the general journal.</li>
+      <li class="here"><span class="tag">THIS LESSON</span><strong>Post</strong> — transfer journal debits and credits into the individual general-ledger accounts.</li>
+      <li class="here"><span class="tag">THIS LESSON</span><strong>Prepare the unadjusted trial balance</strong> — list all account balances and prove debits = credits.</li>
+      <li><span class="tag">→ 101.8</span><strong>Journalize and post adjusting entries</strong> — accruals, deferrals, depreciation.</li>
+      <li><span class="tag">→ 101.8</span><strong>Prepare the adjusted trial balance.</strong></li>
+      <li><span class="tag">→ 101.9</span><strong>Prepare the financial statements</strong> — income statement, statement of retained earnings, balance sheet, cash-flow statement.</li>
+      <li><span class="tag">→ 101.9</span><strong>Journalize and post closing entries</strong> — zero out revenues, expenses, and dividends into retained earnings.</li>
+      <li><span class="tag">→ 101.9</span><strong>Prepare the post-closing trial balance</strong> — prove the books are ready for the next period.</li>
+    </ol>
+    <p>Then the cycle starts over. The discipline of the sequence is the point:
+    statements prepared from books that haven't been posted and proved aren't
+    statements, they're guesses.</p>
+
+    <h3>Step 1 — Analyze the transaction</h3>
+    <p>Accounting doesn't begin with a journal entry; it begins with a
+    <strong>source document</strong> — the original evidence that an economic
+    event happened. Typical source documents:</p>
+    <ul class="tight">
+      <li><b>Sales invoice</b> — you billed a customer (revenue earned on account).</li>
+      <li><b>Purchase invoice / vendor bill</b> — a supplier billed you.</li>
+      <li><b>Cash register tape, receipt</b> — cash sale or cash payment evidence.</li>
+      <li><b>Check stub / remittance advice, bank statement</b> — cash moved.</li>
+      <li><b>Promissory note, loan agreement</b> — formal debt created.</li>
+      <li><b>Time cards, payroll records</b> — wages owed or paid.</li>
+    </ul>
+    <p>For each document, transaction analysis asks three questions, in order:</p>
+    <ol>
+      <li><b>Is this recordable?</b> A transaction is recorded only if it
+      affects the accounting equation (A = L + E) <em>and</em> can be reliably
+      measured in dollars. Signing a contract for future services, hiring an
+      employee, or receiving a price quote changes no asset, liability, or
+      equity yet — <em>no entry</em>. The entry comes later, when cash or
+      performance actually moves.</li>
+      <li><b>Which accounts are affected, and do they increase or decrease?</b>
+      Name the specific accounts from the chart of accounts — "Cash" and
+      "Unearned Revenue," not "money" and "stuff we owe."</li>
+      <li><b>Debit or credit?</b> Apply the rules of 101.5: debits increase
+      assets, expenses, and dividends; credits increase liabilities, equity,
+      and revenues. Total debits must equal total credits, so the equation
+      stays balanced automatically.</li>
+    </ol>
+
+    <h3>Step 2 — Journalize in the general journal</h3>
+    <p>The <strong>general journal</strong> is the <em>book of original
+    entry</em>: a chronological record where each transaction first enters the
+    books, complete in one place — date, accounts, amounts, and a short
+    explanation. The standard format has firm conventions:</p>
+    <ul class="tight">
+      <li><b>Date</b> in the first column (year and month written once per page).</li>
+      <li><b>Debited account(s) first</b>, flush left, with amounts in the Debit column.</li>
+      <li><b>Credited account(s) next, indented</b>, with amounts in the Credit column.</li>
+      <li><b>A brief explanation</b> below the entry, often citing the source document ("Invoice 1001").</li>
+      <li><b>A posting-reference (PR) column</b>, left <em>blank</em> at journalizing time — it gets filled in during posting (Step 3).</li>
+      <li>A blank line between entries; no running totals — the journal records, the ledger accumulates.</li>
+    </ul>
+    <p>An entry with more than one debit or more than one credit is a
+    <strong>compound entry</strong> — still one transaction, still equal totals.
+    Example: buy $9,600 of equipment, paying $3,600 cash with the rest on
+    account:</p>
+    <table class="book">
+      <tr><th>Date</th><th>Account Titles and Explanation</th><th class="num">PR</th><th class="num">Debit</th><th class="num">Credit</th></tr>
+      <tr><td>May 3</td><td>Equipment</td><td class="ctr"></td><td class="num">9,600</td><td class="num"></td></tr>
+      <tr><td></td><td class="indent">Cash</td><td class="ctr"></td><td class="num"></td><td class="num">3,600</td></tr>
+      <tr><td></td><td class="indent">Accounts Payable</td><td class="ctr"></td><td class="num"></td><td class="num">6,000</td></tr>
+      <tr><td></td><td class="expl">Purchased workstation equipment; paid part cash, balance on account.</td><td></td><td></td><td></td></tr>
+    </table>
+    <p>One debit of 9,600 against credits of 3,600 + 6,000 = 9,600. Equal —
+    always.</p>
+
+    <h3>Step 3 — Post to the general ledger</h3>
+    <p>The journal answers "what happened on May 3?" but it cannot answer "how
+    much cash do we have?" — the Cash pieces are scattered across many entries.
+    <strong>Posting</strong> fixes that: each debit and credit line in the
+    journal is copied into its own account in the <strong>general
+    ledger</strong>, the complete collection of accounts.</p>
+
+    <h4 class="subhd">The chart of accounts</h4>
+    <p>The ledger's table of contents is the <strong>chart of accounts</strong>:
+    every account the business uses, with an identifying number. The
+    near-universal numbering convention assigns a leading digit per category:</p>
+    <table class="book">
+      <tr><th>Number range</th><th>Category</th><th>Examples</th></tr>
+      <tr><td class="ctr">1xx / 1xxx</td><td>Assets</td><td>101 Cash, 110 Accounts Receivable, 150 Equipment</td></tr>
+      <tr><td class="ctr">2xx / 2xxx</td><td>Liabilities</td><td>201 Accounts Payable, 230 Unearned Revenue</td></tr>
+      <tr><td class="ctr">3xx / 3xxx</td><td>Equity</td><td>301 Common Stock, 318 Retained Earnings</td></tr>
+      <tr><td class="ctr">4xx / 4xxx</td><td>Revenues</td><td>401 Service Revenue</td></tr>
+      <tr><td class="ctr">5xx–6xx / 5xxx+</td><td>Expenses</td><td>501 Salaries Expense, 510 Rent Expense</td></tr>
+    </table>
+    <p>Gaps are left in the numbering so new accounts can slot in without
+    renumbering. Accounts appear in the ledger — and later on the trial
+    balance — in chart-of-accounts order.</p>
+
+    <h4 class="subhd">The posting mechanics and the audit trail</h4>
+    <p>To post one journal line: find the account's ledger page, enter the
+    date, the amount on the correct (debit or credit) side, and in the
+    account's reference column write the journal page it came from (e.g.
+    <code class="je">J1</code>). Then go back to the journal and write the
+    account's number in the PR column. That two-way cross-reference is the
+    <strong>audit trail</strong>: from any ledger amount you can trace back to
+    the full journal entry and its explanation; from any journal entry you can
+    confirm both sides were posted. A filled PR column also marks how far
+    posting has progressed — an unfilled PR means an unposted line.</p>
+
+    <h4 class="subhd">Ledger account formats</h4>
+    <p>The <b>T-account</b> from 101.5 (debits left, credits right) is the
+    classroom sketch. Real ledgers use the <b>three-column (running-balance)
+    form</b>: columns for Date, PR, Debit, Credit, and Balance, with the
+    balance recomputed after every posting. Same information, but the current
+    balance is always visible — here is Brightwater's Cash account after the
+    month you'll meet below:</p>
+    <table class="book">
+      <tr><th colspan="6">Cash — Account No. 101</th></tr>
+      <tr><th>Date</th><th class="num">PR</th><th class="num">Debit</th><th class="num">Credit</th><th class="num">Balance</th><th></th></tr>
+      <tr><td>May 1</td><td class="ctr">J1</td><td class="num">30,000</td><td class="num"></td><td class="num">30,000</td><td>Dr</td></tr>
+      <tr><td>May 2</td><td class="ctr">J1</td><td class="num"></td><td class="num">2,400</td><td class="num">27,600</td><td>Dr</td></tr>
+      <tr><td>May 3</td><td class="ctr">J1</td><td class="num"></td><td class="num">3,600</td><td class="num">24,000</td><td>Dr</td></tr>
+      <tr><td>May 15</td><td class="ctr">J1</td><td class="num">4,500</td><td class="num"></td><td class="num">28,500</td><td>Dr</td></tr>
+      <tr><td>May 20</td><td class="ctr">J1</td><td class="num">5,000</td><td class="num"></td><td class="num">33,500</td><td>Dr</td></tr>
+      <tr><td>May 26</td><td class="ctr">J1</td><td class="num"></td><td class="num">2,100</td><td class="num">31,400</td><td>Dr</td></tr>
+      <tr><td>May 29</td><td class="ctr">J1</td><td class="num"></td><td class="num">2,000</td><td class="num">29,400</td><td>Dr</td></tr>
+    </table>
+
+    <h3>Step 4 — The unadjusted trial balance</h3>
+    <p>At the end of the period (or any time you want a check), you prepare the
+    <strong>unadjusted trial balance</strong>: a two-column list of every
+    ledger account and its ending balance — debit balances in the left column,
+    credit balances in the right — in chart-of-accounts order, with each
+    column totaled. "Unadjusted" because it's taken <em>before</em> the
+    period-end adjusting entries of 101.8.</p>
+    <p><b>What equal totals prove:</b> that the debits and credits you posted
+    are arithmetically equal — no one-sided postings, no addition slips in the
+    balances, no transcription errors onto the trial balance itself.</p>
+    <p><b>What equal totals do NOT prove.</b> The trial balance is a parity
+    check, not a correctness proof. It stays perfectly balanced when:</p>
+    <ul class="tight">
+      <li>a transaction was <b>never journalized at all</b> (both sides missing),</li>
+      <li>an entry was <b>journalized or posted twice</b> (both sides doubled),</li>
+      <li>the right amount was posted to the <b>wrong account</b> (debit Equipment instead of debit Supplies),</li>
+      <li>the <b>wrong amount</b> was used on <em>both</em> sides of an entry,</li>
+      <li>two independent errors <b>offset</b> each other.</li>
+    </ul>
+
+    <h4 class="subhd">When it doesn't balance: the standard hunt</h4>
+    <p>If the columns disagree, compute the <b>difference</b> and work this
+    checklist before re-tracing everything:</p>
+    <ol>
+      <li><b>Re-add both columns.</b> The most common error is in the trial balance itself.</li>
+      <li><b>Difference equals a journal amount?</b> One side of that entry was
+      probably <b>never posted</b> (an omitted posting). Search the ledger for
+      the missing half.</li>
+      <li><b>Difference divisible by 2?</b> Divide it by 2 and search for that
+      amount <b>posted to the wrong side</b> — a debit recorded as a credit
+      overstates one column and understates the other, throwing the totals off
+      by <em>twice</em> the amount.</li>
+      <li><b>Difference divisible by 9?</b> Suspect a <b>transposition</b>
+      (adjacent digits swapped: writing 1,510 for 1,150) or a <b>slide</b>
+      (decimal shifted: writing 115 for 1,150). Swapping adjacent digits
+      changes a number by 9 × (difference of the digits) × (place value), and
+      a slide changes it by a multiple of 9 as well — so a difference evenly
+      divisible by 9 is the classic fingerprint of both.</li>
+      <li>If all else fails, re-verify each ledger balance, then re-trace each
+      posting against the journal — the audit trail exists for exactly this.</li>
+    </ol>
+    <div class="note"><b>Why 9?</b> Swap the digits <em>ab</em> (value
+    10a&nbsp;+&nbsp;b) to <em>ba</em> (value 10b&nbsp;+&nbsp;a) and the change
+    is 9(a&nbsp;−&nbsp;b). At the tens/hundreds place the change is 90(a−b),
+    and so on — always a multiple of 9. A slide divides or multiplies by 10,
+    and n&nbsp;×&nbsp;10 − n = 9n, again a multiple of 9.</div>
+
+    <h3>Worked example: Brightwater Design Studio, May 2026</h3>
+    <p>Brightwater is a one-designer studio that opened May 1. Its chart of
+    accounts: <code class="je">101</code> Cash, <code class="je">110</code>
+    Accounts Receivable, <code class="je">130</code> Supplies,
+    <code class="je">150</code> Equipment, <code class="je">201</code> Accounts
+    Payable, <code class="je">230</code> Unearned Revenue,
+    <code class="je">301</code> Common Stock, <code class="je">401</code>
+    Service Revenue, <code class="je">501</code> Salaries Expense,
+    <code class="je">510</code> Rent Expense. Nine May transactions, each
+    analyzed and journalized (journal page J1, PR column shown as it looks
+    <em>after</em> posting):</p>
+
+    <table class="book">
+      <tr><th>Date</th><th>Account Titles and Explanation</th><th class="num">PR</th><th class="num">Debit</th><th class="num">Credit</th></tr>
+      <tr><td>May 1</td><td>Cash</td><td class="ctr">101</td><td class="num">30,000</td><td class="num"></td></tr>
+      <tr><td></td><td class="indent">Common Stock</td><td class="ctr">301</td><td class="num"></td><td class="num">30,000</td></tr>
+      <tr><td></td><td class="expl">Issued common stock to owner for cash.</td><td></td><td></td><td></td></tr>
+      <tr><td>May 2</td><td>Rent Expense</td><td class="ctr">510</td><td class="num">2,400</td><td class="num"></td></tr>
+      <tr><td></td><td class="indent">Cash</td><td class="ctr">101</td><td class="num"></td><td class="num">2,400</td></tr>
+      <tr><td></td><td class="expl">Paid May office rent.</td><td></td><td></td><td></td></tr>
+      <tr><td>May 3</td><td>Equipment</td><td class="ctr">150</td><td class="num">9,600</td><td class="num"></td></tr>
+      <tr><td></td><td class="indent">Cash</td><td class="ctr">101</td><td class="num"></td><td class="num">3,600</td></tr>
+      <tr><td></td><td class="indent">Accounts Payable</td><td class="ctr">201</td><td class="num"></td><td class="num">6,000</td></tr>
+      <tr><td></td><td class="expl">Purchased workstation equipment; part cash, balance on account (compound entry).</td><td></td><td></td><td></td></tr>
+      <tr><td>May 8</td><td>Supplies</td><td class="ctr">130</td><td class="num">1,150</td><td class="num"></td></tr>
+      <tr><td></td><td class="indent">Accounts Payable</td><td class="ctr">201</td><td class="num"></td><td class="num">1,150</td></tr>
+      <tr><td></td><td class="expl">Purchased supplies on account.</td><td></td><td></td><td></td></tr>
+      <tr><td>May 12</td><td>Accounts Receivable</td><td class="ctr">110</td><td class="num">7,200</td><td class="num"></td></tr>
+      <tr><td></td><td class="indent">Service Revenue</td><td class="ctr">401</td><td class="num"></td><td class="num">7,200</td></tr>
+      <tr><td></td><td class="expl">Billed client for completed brand-design work, Invoice 1001.</td><td></td><td></td><td></td></tr>
+      <tr><td>May 15</td><td>Cash</td><td class="ctr">101</td><td class="num">4,500</td><td class="num"></td></tr>
+      <tr><td></td><td class="indent">Unearned Revenue</td><td class="ctr">230</td><td class="num"></td><td class="num">4,500</td></tr>
+      <tr><td></td><td class="expl">Received advance payment for a June project (a liability — not yet earned).</td><td></td><td></td><td></td></tr>
+      <tr><td>May 20</td><td>Cash</td><td class="ctr">101</td><td class="num">5,000</td><td class="num"></td></tr>
+      <tr><td></td><td class="indent">Accounts Receivable</td><td class="ctr">110</td><td class="num"></td><td class="num">5,000</td></tr>
+      <tr><td></td><td class="expl">Collected part of Invoice 1001. Note: no revenue here — it was recognized May 12.</td><td></td><td></td><td></td></tr>
+      <tr><td>May 26</td><td>Salaries Expense</td><td class="ctr">501</td><td class="num">2,100</td><td class="num"></td></tr>
+      <tr><td></td><td class="indent">Cash</td><td class="ctr">101</td><td class="num"></td><td class="num">2,100</td></tr>
+      <tr><td></td><td class="expl">Paid part-time assistant.</td><td></td><td></td><td></td></tr>
+      <tr><td>May 29</td><td>Accounts Payable</td><td class="ctr">201</td><td class="num">2,000</td><td class="num"></td></tr>
+      <tr><td></td><td class="indent">Cash</td><td class="ctr">101</td><td class="num"></td><td class="num">2,000</td></tr>
+      <tr><td></td><td class="expl">Paid equipment vendor on account.</td><td></td><td></td><td></td></tr>
+    </table>
+
+    <p>Posting all nineteen lines (watch it happen in <b>See it #1</b>) yields
+    the running-balance Cash ledger shown earlier, plus — Accounts Payable, the
+    other account with traffic in both directions:</p>
+    <table class="book">
+      <tr><th colspan="6">Accounts Payable — Account No. 201</th></tr>
+      <tr><th>Date</th><th class="num">PR</th><th class="num">Debit</th><th class="num">Credit</th><th class="num">Balance</th><th></th></tr>
+      <tr><td>May 3</td><td class="ctr">J1</td><td class="num"></td><td class="num">6,000</td><td class="num">6,000</td><td>Cr</td></tr>
+      <tr><td>May 8</td><td class="ctr">J1</td><td class="num"></td><td class="num">1,150</td><td class="num">7,150</td><td>Cr</td></tr>
+      <tr><td>May 29</td><td class="ctr">J1</td><td class="num">2,000</td><td class="num"></td><td class="num">5,150</td><td>Cr</td></tr>
+    </table>
+    <p>Ending balances of all ten accounts: Cash 29,400 Dr; Accounts Receivable
+    7,200 − 5,000 = 2,200 Dr; Supplies 1,150 Dr; Equipment 9,600 Dr; Accounts
+    Payable 5,150 Cr; Unearned Revenue 4,500 Cr; Common Stock 30,000 Cr;
+    Service Revenue 7,200 Cr; Salaries Expense 2,100 Dr; Rent Expense 2,400 Dr.
+    Lay them into two columns in chart-of-accounts order:</p>
+
+    <table class="book">
+      <tr><th colspan="4" style="text-align:center">Brightwater Design Studio<br>Unadjusted Trial Balance<br>May 31, 2026</th></tr>
+      <tr><th class="ctr">No.</th><th>Account</th><th class="num">Debit</th><th class="num">Credit</th></tr>
+      <tr><td class="ctr">101</td><td>Cash</td><td class="num">29,400</td><td class="num"></td></tr>
+      <tr><td class="ctr">110</td><td>Accounts Receivable</td><td class="num">2,200</td><td class="num"></td></tr>
+      <tr><td class="ctr">130</td><td>Supplies</td><td class="num">1,150</td><td class="num"></td></tr>
+      <tr><td class="ctr">150</td><td>Equipment</td><td class="num">9,600</td><td class="num"></td></tr>
+      <tr><td class="ctr">201</td><td>Accounts Payable</td><td class="num"></td><td class="num">5,150</td></tr>
+      <tr><td class="ctr">230</td><td>Unearned Revenue</td><td class="num"></td><td class="num">4,500</td></tr>
+      <tr><td class="ctr">301</td><td>Common Stock</td><td class="num"></td><td class="num">30,000</td></tr>
+      <tr><td class="ctr">401</td><td>Service Revenue</td><td class="num"></td><td class="num">7,200</td></tr>
+      <tr><td class="ctr">501</td><td>Salaries Expense</td><td class="num">2,100</td><td class="num"></td></tr>
+      <tr><td class="ctr">510</td><td>Rent Expense</td><td class="num">2,400</td><td class="num"></td></tr>
+      <tr class="tot"><td></td><td>Totals</td><td class="num">46,850</td><td class="num">46,850</td></tr>
+    </table>
+    <p>Both columns total <b>46,850</b> — the posting arithmetic holds.</p>
+
+    <h4 class="subhd">An error hunt, worked</h4>
+    <p>Suppose that while copying balances onto the trial balance, the
+    bookkeeper wrote Supplies as <b>1,510</b> instead of 1,150. The debit
+    column now totals 47,210 against credits of 46,850 — out of balance by
+    <b>360</b>. Run the checklist: 360 isn't a journal amount; 360 ÷ 2 = 180
+    appears nowhere; but <b>360 ÷ 9 = 40</b> — a whole number, the
+    transposition fingerprint. So scan each trial-balance figure against its
+    ledger balance looking for swapped digits, and there it is: 1,<b>51</b>0
+    vs 1,<b>15</b>0. (Check the algebra: the swap happened in the hundreds and
+    tens places, digits 1 and 5, so the error is 9 × (5−1) × 10 = 360.
+    Exactly the difference.) Fix it, re-add, balanced.</p>
+
+    <h3>The road ahead</h3>
+    <p>A balanced unadjusted trial balance is mile-marker four of nine. The
+    balances are arithmetically proven but not yet economically complete: rent
+    that's been used up, supplies consumed, revenue earned but unbilled — none
+    of that is in the books yet. 101.7 builds the accrual-accounting case for
+    why those adjustments are needed; 101.8 journalizes the adjusting entries
+    and re-proves with an adjusted trial balance; 101.9 prepares the
+    statements, closes the temporary accounts, and proves once more with the
+    post-closing trial balance — completing the cycle.</p>
+  </section>
+
+  <!-- 2. VISUAL SECTIONS -->
+  <section id="see-1" class="see">
+    <h2>See it: posting, journal → ledger</h2>
+    <p>Brightwater's journal page J1 is on the left; the ten ledger accounts are
+    on the right. Post the entries one at a time and watch each debit and
+    credit line fly to its ledger account: the ledger gains a dated
+    <code class="je">J1</code> line, the running balance updates, and the
+    journal's PR column fills in with the account number — the audit trail
+    being built in both directions.</p>
+    <div class="visual" id="viz-1">
+      <div class="controls">
+        <button id="vj-next">Post next entry</button>
+        <button id="vj-all">Post all</button>
+        <button id="vj-reset" class="reset">Reset</button>
+      </div>
+      <div class="vjcols">
+        <div class="vjpane">
+          <h4>General Journal — page J1</h4>
+          <div class="vjournal"><table class="vj" id="vj-table">
+            <thead><tr><th>Date</th><th>Accounts</th><th style="text-align:center">PR</th><th style="text-align:right">Dr</th><th style="text-align:right">Cr</th></tr></thead>
+          </table></div>
+        </div>
+        <div class="vjpane">
+          <h4>General Ledger</h4>
+          <div class="vledger" id="vj-ledger"></div>
+        </div>
+      </div>
+      <div class="vstatus" id="vj-status"></div>
+    </div>
+  </section>
+
+  <section id="see-2" class="see">
+    <h2>See it: build the trial balance</h2>
+    <p>The ledger work is done — these are Brightwater's ten ending balances in
+    chart-of-accounts order, but stripped of their Dr/Cr labels. Your job is
+    the bookkeeper's: place each balance in the correct column based on the
+    account's <em>normal balance</em> (all balances here are normal). The
+    column totals run live, so you'll see exactly how a wrong-side placement
+    wrecks the equality — and how it self-corrects when you fix it. Click
+    Dr or Cr on each row (you can re-click to change your mind).</p>
+    <div class="visual" id="viz-2">
+      <div class="controls"><button id="tbb-reset" class="reset">Reset</button></div>
+      <table class="tbb">
+        <thead><tr><th style="width:42px">No.</th><th>Account</th><th class="num">Ledger balance</th><th>Place it</th><th class="num">Debit</th><th class="num">Credit</th></tr></thead>
+        <tbody id="tbb-body"></tbody>
+        <tfoot><tr class="tot"><td></td><td>Totals</td><td></td><td></td><td class="num" id="tbb-totd">0</td><td class="num" id="tbb-totc">0</td></tr></tfoot>
+      </table>
+      <div id="tbb-status"></div>
+    </div>
+  </section>
+
+  <section id="see-3" class="see">
+    <h2>See it: trial-balance error detective</h2>
+    <p>Kestrel Tutoring's ledger is correct, but its bookkeeper made exactly one
+    mistake preparing the trial balance below — a transposition or slide, an
+    amount placed on the wrong side, or a balance left off entirely. Work the
+    standard checklist: read the difference, apply the divisibility tests to
+    form a hypothesis, then identify the damaged account. Generate as many
+    faulty trial balances as you like; the error is seeded randomly each
+    time.</p>
+    <div class="visual" id="viz-3">
+      <div class="controls"><button id="det-new">New faulty trial balance</button>
+        <button id="det-reveal" class="reset" disabled>Reveal answer</button></div>
+      <div class="det-grid">
+        <div>
+          <table class="det">
+            <thead><tr><th>Account</th><th class="num">Debit</th><th class="num">Credit</th></tr></thead>
+            <tbody id="det-body"></tbody>
+            <tfoot><tr class="tot"><td>Totals</td><td class="num" id="det-totd"></td><td class="num" id="det-totc"></td></tr></tfoot>
+          </table>
+        </div>
+        <div>
+          <div class="det-math" id="det-math">Click “New faulty trial balance” to begin.</div>
+          <div class="det-step" id="det-step1" style="display:none">
+            <div class="lbl">Step 1 — Hypothesis: what kind of error fits the difference?</div>
+            <div class="controls" style="margin-top:6px">
+              <button data-hyp="nine">Transposition / slide</button>
+              <button data-hyp="two">Posted on wrong side</button>
+              <button data-hyp="omit">Balance omitted</button>
+            </div>
+            <div class="det-feedback" id="det-fb1"></div>
+          </div>
+          <div class="det-step" id="det-step2" style="display:none">
+            <div class="lbl">Step 2 — Which account is damaged? (Check rows against the ledger.)</div>
+            <div class="acctbtns" id="det-accts" style="margin-top:6px"></div>
+            <div class="det-feedback" id="det-fb2"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. QUIZ -->
+  <section id="quiz">
+    <h2>Check yourself</h2>
+    <form id="quizForm">
+
+      <div class="q" data-qid="q1" data-type="mc">
+        <p><strong>1.</strong> In the accounting cycle, immediately after a transaction is journalized, the next step is to:</p>
+        <div class="opts">
+          <label><input type="radio" name="q1" value="a"> Prepare the unadjusted trial balance.</label>
+          <label><input type="radio" name="q1" value="b"> Post the entry's debits and credits to the general ledger.</label>
+          <label><input type="radio" name="q1" value="c"> Prepare the financial statements.</label>
+          <label><input type="radio" name="q1" value="d"> File the source document and wait until period end.</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q2" data-type="text">
+        <p><strong>2.</strong> Because every transaction is first recorded there, in chronological order and complete in one place, which accounting record is called the <em>book of original entry</em>? (One or two words.)</p>
+        <input type="text" name="q2" placeholder="record name" />
+      </div>
+
+      <div class="q" data-qid="q3" data-type="mc">
+        <p><strong>3.</strong> A firm purchases $800 of office supplies on account. The correct journal entry is:</p>
+        <div class="opts">
+          <label><input type="radio" name="q3" value="a"> Debit Supplies 800; credit Cash 800.</label>
+          <label><input type="radio" name="q3" value="b"> Debit Supplies 800; credit Accounts Payable 800.</label>
+          <label><input type="radio" name="q3" value="c"> Debit Accounts Payable 800; credit Supplies 800.</label>
+          <label><input type="radio" name="q3" value="d"> Debit Supplies Expense 800; credit Accounts Receivable 800.</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q4" data-type="mc">
+        <p><strong>4.</strong> A bookkeeper records a $1,200 cash purchase of supplies by debiting <em>Equipment</em> $1,200 and crediting Cash $1,200. What is the effect on the unadjusted trial balance?</p>
+        <div class="opts">
+          <label><input type="radio" name="q4" value="a"> The debit column will exceed the credit column by $1,200.</label>
+          <label><input type="radio" name="q4" value="b"> The trial balance still balances — its equality cannot detect a posting to the wrong account.</label>
+          <label><input type="radio" name="q4" value="c"> The credit column will exceed the debit column by $2,400.</label>
+          <label><input type="radio" name="q4" value="d"> The trial balance cannot be prepared until the error is corrected.</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q5" data-type="mc">
+        <p><strong>5.</strong> A trial balance shows debits of $87,300 and credits of $87,840. Following the standard error-hunting routine, the difference points you to look <em>first</em> for:</p>
+        <div class="opts">
+          <label><input type="radio" name="q5" value="a"> An entire journal entry that was never posted.</label>
+          <label><input type="radio" name="q5" value="b"> A transposition or slide — two digits swapped or a decimal shifted.</label>
+          <label><input type="radio" name="q5" value="c"> A journal entry that was accidentally posted twice.</label>
+          <label><input type="radio" name="q5" value="d"> A transaction that was journalized in the wrong month.</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q6" data-type="num">
+        <p><strong>6.</strong> A Cash ledger account begins the month with a debit balance of $12,500. During the month these postings arrive from the journal: a $6,400 debit, a $3,750 credit, a $1,900 credit, and a $2,250 debit. What is the ending balance of the Cash account, in dollars?</p>
+        <input type="number" name="q6" step="any" placeholder="dollars" />
+      </div>
+
+      <div class="q" data-qid="q7" data-type="num">
+        <p><strong>7.</strong> A service firm's ledger shows these ending balances (every account carries its <em>normal</em> balance): Cash $9,800; Accounts Receivable $4,300; Supplies $1,200; Equipment $15,000; Accounts Payable $3,600; Notes Payable $8,000; Common Stock $12,000; Service Revenue $11,400; Rent Expense $2,500; Salaries Expense $2,200. After you sort each balance into the correct column, what is the total of the <em>debit</em> column of the trial balance, in dollars?</p>
+        <input type="number" name="q7" step="any" placeholder="dollars" />
+      </div>
+
+      <div class="q" data-qid="q8" data-type="num">
+        <p><strong>8.</strong> A trial balance's debit column totals $52,140 and its credit column totals $53,000. The bookkeeper discovers that exactly one ledger posting — a debit — was mistakenly posted as a credit. What was the dollar amount of that misposted entry?</p>
+        <input type="number" name="q8" step="any" placeholder="dollars" />
+      </div>
+
+      <button type="submit">Submit answers</button>
+    </form>
+    <div id="result"></div>
+  </section>
+
+</div>
+
+<script>
+  // Lesson metadata used by the recorder.
+  const LESSON_ADDRESS = "101.6";
+
+  const fmt = n => Math.round(n).toLocaleString("en-US");
+
+  /* =========================================================
+     Shared dataset: Brightwater Design Studio, May 2026
+     ========================================================= */
+  const COA = [
+    { num:"101", name:"Cash",                normal:"D" },
+    { num:"110", name:"Accounts Receivable", normal:"D" },
+    { num:"130", name:"Supplies",            normal:"D" },
+    { num:"150", name:"Equipment",           normal:"D" },
+    { num:"201", name:"Accounts Payable",    normal:"C" },
+    { num:"230", name:"Unearned Revenue",    normal:"C" },
+    { num:"301", name:"Common Stock",        normal:"C" },
+    { num:"401", name:"Service Revenue",     normal:"C" },
+    { num:"501", name:"Salaries Expense",    normal:"D" },
+    { num:"510", name:"Rent Expense",        normal:"D" },
+  ];
+  const acct = n => COA.find(a => a.num === n);
+
+  const ENTRIES = [
+    { date:"May 1",  memo:"Issued common stock for cash.",
+      lines:[["101","D",30000],["301","C",30000]] },
+    { date:"May 2",  memo:"Paid May office rent.",
+      lines:[["510","D",2400],["101","C",2400]] },
+    { date:"May 3",  memo:"Bought equipment: part cash, rest on account.",
+      lines:[["150","D",9600],["101","C",3600],["201","C",6000]] },
+    { date:"May 8",  memo:"Bought supplies on account.",
+      lines:[["130","D",1150],["201","C",1150]] },
+    { date:"May 12", memo:"Billed client — Invoice 1001.",
+      lines:[["110","D",7200],["401","C",7200]] },
+    { date:"May 15", memo:"Advance received for June project.",
+      lines:[["101","D",4500],["230","C",4500]] },
+    { date:"May 20", memo:"Collected on Invoice 1001.",
+      lines:[["101","D",5000],["110","C",5000]] },
+    { date:"May 26", memo:"Paid assistant salary.",
+      lines:[["501","D",2100],["101","C",2100]] },
+    { date:"May 29", memo:"Paid equipment vendor on account.",
+      lines:[["201","D",2000],["101","C",2000]] },
+  ];
+
+  /* =========================================================
+     Visual 1 — animated posting, journal → ledger
+     ========================================================= */
+  (function () {
+    const viz     = document.getElementById("viz-1");
+    const table   = document.getElementById("vj-table");
+    const ledger  = document.getElementById("vj-ledger");
+    const status  = document.getElementById("vj-status");
+    const btnNext = document.getElementById("vj-next");
+    const btnAll  = document.getElementById("vj-all");
+    const btnReset= document.getElementById("vj-reset");
+
+    let next = 0, busy = false;
+    let bal = {};            // signed balance per account (Dr positive)
+    let prCells = [];        // prCells[entryIdx][lineIdx]
+    let amtCells = [];       // journal amount cell per line (flight origin)
+    let bodies = [];         // tbody per entry
+    let cardHead = {}, cardBody = {};   // ledger card pieces per account
+
+    const balTxt = v => v === 0 ? "—" :
+      fmt(Math.abs(v)) + (v > 0 ? " Dr" : " Cr");
+
+    function build() {
+      next = 0; busy = false; bal = {}; prCells = []; amtCells = [];
+      bodies = []; cardHead = {}; cardBody = {};
+      // journal
+      table.querySelectorAll("tbody").forEach(b => b.remove());
+      ENTRIES.forEach((e, i) => {
+        const tb = document.createElement("tbody");
+        tb.className = "entry";
+        prCells[i] = []; amtCells[i] = [];
+        e.lines.forEach((ln, j) => {
+          const [num, side, amt] = ln;
+          const tr = document.createElement("tr");
+          const a = acct(num);
+          tr.innerHTML =
+            `<td>${j === 0 ? e.date : ""}</td>` +
+            `<td class="${side === "C" ? "cr-acct" : ""}">${a.name}</td>` +
+            `<td class="pr">—</td>` +
+            `<td class="num">${side === "D" ? fmt(amt) : ""}</td>` +
+            `<td class="num">${side === "C" ? fmt(amt) : ""}</td>`;
+          tb.appendChild(tr);
+          prCells[i][j]  = tr.children[2];
+          amtCells[i][j] = tr.children[side === "D" ? 3 : 4];
+        });
+        const trm = document.createElement("tr");
+        trm.innerHTML = `<td></td><td class="memo" colspan="4">${e.memo}</td>`;
+        tb.appendChild(trm);
+        table.appendChild(tb);
+        bodies[i] = tb;
+      });
+      // ledger
+      ledger.innerHTML = "";
+      COA.forEach(a => {
+        bal[a.num] = 0;
+        const card = document.createElement("div");
+        card.className = "acard";
+        card.innerHTML =
+          `<h5>${a.num} · ${a.name}<span class="bal">—</span></h5>` +
+          `<table class="lg"><thead><tr><th>Date</th><th>PR</th>` +
+          `<th>Dr</th><th>Cr</th><th>Balance</th></tr></thead>` +
+          `<tbody></tbody></table>`;
+        ledger.appendChild(card);
+        cardHead[a.num] = card.querySelector(".bal");
+        cardBody[a.num] = card.querySelector("tbody");
+      });
+      update();
+    }
+
+    function update() {
+      const done = next >= ENTRIES.length;
+      btnNext.disabled = busy || done;
+      btnAll.disabled  = busy || done;
+      btnReset.disabled = busy;
+      status.textContent = done
+        ? "All 9 entries (19 line postings) posted. Every journal PR is filled — the audit trail is complete."
+        : `Posted ${next} of ${ENTRIES.length} entries. Next up: ${ENTRIES[next].date} — ${ENTRIES[next].memo}`;
+    }
+
+    const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+    function fly(fromEl, toEl, label, cls) {
+      return new Promise(resolve => {
+        const wr = viz.getBoundingClientRect();
+        const fr = fromEl.getBoundingClientRect();
+        const tr = toEl.getBoundingClientRect();
+        const chip = document.createElement("div");
+        chip.className = "chip " + cls;
+        chip.textContent = label;
+        chip.style.left = (fr.left - wr.left) + "px";
+        chip.style.top  = (fr.top  - wr.top)  + "px";
+        viz.appendChild(chip);
+        let settled = false;
+        const finish = () => { if (settled) return; settled = true;
+                               chip.remove(); resolve(); };
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+          chip.style.transform =
+            `translate(${tr.left - fr.left}px, ${tr.top - fr.top}px) scale(.85)`;
+          chip.style.opacity = "0.3";
+        }));
+        chip.addEventListener("transitionend", finish, { once:true });
+        setTimeout(finish, 900);   // safety net
+      });
+    }
+
+    async function postEntry(i) {
+      const e = ENTRIES[i];
+      bodies[i].classList.add("active");
+      for (let j = 0; j < e.lines.length; j++) {
+        const [num, side, amt] = e.lines[j];
+        const a = acct(num);
+        // scroll the target card into view inside the ledger pane
+        const card = cardBody[num].closest(".acard");
+        card.scrollIntoView({ block:"nearest", behavior:"smooth" });
+        await sleep(120);
+        await fly(amtCells[i][j], cardHead[num].parentElement,
+                  `${side === "D" ? "Dr" : "Cr"} ${fmt(amt)} → ${num}`,
+                  side === "D" ? "dr" : "cr");
+        bal[num] += (side === "D" ? amt : -amt);
+        const tr = document.createElement("tr");
+        tr.className = "new";
+        tr.innerHTML =
+          `<td>${e.date}</td><td>J1</td>` +
+          `<td>${side === "D" ? fmt(amt) : ""}</td>` +
+          `<td>${side === "C" ? fmt(amt) : ""}</td>` +
+          `<td>${balTxt(bal[num])}</td>`;
+        cardBody[num].appendChild(tr);
+        cardHead[num].textContent = balTxt(bal[num]);
+        prCells[i][j].textContent = num;   // fill the journal PR — audit trail
+        await sleep(140);
+      }
+      bodies[i].classList.remove("active");
+      bodies[i].classList.add("posted");
+    }
+
+    btnNext.addEventListener("click", async () => {
+      if (busy || next >= ENTRIES.length) return;
+      busy = true; update();
+      await postEntry(next);
+      next++; busy = false; update();
+    });
+    btnAll.addEventListener("click", async () => {
+      if (busy) return;
+      busy = true; update();
+      while (next < ENTRIES.length) {
+        await postEntry(next);
+        next++;
+        status.textContent = `Posted ${next} of ${ENTRIES.length} entries…`;
+        await sleep(180);
+      }
+      busy = false; update();
+    });
+    btnReset.addEventListener("click", () => { if (!busy) build(); });
+
+    build();
+  })();
+
+  /* =========================================================
+     Visual 2 — build the trial balance
+     ========================================================= */
+  (function () {
+    const ENDINGS = {  // Brightwater ledger ending balances (all normal)
+      "101":29400, "110":2200, "130":1150, "150":9600, "201":5150,
+      "230":4500, "301":30000, "401":7200, "501":2100, "510":2400
+    };
+    const body   = document.getElementById("tbb-body");
+    const totD   = document.getElementById("tbb-totd");
+    const totC   = document.getElementById("tbb-totc");
+    const statEl = document.getElementById("tbb-status");
+    let placed = {};   // num -> "D" | "C"
+    let rows = {};
+
+    function render() {
+      let d = 0, c = 0, nPlaced = 0, nWrong = 0;
+      COA.forEach(a => {
+        const amt = ENDINGS[a.num];
+        const r = rows[a.num];
+        const side = placed[a.num];
+        const dCell = r.children[4], cCell = r.children[5];
+        dCell.textContent = ""; cCell.textContent = "";
+        dCell.className = "num cell"; cCell.className = "num cell";
+        r.querySelector(".dr").classList.toggle("on", side === "D");
+        r.querySelector(".cr").classList.toggle("on", side === "C");
+        if (side) {
+          nPlaced++;
+          const cell = side === "D" ? dCell : cCell;
+          cell.textContent = fmt(amt);
+          const right = side === a.normal;
+          cell.classList.add(right ? "ok" : "bad");
+          if (!right) nWrong++;
+          if (side === "D") d += amt; else c += amt;
+        }
+      });
+      totD.textContent = fmt(d);
+      totC.textContent = fmt(c);
+      if (nPlaced === 0) {
+        statEl.textContent = "Place all ten balances.";
+        statEl.style.color = "";
+      } else if (nPlaced < COA.length) {
+        statEl.textContent = `${COA.length - nPlaced} balance(s) left to place.` +
+          (nWrong ? " Some placements look off — red cells disagree with the account's normal balance." : "");
+        statEl.style.color = nWrong ? "var(--bad)" : "";
+      } else if (nWrong === 0 && d === c) {
+        statEl.textContent = `In balance: ${fmt(d)} = ${fmt(c)} ✓ — every balance on its normal side.`;
+        statEl.style.color = "var(--accent)";
+      } else {
+        statEl.textContent = `Columns disagree: debits ${fmt(d)} vs credits ${fmt(c)} ` +
+          `(difference ${fmt(Math.abs(d - c))}). Fix the red rows — each wrong-side placement ` +
+          `moves the difference by twice that balance.`;
+        statEl.style.color = "var(--bad)";
+      }
+    }
+
+    function build() {
+      placed = {}; rows = {};
+      body.innerHTML = "";
+      COA.forEach(a => {
+        const tr = document.createElement("tr");
+        tr.innerHTML =
+          `<td>${a.num}</td><td>${a.name}</td>` +
+          `<td class="num">${fmt(ENDINGS[a.num])}</td>` +
+          `<td class="sidebtns"><button type="button" class="dr">Dr</button>` +
+          `<button type="button" class="cr">Cr</button></td>` +
+          `<td class="num cell"></td><td class="num cell"></td>`;
+        tr.querySelector(".dr").addEventListener("click",
+          () => { placed[a.num] = "D"; render(); });
+        tr.querySelector(".cr").addEventListener("click",
+          () => { placed[a.num] = "C"; render(); });
+        body.appendChild(tr);
+        rows[a.num] = tr;
+      });
+      render();
+    }
+
+    document.getElementById("tbb-reset").addEventListener("click", build);
+    build();
+  })();
+
+  /* =========================================================
+     Visual 3 — trial-balance error detective
+     ========================================================= */
+  (function () {
+    // Kestrel Tutoring — correct ledger balances (TB order)
+    const K = [
+      { name:"Cash",                side:"D", amt:14200 },
+      { name:"Accounts Receivable", side:"D", amt:3650  },
+      { name:"Supplies",            side:"D", amt:980   },
+      { name:"Equipment",           side:"D", amt:21000 },
+      { name:"Accounts Payable",    side:"C", amt:4830  },
+      { name:"Notes Payable",       side:"C", amt:9000  },
+      { name:"Common Stock",        side:"C", amt:18000 },
+      { name:"Service Revenue",     side:"C", amt:12400 },
+      { name:"Rent Expense",        side:"D", amt:2900  },
+      { name:"Salaries Expense",    side:"D", amt:1500  },
+    ];
+    // exclude accounts whose signature would be ambiguous for these error types
+    const SAFE = K.map((a, i) => i).filter(i =>
+      (2 * K[i].amt) % 9 !== 0 && K[i].amt % 9 !== 0);
+
+    const body   = document.getElementById("det-body");
+    const totD   = document.getElementById("det-totd");
+    const totC   = document.getElementById("det-totc");
+    const mathEl = document.getElementById("det-math");
+    const step1  = document.getElementById("det-step1");
+    const step2  = document.getElementById("det-step2");
+    const fb1    = document.getElementById("det-fb1");
+    const fb2    = document.getElementById("det-fb2");
+    const acctsEl= document.getElementById("det-accts");
+    const btnNew = document.getElementById("det-new");
+    const btnRev = document.getElementById("det-reveal");
+
+    let seed = null;   // { kind, hyp, idx, shownAmt, shownSide, story }
+    let solvedHyp = false;
+
+    const pick = arr => arr[Math.floor(Math.random() * arr.length)];
+
+    function transposeOptions(n) {
+      const s = String(n), out = [];
+      for (let i = 0; i < s.length - 1; i++) {
+        if (s[i] !== s[i + 1] && !(i === 0 && s[i + 1] === "0")) {
+          out.push(Number(s.slice(0, i) + s[i + 1] + s[i] + s.slice(i + 2)));
+        }
+      }
+      return out.filter(v => v !== n);
+    }
+
+    // a transposed figure must not produce a difference that mimics the
+    // "omitted balance" (diff = amount) or "wrong side" (diff = 2×amount)
+    // signatures, or the heuristics would point two ways at once.
+    const AMTS = K.map(a => a.amt);
+    function cleanTranspose(i) {
+      return transposeOptions(K[i].amt).filter(v => {
+        const d = Math.abs(v - K[i].amt);
+        return !AMTS.includes(d) && !AMTS.includes(d / 2);
+      });
+    }
+
+    function makeSeed() {
+      const kind = pick(["transposition", "slide", "wrongside", "omit"]);
+      let idx, shownAmt, shownSide, story;
+      if (kind === "transposition") {
+        const cands = K.map((a, i) => i).filter(i => cleanTranspose(i).length);
+        idx = pick(cands);
+        shownAmt = pick(cleanTranspose(idx));
+        shownSide = K[idx].side;
+        story = `${K[idx].name} was copied as ${fmt(shownAmt)} instead of ` +
+          `${fmt(K[idx].amt)} — adjacent digits transposed. The difference, ` +
+          `${fmt(Math.abs(shownAmt - K[idx].amt))}, is 9 × ` +
+          `${fmt(Math.abs(shownAmt - K[idx].amt) / 9)}.`;
+        return { kind, hyp:"nine", idx, shownAmt, shownSide, story };
+      }
+      if (kind === "slide") {
+        const cands = K.map((a, i) => i).filter(i => K[i].amt % 10 === 0);
+        idx = pick(cands);
+        shownAmt = Math.random() < 0.5 ? K[idx].amt / 10 : K[idx].amt * 10;
+        shownSide = K[idx].side;
+        story = `${K[idx].name} slid a decimal place: listed as ${fmt(shownAmt)} ` +
+          `instead of ${fmt(K[idx].amt)}. A slide changes the number by a ` +
+          `multiple of 9 (n×10 − n = 9n) — same fingerprint as a transposition.`;
+        return { kind, hyp:"nine", idx, shownAmt, shownSide, story };
+      }
+      if (kind === "wrongside") {
+        idx = pick(SAFE);
+        shownAmt = K[idx].amt;
+        shownSide = K[idx].side === "D" ? "C" : "D";
+        story = `${K[idx].name}'s ${fmt(K[idx].amt)} was listed in the ` +
+          `${shownSide === "D" ? "debit" : "credit"} column instead of the ` +
+          `${K[idx].side === "D" ? "debit" : "credit"} column. A wrong-side ` +
+          `listing throws the totals off by twice the amount: 2 × ` +
+          `${fmt(K[idx].amt)} = ${fmt(2 * K[idx].amt)}.`;
+        return { kind, hyp:"two", idx, shownAmt, shownSide, story };
+      }
+      // omit
+      idx = pick(SAFE);
+      shownAmt = null; shownSide = null;
+      story = `${K[idx].name} (${fmt(K[idx].amt)} ${K[idx].side === "D" ? "Dr" : "Cr"}) ` +
+        `was left off the trial balance entirely. The difference equals its ` +
+        `ledger balance exactly — the “difference equals an amount” signature.`;
+      return { kind, hyp:"omit", idx, shownAmt, shownSide, story };
+    }
+
+    function displayedRows() {
+      const rows = [];
+      K.forEach((a, i) => {
+        if (seed.kind === "omit" && i === seed.idx) return;   // row missing
+        let amt = a.amt, side = a.side;
+        if (i === seed.idx) { amt = seed.shownAmt; side = seed.shownSide; }
+        rows.push({ name:a.name, amt, side, i });
+      });
+      return rows;
+    }
+
+    function renderTB() {
+      const rows = displayedRows();
+      let d = 0, c = 0;
+      body.innerHTML = "";
+      rows.forEach(r => {
+        if (r.side === "D") d += r.amt; else c += r.amt;
+        const tr = document.createElement("tr");
+        tr.dataset.k = r.i;
+        tr.innerHTML = `<td>${r.name}</td>` +
+          `<td class="num">${r.side === "D" ? fmt(r.amt) : ""}</td>` +
+          `<td class="num">${r.side === "C" ? fmt(r.amt) : ""}</td>`;
+        body.appendChild(tr);
+      });
+      totD.textContent = fmt(d);
+      totC.textContent = fmt(c);
+      const D = Math.abs(d - c);
+      const by9 = D % 9 === 0, by2 = D % 2 === 0;
+      mathEl.innerHTML =
+        `Out of balance by <b>${fmt(D)}</b> ` +
+        `(debits ${fmt(d)} vs credits ${fmt(c)}).<br>` +
+        `${fmt(D)} ÷ 9 = ${(D / 9) % 1 === 0 ? fmt(D / 9) : (D / 9).toFixed(2)} ` +
+        `<span class="${by9 ? "yes" : "no"}">${by9 ? "whole ✓" : "not whole ✗"}</span><br>` +
+        `${fmt(D)} ÷ 2 = ${(D / 2) % 1 === 0 ? fmt(D / 2) : (D / 2).toFixed(2)} ` +
+        `<span class="${by2 ? "yes" : "no"}">${by2 ? "whole ✓" : "not whole ✗"}</span>` +
+        `<br><span style="font-weight:400">Also ask: does ${fmt(D)} (or ${fmt(D / 2)}) match a ledger amount?</span>`;
+      return D;
+    }
+
+    function newPuzzle() {
+      seed = makeSeed();
+      solvedHyp = false;
+      renderTB();
+      step1.style.display = "block";
+      step2.style.display = "none";
+      fb1.className = "det-feedback"; fb1.textContent = "";
+      fb2.className = "det-feedback"; fb2.textContent = "";
+      btnRev.disabled = false;
+      acctsEl.innerHTML = "";
+      K.forEach((a, i) => {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.textContent = a.name;
+        b.addEventListener("click", () => guessAccount(i, b));
+        acctsEl.appendChild(b);
+      });
+    }
+
+    function hypFeedback(hyp) {
+      if (!seed) return;
+      const D = renderTB();
+      if (hyp === seed.hyp) {
+        solvedHyp = true;
+        const why = {
+          nine: `the difference divides evenly by 9 — the transposition/slide fingerprint`,
+          two: `half the difference, ${fmt(D / 2)}, is exactly the amount sitting on the wrong side`,
+          omit: `the difference, ${fmt(D)}, exactly matches a ledger balance`
+        }[hyp];
+        fb1.className = "det-feedback good";
+        fb1.textContent = `Right — ${why}. Now find the damaged account below.`;
+        step2.style.display = "block";
+      } else {
+        const reasons = {
+          nine: D % 9 !== 0
+            ? `${fmt(D)} doesn't divide evenly by 9, so a transposition or slide can't explain it alone.`
+            : `the divisible-by-9 test does pass here, but check the other signatures — one of them fits this difference more precisely.`,
+          two: D % 2 !== 0
+            ? `${fmt(D)} is odd, so it can't be twice a misplaced amount.`
+            : `the difference is even, but is ${fmt(D / 2)} actually an amount in a column? Scan for it before committing.`,
+          omit: `for an omitted balance the difference would equal a ledger amount exactly — does ${fmt(D)} match one?`
+        };
+        fb1.className = "det-feedback bad";
+        fb1.textContent = `Not the best fit: ${reasons[hyp]} Try again.`;
+      }
+    }
+
+    function guessAccount(i, btn) {
+      if (!seed || !solvedHyp) return;
+      if (i === seed.idx) {
+        btn.classList.add("found");
+        fb2.className = "det-feedback good";
+        fb2.textContent = `Found it. ${seed.story}`;
+        btnRev.disabled = true;
+      } else {
+        btn.classList.add("no");
+        fb2.className = "det-feedback bad";
+        fb2.textContent = `No — ${K[i].name} traces back to the ledger cleanly. Keep checking.`;
+      }
+    }
+
+    step1.querySelectorAll("button[data-hyp]").forEach(b =>
+      b.addEventListener("click", () => hypFeedback(b.dataset.hyp)));
+    btnNew.addEventListener("click", newPuzzle);
+    btnRev.addEventListener("click", () => {
+      if (!seed) return;
+      solvedHyp = true;
+      step2.style.display = "block";
+      fb2.className = "det-feedback info";
+      fb2.textContent = seed.story;
+      btnRev.disabled = true;
+    });
+  })();
+
+  // Collect answers WITHOUT knowing which are correct. Grading is server-side.
+  document.getElementById("quizForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const fd = new FormData(e.target);
+    const answers = {};
+    document.querySelectorAll(".q").forEach(q => {
+      const qid = q.dataset.qid;
+      answers[qid] = fd.get(qid);
+    });
+
+    const payload = { address: LESSON_ADDRESS, answers, ts: Date.now() };
+
+    try {
+      // record_attempt.py (via serve.py) grades against the gated answer key.
+      const res = await fetch("http://127.0.0.1:8753/record", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (data.error) {
+        document.getElementById("result").textContent = "Recorder error: " + data.error;
+        return;
+      }
+      document.getElementById("result").textContent =
+        `Score: ${data.correct}/${data.total}. ` +
+        (data.weak_topics?.length ? `Review: ${data.weak_topics.join(", ")}` : "Nice work.");
+      // Per-question feedback from the graded response; the page never sees the key.
+      (data.results || []).forEach(r => {
+        const q = document.querySelector(`.q[data-qid="${r.qid}"]`);
+        if (!q) return;
+        q.classList.remove("right", "wrong");
+        q.classList.add(r.is_correct ? "right" : "wrong");
+        let fb = q.querySelector(".fb");
+        if (!fb) { fb = document.createElement("div"); fb.className = "fb"; q.appendChild(fb); }
+        fb.textContent = "";
+        const mark = document.createElement("b");
+        mark.textContent = r.is_correct ? "✓ Correct" : "✗ Incorrect";
+        fb.appendChild(mark);
+        if (!r.is_correct && r.explanation) fb.append(" — " + r.explanation);
+      });
+    } catch (err) {
+      // Offline fallback: stash the attempt for later import.
+      const blob = new Blob([JSON.stringify(payload, null, 2)],
+                            {type:"application/json"});
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = `${LESSON_ADDRESS}.attempt.json`;
+      a.click();
+      document.getElementById("result").textContent =
+        "Recorder offline — downloaded attempt JSON. Run scripts/serve.py and import it.";
+    }
+  });
+</script>
+</body>
+</html>

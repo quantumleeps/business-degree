@@ -1,0 +1,65 @@
+{
+  "address": "101.6",
+  "title": "The accounting cycle: journal → ledger → trial balance",
+  "questions": [
+    {
+      "qid": "q1",
+      "type": "mc",
+      "correct": "b",
+      "topic": "accounting cycle steps",
+      "explanation": "The front half of the cycle runs analyze → journalize → post → unadjusted trial balance. Posting transfers each journal line into its general-ledger account; the trial balance comes only after posting."
+    },
+    {
+      "qid": "q2",
+      "type": "text",
+      "correct": ["journal", "general journal", "the journal", "the general journal"],
+      "topic": "journalizing",
+      "explanation": "The general journal is the book of original entry: every transaction is first recorded there, chronologically and complete in one place, before being posted to the ledger."
+    },
+    {
+      "qid": "q3",
+      "type": "mc",
+      "correct": "b",
+      "topic": "journalizing",
+      "explanation": "Supplies (an asset) increases, so it is debited. The purchase is on account, so the claim created is Accounts Payable (a liability), which increases with a credit. No cash moved, and no expense is recognized until the supplies are used."
+    },
+    {
+      "qid": "q4",
+      "type": "mc",
+      "correct": "b",
+      "topic": "trial balance",
+      "explanation": "Equal debits and credits were posted — just to the wrong asset account. The trial balance's column equality is only an arithmetic parity check; it cannot detect wrong-account postings, omitted entries, or duplicated entries."
+    },
+    {
+      "qid": "q5",
+      "type": "mc",
+      "correct": "b",
+      "topic": "error detection",
+      "explanation": "The difference is 87,840 − 87,300 = 540, and 540 ÷ 9 = 60 — a whole number, the classic fingerprint of a transposition or slide. An entry omitted or posted twice in full keeps the trial balance balanced, so neither explains any difference."
+    },
+    {
+      "qid": "q6",
+      "type": "num",
+      "correct": 15500,
+      "tolerance": 0.5,
+      "topic": "posting",
+      "explanation": "Running balance: 12,500 + 6,400 = 18,900; − 3,750 = 15,150; − 1,900 = 13,250; + 2,250 = 15,500 debit balance."
+    },
+    {
+      "qid": "q7",
+      "type": "num",
+      "correct": 35000,
+      "tolerance": 0.5,
+      "topic": "trial balance",
+      "explanation": "Debit-normal accounts: Cash 9,800 + Accounts Receivable 4,300 + Supplies 1,200 + Equipment 15,000 + Rent Expense 2,500 + Salaries Expense 2,200 = 35,000. (The credit column — AP 3,600 + Notes Payable 8,000 + Common Stock 12,000 + Service Revenue 11,400 — also totals 35,000.)"
+    },
+    {
+      "qid": "q8",
+      "type": "num",
+      "correct": 430,
+      "tolerance": 0.5,
+      "topic": "error detection",
+      "explanation": "A debit posted as a credit understates the debit column and overstates the credit column, so the totals diverge by twice the amount: difference = 53,000 − 52,140 = 860; 860 ÷ 2 = 430."
+    }
+  ]
+}
