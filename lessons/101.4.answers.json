@@ -1,0 +1,65 @@
+{
+  "address": "101.4",
+  "title": "The statement of cash flows: operating, investing, financing",
+  "questions": [
+    {
+      "qid": "q1",
+      "type": "mc",
+      "correct": "b",
+      "topic": "cfs classification",
+      "explanation": "Under US GAAP, interest paid (and interest/dividends received) is operating because it flows through the income statement. Only loan principal moves through financing."
+    },
+    {
+      "qid": "q2",
+      "type": "mc",
+      "correct": "c",
+      "topic": "indirect method",
+      "explanation": "Depreciation moves no cash when recorded — the cash left in investing when the asset was bought. The indirect method adds it back to net income to undo the non-cash expense; it is never itself a cash flow."
+    },
+    {
+      "qid": "q3",
+      "type": "mc",
+      "correct": "a",
+      "topic": "cfs classification",
+      "explanation": "Asset sales appear at full proceeds ($52,000) in investing. The $12,000 gain sits inside net income, so the indirect method subtracts it in operating to avoid double-counting. The $40,000 book value is not a cash flow at all."
+    },
+    {
+      "qid": "q4",
+      "type": "mc",
+      "correct": "d",
+      "topic": "lifecycle signature",
+      "explanation": "CFO +, CFI −, CFF − is the mature-firm signature: operations generate cash, some is reinvested, and the surplus is returned to lenders and shareholders (dividends, buybacks, debt paydown)."
+    },
+    {
+      "qid": "q5",
+      "type": "num",
+      "correct": 99000,
+      "tolerance": 1,
+      "topic": "working capital adjustments",
+      "explanation": "CFO = 75,000 NI + 20,000 depreciation + 3,000 loss added back − 9,000 AR increase + 4,000 inventory decrease + 6,000 AP increase = 99,000."
+    },
+    {
+      "qid": "q6",
+      "type": "num",
+      "correct": 50000,
+      "tolerance": 1,
+      "topic": "free cash flow",
+      "explanation": "FCF = CFO − capex = 120,000 − 70,000 = 50,000. The van proceeds are an investing inflow, not a capex reduction in the baseline definition, and dividends are a financing outflow — neither enters FCF."
+    },
+    {
+      "qid": "q7",
+      "type": "num",
+      "correct": 36000,
+      "tolerance": 1,
+      "topic": "cash reconciliation",
+      "explanation": "Operating: 240,000 − 195,000 − 5,000 interest = +40,000. Investing: −50,000 capex + 8,000 proceeds = −42,000. Financing: +20,000 borrowing − 12,000 dividends = +8,000. Net change +6,000; ending cash = 30,000 + 6,000 = 36,000."
+    },
+    {
+      "qid": "q8",
+      "type": "text",
+      "correct": ["net income", "netincome"],
+      "topic": "indirect method",
+      "explanation": "The indirect method starts from net income and adjusts for non-cash items, gains/losses, and working-capital changes to arrive at CFO."
+    }
+  ]
+}

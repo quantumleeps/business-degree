@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>101.4 — The statement of cash flows (operating/investing/financing)</title>
+<style>
+  :root { --ink:#1a1a2e; --paper:#fdfdfb; --accent:#2d6a4f; --accent2:#1d4ed8;
+          --muted:#6b7280; --warn:#b45309; --bad:#b91c1c; }
+  body { margin:0; font:16px/1.6 system-ui,sans-serif; color:var(--ink);
+         background:var(--paper); }
+  .wrap { max-width:820px; margin:0 auto; padding:32px 20px 80px; }
+  header .addr { font:600 13px ui-monospace,monospace; color:var(--accent);
+                 letter-spacing:.05em; }
+  h1 { font-size:30px; margin:.2em 0 .1em; line-height:1.2; }
+  .why { color:var(--muted); font-style:italic; margin-bottom:2em; }
+  section { margin:2.5em 0; }
+  h2 { border-bottom:2px solid var(--accent); padding-bottom:4px; }
+  h3 { margin:1.6em 0 .3em; font-size:18px; }
+  .lead { font-size:17px; }
+  .analogy { background:#f0f7f4; border-left:4px solid var(--accent);
+             padding:12px 16px; border-radius:0 8px 8px 0; margin:1.2em 0; }
+  .gotcha { background:#fff7ed; border-left:4px solid var(--warn);
+            padding:12px 16px; border-radius:0 8px 8px 0; margin:1.2em 0; }
+  .eq { font:600 17px ui-monospace,monospace; text-align:center;
+        background:#fff; border:1px solid #e5e7eb; border-radius:10px;
+        padding:14px; margin:1.2em 0; }
+  .eq small { font-weight:400; color:var(--muted); font-family:system-ui; }
+  table.book { border-collapse:collapse; width:100%; margin:1em 0; font-size:15px; }
+  table.book th, table.book td { border:1px solid #e5e7eb; padding:7px 10px;
+        text-align:left; }
+  table.book th { background:#f9fafb; }
+  table.book td.num, table.book th.num { text-align:right;
+        font-family:ui-monospace,monospace; }
+  table.book tr.tot td { font-weight:700; border-top:2px solid #d1d5db; }
+  table.book tr.sub td { font-weight:600; background:#f9fafb; }
+  .visual { border:1px solid #e5e7eb; border-radius:12px; padding:16px;
+            background:#fff; }
+  .hint { font-size:13px; color:var(--muted); }
+  ul.tight li { margin:.25em 0; }
+
+  /* viz-1: transaction toggles + waterfall */
+  .txgrid { display:grid; grid-template-columns:1fr 1fr; gap:2px 18px;
+            margin-bottom:10px; }
+  .txgrid label { display:flex; align-items:baseline; gap:7px; font-size:14px;
+            cursor:pointer; padding:3px 4px; border-radius:6px; }
+  .txgrid label:hover { background:#f3f4f6; }
+  .txgrid .tag { font:600 10px ui-monospace,monospace; padding:1px 5px;
+            border-radius:4px; color:#fff; flex:none; }
+  .tag.O { background:#2d6a4f; } .tag.I { background:#1d4ed8; }
+  .tag.F { background:#b45309; } .tag.N { background:#9ca3af; }
+  .seccols { display:grid; grid-template-columns:repeat(4,1fr); gap:10px;
+             margin-top:12px; font-size:12.5px; }
+  .seccols .col { border:1px solid #e5e7eb; border-radius:8px; padding:7px 9px;
+             background:#fcfcfb; }
+  .seccols h5 { margin:0 0 4px; font-size:12px; }
+  .seccols .line { display:flex; justify-content:space-between; gap:6px;
+             font-family:ui-monospace,monospace; font-size:11.5px; }
+  .seccols .net { border-top:1px solid #e5e7eb; margin-top:4px; padding-top:3px;
+             font-weight:700; display:flex; justify-content:space-between;
+             font-family:ui-monospace,monospace; font-size:11.5px; }
+  .contrast { margin-top:12px; font:600 14px ui-monospace,monospace;
+              text-align:center; }
+  .contrast .neg { color:var(--bad); }
+  .contrast .pos { color:var(--accent); }
+  .insolvent { text-align:center; font-weight:700; color:var(--bad);
+               margin-top:6px; font-size:14px; }
+
+  /* viz-2: sliders */
+  .sliders { display:grid; grid-template-columns:auto 1fr auto; gap:4px 12px;
+             align-items:center; margin-bottom:12px; font-size:13.5px; }
+  .sliders label { white-space:nowrap; }
+  .sliders input[type=range] { width:100%; }
+  .sliders .val { font:600 13px ui-monospace,monospace; min-width:62px;
+                  text-align:right; }
+  .eqline { font:600 14px ui-monospace,monospace; text-align:center;
+            background:#f9fafb; border:1px solid #e5e7eb; border-radius:8px;
+            padding:8px; margin:10px 0; }
+  .annot { font-size:13.5px; margin-top:10px; }
+  .annot div { padding:5px 10px; border-left:3px solid #e5e7eb; margin:5px 0;
+               border-radius:0 6px 6px 0; background:#fcfcfb; }
+  .annot b.add { color:var(--accent); } .annot b.sub { color:var(--bad); }
+
+  /* viz-3: signature explorer */
+  .sigrow { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px; }
+  .sigrow button { font-size:13px; padding:7px 12px; background:var(--accent2); }
+  .sigrow button.active { outline:3px solid #93c5fd; }
+  .signs { display:flex; gap:10px; margin-bottom:10px; }
+  .signs button { font:700 15px ui-monospace,monospace; background:#374151;
+                  min-width:110px; }
+  .signs button.pos { background:var(--accent); }
+  .signs button.neg { background:var(--bad); }
+  .interp { background:#f0f7f4; border-left:4px solid var(--accent);
+            padding:10px 14px; border-radius:0 8px 8px 0; margin-top:12px;
+            font-size:14.5px; }
+  .interp b { display:block; }
+
+  /* quiz */
+  .q { margin:1.2em 0; padding:14px; border:1px solid #e5e7eb; border-radius:10px; }
+  .q .opts label { display:block; margin:4px 0; cursor:pointer; }
+  .q input[type=number], .q input[type=text] { font-size:15px; padding:6px 8px;
+        border:1px solid #d1d5db; border-radius:6px; width:170px; }
+  .q.right { border-color:var(--accent); background:#f0f7f4; }
+  .q.wrong { border-color:#b91c1c; background:#fef2f2; }
+  .q .fb { margin-top:10px; padding-top:8px; border-top:1px dashed #d1d5db;
+        font-size:14px; }
+  .q.right .fb b { color:var(--accent); }
+  .q.wrong .fb b { color:#b91c1c; }
+  button { background:var(--accent); color:#fff; border:0; padding:10px 18px;
+           border-radius:8px; font-size:15px; cursor:pointer; }
+  button:hover { filter:brightness(1.07); }
+  #result { margin-top:1em; font-weight:600; }
+  svg text { font:11.5px ui-monospace,monospace; fill:var(--ink); }
+  svg text.lab { font:11px system-ui; fill:var(--muted); }
+  @media (max-width:640px) {
+    .txgrid { grid-template-columns:1fr; }
+    .seccols { grid-template-columns:1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="addr">101.4</div>
+    <h1>The statement of cash flows: operating, investing, financing</h1>
+    <p class="why">Net income is a modeled estimate; cash is a conserved quantity — this statement is the mass balance that reconciles the one number a business cannot fake running out of.</p>
+  </header>
+
+  <!-- 1. WRITTEN / TEACHING SECTION -->
+  <section id="learn">
+    <h2>Learn</h2>
+
+    <p class="lead">You now have a snapshot (the balance sheet, 101.2) and an
+    accrual event log (the income statement, 101.3). Why a <em>third</em>
+    statement? Because the income statement deliberately does <strong>not</strong>
+    track cash. Under accrual accounting, revenue is recorded when
+    <em>earned</em> and expenses when <em>incurred</em> — not when money moves.
+    That makes net income a better measure of economic performance, but it
+    means a company can report healthy profits while its bank account drains
+    to zero. Businesses don't die of low net income; they die when they
+    <strong>can't make payroll</strong>. The statement of cash flows (CFS)
+    exists to answer the question the other two statements dodge:
+    <em>where did the cash actually come from, and where did it actually go?</em></p>
+
+    <h3>Profitable but insolvent — the failure mode</h3>
+    <p>Imagine a fast-growing machine shop. It books $500k of revenue this
+    year — all on 90-day credit terms — while paying cash up front for steel,
+    wages, and two new CNC machines. The income statement shows a solid
+    profit: revenue earned, expenses matched. The bank account shows a
+    catastrophe: cash went out months before any came in. If the shop can't
+    bridge the gap, it goes under <em>while profitable</em>. This is not
+    exotic — running out of working capital during growth is one of the most
+    common ways otherwise-sound businesses fail. The CFS is the instrument
+    that makes the gap between accrual profit and cash visible <em>before</em>
+    it becomes fatal.</p>
+
+    <div class="analogy">
+      <b>Engineering framing — a mass balance on cash.</b> Cash is a conserved
+      quantity: it cannot be created by an accounting estimate, only moved
+      across the system boundary. The CFS is exactly a control-volume balance:
+      <em>accumulation = inflows − outflows</em>, integrated over the period.
+      Beginning cash plus every flow across the boundary must equal ending
+      cash — to the dollar, with no plug terms. And like a good energy audit,
+      the statement doesn't just total the flows; it <strong>partitions</strong>
+      them by mechanism, so you can see <em>which subsystem</em> is generating
+      or consuming cash. Net income involves judgment calls (depreciation
+      schedules, revenue timing, estimates of bad debts). The cash balance is
+      checkable against a bank statement. That's why analysts treat the CFS as
+      the hardest statement to manipulate.
+    </div>
+
+    <h3>The governing identity</h3>
+    <p>Every cash flow during the period is classified into exactly one of
+    three activities — the partition is exhaustive and mutually exclusive:</p>
+    <div class="eq">
+      ΔCash &nbsp;=&nbsp; CFO + CFI + CFF<br/>
+      Beginning cash + CFO + CFI + CFF = Ending cash<br/>
+      <small>CFO = cash flow from operating · CFI = investing · CFF = financing</small>
+    </div>
+    <p>Each section answers a different question about the business as a
+    system:</p>
+    <ul class="tight">
+      <li><b>Operating (CFO)</b> — does the core engine generate cash?
+        Receipts from customers; payments to suppliers and employees; and —
+        a convention to memorize — <b>interest paid, interest received, and
+        dividends received</b> are all operating under US GAAP, because they
+        run through the income statement. Income taxes paid are operating too.</li>
+      <li><b>Investing (CFI)</b> — what is the business doing to its
+        <em>productive capacity</em>? Purchases of property, plant &amp;
+        equipment (capital expenditures, "capex"), proceeds from selling
+        long-term assets, purchases and sales of investment securities, loans
+        made to others.</li>
+      <li><b>Financing (CFF)</b> — how is the business funded, and what is it
+        returning to its funders? Borrowing and <em>repaying principal</em> on
+        debt, issuing stock, buying back stock, and <b>paying dividends</b>
+        (paid = financing, even though <em>received</em> = operating).</li>
+    </ul>
+
+    <div class="gotcha">
+      <b>Classification gotchas that show up on every exam:</b>
+      <ul class="tight">
+        <li><b>Interest paid is operating, not financing</b> (US GAAP). Only the
+          <em>principal</em> of a loan flows through financing. Rationale:
+          interest expense is on the income statement, so its cash twin stays
+          in operating. (IFRS allows either; we use the GAAP rule.)</li>
+        <li><b>Selling an asset shows the full proceeds, not the book value.</b>
+          Sell a machine carried at $40k for $52k cash → investing shows a
+          <em>$52k</em> inflow. The $12k gain is an income-statement artifact,
+          not a separate cash flow (more on this below).</li>
+        <li><b>Depreciation is nowhere on the CFS as a flow.</b> No cash moves
+          when you depreciate. It appears only as a reconciliation add-back in
+          the indirect method — which trips people into thinking it's a "source
+          of cash." It isn't; it's the <em>removal of a non-cash expense</em>.</li>
+        <li><b>Buying inventory is operating, buying a machine is investing.</b>
+          The one-year/operating-cycle logic from the balance sheet carries
+          over: working-capital churn is operating; long-term capacity is
+          investing.</li>
+        <li><b>Non-cash transactions</b> (buy a building by issuing stock,
+          convert debt to equity) appear in <em>none</em> of the three sections —
+          they're disclosed in a supplementary note instead. Nothing crossed the
+          cash boundary.</li>
+      </ul>
+    </div>
+
+    <h3>The indirect method: net income → CFO</h3>
+    <p>There are two ways to compute the operating section. The
+    <b>direct method</b> lists actual cash receipts and payments (collected
+    from customers, paid to suppliers, paid to employees…). The
+    <b>indirect method</b> — used by the overwhelming majority of companies —
+    starts from <b>net income</b> and <em>repairs</em> it: undo everything
+    accrual accounting did that didn't involve cash. Three repair categories:</p>
+
+    <p><b>1. Add back non-cash expenses.</b> Depreciation and amortization
+    (D&amp;A) reduced net income but moved no cash this period (the cash left
+    back when the asset was bought — and was recorded in <em>investing</em>
+    then). Add them back.</p>
+
+    <p><b>2. Remove gains, add back losses on asset sales.</b> Sell the $40k
+    machine for $52k: net income includes a $12k gain, but the actual cash
+    event is the $52k of proceeds, which belongs in investing. If you left the
+    gain in operating <em>and</em> the proceeds in investing, you'd
+    double-count $12k. So subtract gains (and symmetrically, add back losses)
+    from net income.</p>
+
+    <p><b>3. Adjust for working-capital changes.</b> Don't memorize the signs —
+    derive them. Each operating accrual has a partner balance-sheet account
+    that absorbs the timing difference between income and cash. Take
+    receivables: ending AR = beginning AR + revenue billed − cash collected,
+    so</p>
+    <div class="eq">Cash collected = Revenue − ΔAR
+      <br/><small>(ΔAR = ending − beginning; AR up means some revenue wasn't collected)</small></div>
+    <p>Same algebra for the purchasing pipeline: purchases = COGS + ΔInventory
+    (you bought what you sold, plus whatever stocked the shelves), and cash
+    paid = purchases − ΔAP (whatever suppliers financed, you didn't pay yet):</p>
+    <div class="eq">Cash paid to suppliers = COGS + ΔInventory − ΔAP</div>
+    <p>Stack these up and the general rule falls out:</p>
+    <div class="eq">CFO = Net income + non-cash expenses − gains (+ losses)
+      <br/>− Δ(operating assets) + Δ(operating liabilities)</div>
+    <ul class="tight">
+      <li><b>Operating asset up</b> (AR, inventory, prepaid) → cash is tied up
+        there → <b>subtract</b> the increase.</li>
+      <li><b>Operating asset down</b> → cash was released → <b>add</b>.</li>
+      <li><b>Operating liability up</b> (AP, accrued wages, taxes payable) →
+        someone else is floating you → <b>add</b>.</li>
+      <li><b>Operating liability down</b> → you paid old obligations →
+        <b>subtract</b>.</li>
+    </ul>
+    <p>One more wrinkle: even companies that use the direct method must
+    <em>also</em> present this net-income-to-CFO reconciliation under US GAAP —
+    which is why almost everyone just publishes the indirect method and is
+    done with it. Both methods produce the identical CFO; they differ only in
+    presentation. Investing and financing sections are always direct — a plain
+    list of cash flows.</p>
+
+    <h3>Worked example: Maple Tools Co.</h3>
+    <p>Here is everything you need: two consecutive balance sheets, an income
+    statement for the year between them, and a few facts about what happened.
+    We will build the complete indirect-method CFS and reconcile to ending
+    cash exactly.</p>
+
+    <table class="book">
+      <tr><th>Balance sheet</th><th class="num">Dec 31, 2024</th><th class="num">Dec 31, 2025</th><th class="num">Δ</th></tr>
+      <tr><td>Cash</td><td class="num">25,000</td><td class="num">54,000</td><td class="num">+29,000</td></tr>
+      <tr><td>Accounts receivable</td><td class="num">40,000</td><td class="num">52,000</td><td class="num">+12,000</td></tr>
+      <tr><td>Inventory</td><td class="num">60,000</td><td class="num">55,000</td><td class="num">−5,000</td></tr>
+      <tr><td>PP&amp;E, net</td><td class="num">150,000</td><td class="num">155,000</td><td class="num">+5,000</td></tr>
+      <tr class="tot"><td>Total assets</td><td class="num">275,000</td><td class="num">316,000</td><td class="num"></td></tr>
+      <tr><td>Accounts payable</td><td class="num">30,000</td><td class="num">38,000</td><td class="num">+8,000</td></tr>
+      <tr><td>Accrued wages payable</td><td class="num">5,000</td><td class="num">3,000</td><td class="num">−2,000</td></tr>
+      <tr><td>Long-term debt</td><td class="num">70,000</td><td class="num">50,000</td><td class="num">−20,000</td></tr>
+      <tr><td>Common stock</td><td class="num">50,000</td><td class="num">60,000</td><td class="num">+10,000</td></tr>
+      <tr><td>Retained earnings</td><td class="num">120,000</td><td class="num">165,000</td><td class="num">+45,000</td></tr>
+      <tr class="tot"><td>Total liabilities &amp; equity</td><td class="num">275,000</td><td class="num">316,000</td><td class="num"></td></tr>
+    </table>
+
+    <table class="book">
+      <tr><th>Income statement, 2025</th><th class="num">$</th></tr>
+      <tr><td>Revenue</td><td class="num">500,000</td></tr>
+      <tr><td>Cost of goods sold</td><td class="num">(300,000)</td></tr>
+      <tr><td>SG&amp;A expense</td><td class="num">(90,000)</td></tr>
+      <tr><td>Depreciation expense</td><td class="num">(30,000)</td></tr>
+      <tr><td>Gain on sale of equipment</td><td class="num">5,000</td></tr>
+      <tr><td>Interest expense</td><td class="num">(8,000)</td></tr>
+      <tr><td>Income tax expense</td><td class="num">(17,000)</td></tr>
+      <tr class="tot"><td>Net income</td><td class="num">60,000</td></tr>
+    </table>
+
+    <p><b>Additional facts:</b> bought new equipment for $45,000 cash; sold
+    old equipment with a book value of $10,000 for $15,000 cash (hence the
+    $5,000 gain); repaid $20,000 of long-term debt; issued $10,000 of stock;
+    paid $15,000 in dividends. Interest and taxes were paid in cash as
+    incurred.</p>
+
+    <p><b>Sanity checks before building.</b> PP&amp;E rolls forward:
+    150,000 + 45,000 capex − 10,000 book value sold − 30,000 depreciation
+    = 155,000 ✓. Retained earnings rolls forward:
+    120,000 + 60,000 net income − 15,000 dividends = 165,000 ✓. (These
+    roll-forwards are how you <em>extract</em> the CFS facts when a problem
+    doesn't hand them to you.)</p>
+
+    <table class="book">
+      <tr><th>Statement of cash flows, 2025 (indirect)</th><th class="num">$</th></tr>
+      <tr class="sub"><td>Operating activities</td><td class="num"></td></tr>
+      <tr><td>Net income</td><td class="num">60,000</td></tr>
+      <tr><td>+ Depreciation (non-cash)</td><td class="num">30,000</td></tr>
+      <tr><td>− Gain on sale of equipment (cash is in investing)</td><td class="num">(5,000)</td></tr>
+      <tr><td>− Increase in accounts receivable</td><td class="num">(12,000)</td></tr>
+      <tr><td>+ Decrease in inventory</td><td class="num">5,000</td></tr>
+      <tr><td>+ Increase in accounts payable</td><td class="num">8,000</td></tr>
+      <tr><td>− Decrease in accrued wages payable</td><td class="num">(2,000)</td></tr>
+      <tr class="tot"><td>Net cash from operating (CFO)</td><td class="num">84,000</td></tr>
+      <tr class="sub"><td>Investing activities</td><td class="num"></td></tr>
+      <tr><td>Purchase of equipment (capex)</td><td class="num">(45,000)</td></tr>
+      <tr><td>Proceeds from sale of equipment</td><td class="num">15,000</td></tr>
+      <tr class="tot"><td>Net cash from investing (CFI)</td><td class="num">(30,000)</td></tr>
+      <tr class="sub"><td>Financing activities</td><td class="num"></td></tr>
+      <tr><td>Repayment of long-term debt</td><td class="num">(20,000)</td></tr>
+      <tr><td>Issuance of common stock</td><td class="num">10,000</td></tr>
+      <tr><td>Dividends paid</td><td class="num">(15,000)</td></tr>
+      <tr class="tot"><td>Net cash from financing (CFF)</td><td class="num">(25,000)</td></tr>
+      <tr class="sub"><td>Reconciliation</td><td class="num"></td></tr>
+      <tr><td>Net change in cash (84,000 − 30,000 − 25,000)</td><td class="num">29,000</td></tr>
+      <tr><td>+ Beginning cash</td><td class="num">25,000</td></tr>
+      <tr class="tot"><td>Ending cash (ties to the 2025 balance sheet)</td><td class="num">54,000</td></tr>
+    </table>
+
+    <p>The mass balance closes: 25,000 + 84,000 − 30,000 − 25,000 = 54,000,
+    exactly the cash line on the ending balance sheet. Notice the proceeds
+    ($15,000) sit in investing while the gain ($5,000) was scrubbed out of
+    operating — the $10,000 book value never appears as a cash flow anywhere,
+    because it isn't one.</p>
+
+    <p><b>Cross-check with the direct method</b> (same CFO, different
+    presentation): collected from customers = 500,000 − 12,000 ΔAR = 488,000.
+    Purchases = 300,000 COGS − 5,000 inventory drawdown = 295,000; paid to
+    suppliers = 295,000 − 8,000 ΔAP = 287,000. Paid for SG&amp;A and wages =
+    90,000 + 2,000 paydown of accrued wages = 92,000. Interest paid 8,000;
+    taxes paid 17,000. CFO = 488,000 − 287,000 − 92,000 − 8,000 − 17,000 =
+    <b>84,000</b>. Identical — as it must be; the two methods are different
+    decompositions of the same conserved flow.</p>
+
+    <h3>Articulation, free cash flow, and reading the signature</h3>
+    <p>The three statements form a closed system — accountants call it
+    <b>articulation</b>: the income statement explains the change in retained
+    earnings between two balance sheets; the CFS explains the change in the
+    cash line between the same two balance sheets. Given any two consecutive
+    balance sheets and the income statement, the CFS is (mostly) <em>derivable</em>,
+    which is exactly what we just did for Maple Tools.</p>
+
+    <p>Analysts immediately compute one derived metric from the CFS:</p>
+    <div class="eq">Free cash flow (FCF) = CFO − capital expenditures
+      <br/><small>cash the business generates after maintaining/expanding its asset base —
+      what's genuinely available to creditors and owners</small></div>
+    <p>For Maple Tools: FCF = 84,000 − 45,000 = $39,000. (Definitions vary at
+    the edges — some use net capex — but CFO − capex is the baseline form.)</p>
+
+    <p>Finally, the <em>signs</em> of the three sections form a lifecycle
+    signature you can read at a glance, before looking at a single line item:</p>
+    <table class="book">
+      <tr><th>CFO</th><th>CFI</th><th>CFF</th><th>Typical story</th></tr>
+      <tr><td class="num">−</td><td class="num">−</td><td class="num">+</td><td>Startup: operations burn cash, heavy investment, kept alive by outside capital.</td></tr>
+      <tr><td class="num">+</td><td class="num">−</td><td class="num">+</td><td>Growth: the engine works but can't yet fund the expansion; still raising.</td></tr>
+      <tr><td class="num">+</td><td class="num">−</td><td class="num">−</td><td>Mature: self-funding; investing in maintenance; returning cash via dividends, buybacks, debt paydown.</td></tr>
+      <tr><td class="num">−</td><td class="num">+</td><td class="num">−</td><td>Distress: operations bleeding, selling assets to pay creditors.</td></tr>
+    </table>
+    <p>Maple Tools reads (+, −, −): a healthy mature firm — operations
+    generated $84k, of which $30k went into (net) capacity and $25k went back
+    to its funders, with $29k left to pile up in the tank. Explore the full
+    8-combination space in the third visual below.</p>
+  </section>
+
+  <!-- 2. VISUAL SECTIONS -->
+  <section id="see-1" class="see">
+    <h2>See it: the cash mass balance</h2>
+    <p>Toggle events on and off and watch each one land in (or stay out of)
+    the three sections. The waterfall runs beginning cash → operating →
+    investing → financing → ending cash; the readout below contrasts accrual
+    net income with the actual cash flow from the same events. Note which
+    events move income but not cash, and vice versa.</p>
+    <div class="visual" id="viz-1">
+      <div class="txgrid" id="txList"></div>
+      <svg id="wf1" viewBox="0 0 680 300" width="100%" role="img"
+           aria-label="Cash waterfall from beginning to ending balance"></svg>
+      <div class="seccols" id="secCols"></div>
+      <div class="contrast" id="contrast"></div>
+      <div class="insolvent" id="insolvent"></div>
+    </div>
+    <p class="hint">Try this: switch everything off, then enable only
+    "Bill a customer $20k on credit", "Pay $12k of wages", "Buy a machine",
+    and "Buy inventory". Net income is positive — and the cash tank is
+    draining. That is "profitable but insolvent," live.</p>
+  </section>
+
+  <section id="see-2" class="see">
+    <h2>See it: the indirect-method reconciliation machine</h2>
+    <p>Start from net income and repair it into CFO. The sliders are the
+    levers a real business pulls every quarter; the annotations re-derive the
+    sign logic live as you move them. Defaults reproduce the Maple Tools
+    example exactly (all figures in $ thousands).</p>
+    <div class="visual" id="viz-2">
+      <div class="sliders" id="sliders2"></div>
+      <div class="eqline" id="eqline2"></div>
+      <svg id="wf2" viewBox="0 0 680 300" width="100%" role="img"
+           aria-label="Waterfall from net income to cash flow from operations"></svg>
+      <div class="annot" id="annot2"></div>
+    </div>
+    <p class="hint">Push ΔAR hard to the right while leaving net income
+    alone: income holds steady while CFO collapses. A growing gap between net
+    income and CFO — receivables and inventory swelling faster than sales —
+    is one of the classic early-warning signals of earnings trouble.</p>
+  </section>
+
+  <section id="see-3" class="see">
+    <h2>See it: lifecycle signatures</h2>
+    <p>Only the <em>signs</em> of the three sections, and already a story.
+    Pick a preset, or flip each sign yourself — all eight combinations have a
+    reading.</p>
+    <div class="visual" id="viz-3">
+      <div class="sigrow" id="presets3"></div>
+      <div class="signs" id="signs3"></div>
+      <svg id="bars3" viewBox="0 0 680 240" width="100%" role="img"
+           aria-label="Bar chart of the three cash flow sections"></svg>
+      <div class="interp" id="interp3"></div>
+    </div>
+  </section>
+
+  <!-- 3. QUIZ -->
+  <section id="quiz">
+    <h2>Check yourself</h2>
+    <form id="quizForm">
+
+      <div class="q" data-qid="q1" data-type="mc">
+        <p><strong>1.</strong> Under US GAAP, the cash a company pays as <em>interest</em> on its bank loan is classified as:</p>
+        <div class="opts">
+          <label><input type="radio" name="q1" value="a"> Financing — it's a cost of borrowing, like the principal.</label>
+          <label><input type="radio" name="q1" value="b"> Operating — it runs through the income statement, so its cash twin stays in operating.</label>
+          <label><input type="radio" name="q1" value="c"> Investing — the loan funded asset purchases.</label>
+          <label><input type="radio" name="q1" value="d"> It is excluded from the statement and disclosed in a note.</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q2" data-type="mc">
+        <p><strong>2.</strong> On an indirect-method statement of cash flows, depreciation expense appears as:</p>
+        <div class="opts">
+          <label><input type="radio" name="q2" value="a"> A cash outflow in operating, since it is an operating expense.</label>
+          <label><input type="radio" name="q2" value="b"> A cash outflow in investing, spread over the asset's life.</label>
+          <label><input type="radio" name="q2" value="c"> An add-back to net income in operating, because no cash moved when it was recorded.</label>
+          <label><input type="radio" name="q2" value="d"> A financing inflow, since it frees up cash for the firm.</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q3" data-type="mc">
+        <p><strong>3.</strong> A company sells equipment with a book value of $40,000 for $52,000 cash. On its indirect-method statement of cash flows, this transaction shows up as:</p>
+        <div class="opts">
+          <label><input type="radio" name="q3" value="a"> A $52,000 inflow in investing, and the $12,000 gain subtracted from net income in operating.</label>
+          <label><input type="radio" name="q3" value="b"> A $40,000 inflow in investing and a $12,000 inflow in operating.</label>
+          <label><input type="radio" name="q3" value="c"> A $52,000 inflow in operating, since selling things is what operations do.</label>
+          <label><input type="radio" name="q3" value="d"> A $12,000 inflow in investing — only the gain is new cash.</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q4" data-type="mc">
+        <p><strong>4.</strong> A firm's statement shows CFO positive, CFI negative, and CFF negative. The most likely profile is:</p>
+        <div class="opts">
+          <label><input type="radio" name="q4" value="a"> An early-stage startup burning investor money.</label>
+          <label><input type="radio" name="q4" value="b"> A firm in liquidation, selling assets to pay creditors.</label>
+          <label><input type="radio" name="q4" value="c"> A high-growth firm raising heavy outside capital.</label>
+          <label><input type="radio" name="q4" value="d"> A mature firm: operations fund its investment, with the surplus returned to lenders and shareholders.</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q5" data-type="num">
+        <p><strong>5.</strong> Compute cash flow from operating activities (indirect method), in dollars. Net income $75,000; depreciation $20,000; accounts receivable <em>increased</em> $9,000; inventory <em>decreased</em> $4,000; accounts payable <em>increased</em> $6,000; the firm also recorded a $3,000 <em>loss</em> on the sale of a truck.</p>
+        <input type="number" name="q5" step="any" placeholder="dollars" />
+      </div>
+
+      <div class="q" data-qid="q6" data-type="num">
+        <p><strong>6.</strong> A firm reports CFO of $120,000. During the year it spent $70,000 on new equipment, received $10,000 from selling an old delivery van, and paid $25,000 in dividends. Using this lesson's baseline definition, what is its free cash flow, in dollars?</p>
+        <input type="number" name="q6" step="any" placeholder="dollars" />
+      </div>
+
+      <div class="q" data-qid="q7" data-type="num">
+        <p><strong>7.</strong> A firm begins the year with $30,000 of cash. During the year it: collects $240,000 from customers; pays $195,000 to suppliers and employees; pays $5,000 of interest; buys equipment for $50,000; sells an old machine for $8,000; borrows $20,000 long-term; and pays $12,000 of dividends. Classify each flow, total the three sections, and compute <em>ending</em> cash, in dollars.</p>
+        <input type="number" name="q7" step="any" placeholder="dollars" />
+      </div>
+
+      <div class="q" data-qid="q8" data-type="text">
+        <p><strong>8.</strong> Two words: under the indirect method, the operating section begins with ____ ____ and adjusts it to a cash basis.</p>
+        <input type="text" name="q8" placeholder="two words" />
+      </div>
+
+      <button type="submit">Submit answers</button>
+    </form>
+    <div id="result"></div>
+  </section>
+
+</div>
+
+<script>
+  const LESSON_ADDRESS = "101.4";
+
+  /* ================= shared: waterfall renderer =================
+     items: [{label, value, kind:'abs'|'delta', color?}]  (values in $k)   */
+  function fmtK(v) {
+    const a = Math.abs(v).toLocaleString("en-US");
+    return (v < 0 ? "−$" : "$") + a + "k";
+  }
+  function signedK(v) {
+    return (v >= 0 ? "+$" : "−$") + Math.abs(v).toLocaleString("en-US") + "k";
+  }
+  function drawWaterfall(svgId, items) {
+    const W = 680, H = 300, ml = 56, mr = 10, mt = 20, mb = 42;
+    let cum = 0;
+    const bars = items.map(it => {
+      let start;
+      if (it.kind === "abs") { start = 0; cum = it.value; }
+      else { start = cum; cum += it.value; }
+      return { ...it, start, end: cum };
+    });
+    let lo = Math.min(0, ...bars.map(b => Math.min(b.start, b.end)));
+    let hi = Math.max(0, ...bars.map(b => Math.max(b.start, b.end)));
+    if (hi === lo) hi = lo + 1;
+    const pad = (hi - lo) * 0.1;
+    lo -= pad; hi += pad;
+    const y = v => mt + (hi - v) / (hi - lo) * (H - mt - mb);
+    const band = (W - ml - mr) / bars.length, bw = Math.min(band * 0.62, 86);
+    let s = "";
+    // gridline at 0 + a few ticks
+    const ticks = 4;
+    for (let i = 0; i <= ticks; i++) {
+      const v = lo + (hi - lo) * i / ticks;
+      s += `<text x="${ml - 6}" y="${y(v) + 4}" text-anchor="end" class="lab">${Math.round(v)}</text>`;
+      s += `<line x1="${ml}" x2="${W - mr}" y1="${y(v)}" y2="${y(v)}" stroke="#f3f4f6"/>`;
+    }
+    s += `<line x1="${ml}" x2="${W - mr}" y1="${y(0)}" y2="${y(0)}" stroke="#9ca3af" stroke-width="1.5"/>`;
+    bars.forEach((b, i) => {
+      const x = ml + band * i + (band - bw) / 2;
+      const top = y(Math.max(b.start, b.end));
+      const h = Math.max(Math.abs(y(b.start) - y(b.end)), 2);
+      const color = b.color ||
+        (b.kind === "abs" ? "#334155" : (b.value >= 0 ? "#2d6a4f" : "#b91c1c"));
+      s += `<rect x="${x}" y="${top}" width="${bw}" height="${h}" rx="3" fill="${color}"
+              opacity="${b.value === 0 && b.kind === "delta" ? .35 : .92}"/>`;
+      const lblTxt = b.kind === "abs" ? fmtK(b.value) : signedK(b.value);
+      s += `<text x="${x + bw / 2}" y="${top - 6}" text-anchor="middle">${lblTxt}</text>`;
+      s += `<text x="${x + bw / 2}" y="${H - mb + 16}" text-anchor="middle" class="lab">${b.label}</text>`;
+      if (i < bars.length - 1) {
+        const nx = ml + band * (i + 1) + (band - bw) / 2;
+        s += `<line x1="${x + bw}" x2="${nx}" y1="${y(b.end)}" y2="${y(b.end)}"
+                stroke="#9ca3af" stroke-dasharray="3 3"/>`;
+      }
+    });
+    document.getElementById(svgId).innerHTML = s;
+  }
+
+  /* ================= viz-1: cash mass balance ================= */
+  (function () {
+    const BEGIN = 50; // $k
+    const SECNAME = { O: "Operating", I: "Investing", F: "Financing", N: "No cash effect" };
+    const TXNS = [
+      { id:"collect", label:"Collect $30k of receivables", short:"Collect AR", sec:"O", cash:30, ni:0, on:true },
+      { id:"credit",  label:"Bill a customer $20k on credit (uncollected)", short:"Credit sale (NI +20)", sec:"N", cash:0, ni:20, on:true },
+      { id:"wages",   label:"Pay $12k of wages", short:"Wages", sec:"O", cash:-12, ni:-12, on:true },
+      { id:"buyinv",  label:"Buy $15k inventory with cash (unsold)", short:"Buy inventory", sec:"O", cash:-15, ni:0, on:false },
+      { id:"dep",     label:"Record $10k depreciation", short:"Depreciation (NI −10)", sec:"N", cash:0, ni:-10, on:true },
+      { id:"interest",label:"Pay $4k loan interest", short:"Interest paid", sec:"O", cash:-4, ni:-4, on:false },
+      { id:"capex",   label:"Buy a machine for $35k cash", short:"Capex", sec:"I", cash:-35, ni:0, on:true },
+      { id:"sell",    label:"Sell old machine (book $8k) for $11k", short:"Sale proceeds", sec:"I", cash:11, ni:3, on:false },
+      { id:"borrow",  label:"Borrow $25k long-term", short:"Borrow", sec:"F", cash:25, ni:0, on:true },
+      { id:"repay",   label:"Repay $10k of loan principal", short:"Repay principal", sec:"F", cash:-10, ni:0, on:false },
+      { id:"stock",   label:"Issue stock for $15k", short:"Issue stock", sec:"F", cash:15, ni:0, on:false },
+      { id:"div",     label:"Pay a $6k dividend", short:"Dividend", sec:"F", cash:-6, ni:0, on:false },
+    ];
+
+    const list = document.getElementById("txList");
+    TXNS.forEach(t => {
+      const lab = document.createElement("label");
+      lab.innerHTML = `<input type="checkbox" data-tx="${t.id}" ${t.on ? "checked" : ""}/>` +
+        `<span class="tag ${t.sec}">${t.sec === "N" ? "—" : t.sec}</span> ${t.label}`;
+      list.appendChild(lab);
+    });
+    list.addEventListener("change", e => {
+      const t = TXNS.find(x => x.id === e.target.dataset.tx);
+      if (t) { t.on = e.target.checked; render(); }
+    });
+
+    function render() {
+      const on = TXNS.filter(t => t.on);
+      const sum = sec => on.filter(t => t.sec === sec)
+                           .reduce((s, t) => s + t.cash, 0);
+      const O = sum("O"), I = sum("I"), F = sum("F");
+      const NI = on.reduce((s, t) => s + t.ni, 0);
+      const end = BEGIN + O + I + F;
+
+      drawWaterfall("wf1", [
+        { label:"Begin cash", value:BEGIN, kind:"abs", color:"#334155" },
+        { label:"Operating", value:O, kind:"delta" },
+        { label:"Investing", value:I, kind:"delta" },
+        { label:"Financing", value:F, kind:"delta" },
+        { label:"End cash", value:end, kind:"abs",
+          color: end < 0 ? "#b91c1c" : "#334155" },
+      ]);
+
+      const cols = ["O","I","F","N"].map(sec => {
+        const lines = on.filter(t => t.sec === sec);
+        const body = lines.length
+          ? lines.map(t => `<div class="line"><span>${t.short}</span>` +
+              `<span>${sec === "N" ? "—" : signedK(t.cash)}</span></div>`).join("")
+          : `<div class="line"><span style="color:var(--muted)">none</span></div>`;
+        const net = sec === "N" ? "" :
+          `<div class="net"><span>Net</span><span>${signedK(sec==="O"?O:sec==="I"?I:F)}</span></div>`;
+        return `<div class="col"><h5>${SECNAME[sec]}</h5>${body}${net}</div>`;
+      }).join("");
+      document.getElementById("secCols").innerHTML = cols;
+
+      const dC = O + I + F;
+      document.getElementById("contrast").innerHTML =
+        `Accrual net income: <span class="${NI < 0 ? "neg" : "pos"}">${signedK(NI)}</span>` +
+        ` &nbsp;vs&nbsp; net cash flow: <span class="${dC < 0 ? "neg" : "pos"}">${signedK(dC)}</span>`;
+      document.getElementById("insolvent").textContent = end < 0
+        ? `Ending cash is ${fmtK(end)} — out of cash. Payroll bounces regardless of what net income says.`
+        : "";
+    }
+    render();
+  })();
+
+  /* ================= viz-2: indirect reconciliation ================= */
+  (function () {
+    const S = [
+      { id:"ni",   label:"Net income", min:0,   max:150, val:60 },
+      { id:"da",   label:"Depreciation & amortization", min:0, max:50, val:30 },
+      { id:"gl",   label:"Gain (+) / loss (−) on asset sale", min:-20, max:20, val:5 },
+      { id:"dar",  label:"Δ Accounts receivable", min:-30, max:30, val:12 },
+      { id:"dinv", label:"Δ Inventory", min:-30, max:30, val:-5 },
+      { id:"dap",  label:"Δ Accounts payable", min:-30, max:30, val:8 },
+      { id:"dwag", label:"Δ Accrued wages payable", min:-10, max:10, val:-2 },
+    ];
+    const box = document.getElementById("sliders2");
+    S.forEach(s => {
+      const lab = document.createElement("label");
+      lab.textContent = s.label;
+      lab.htmlFor = "sl-" + s.id;
+      const inp = document.createElement("input");
+      inp.type = "range"; inp.id = "sl-" + s.id;
+      inp.min = s.min; inp.max = s.max; inp.step = 1; inp.value = s.val;
+      const val = document.createElement("span");
+      val.className = "val"; val.id = "v-" + s.id;
+      inp.addEventListener("input", () => { s.val = +inp.value; render(); });
+      box.appendChild(lab); box.appendChild(inp); box.appendChild(val);
+    });
+
+    const v = id => S.find(s => s.id === id).val;
+
+    function annot() {
+      const out = [];
+      const gl = v("gl");
+      if (gl > 0) out.push(`<b class="sub">−${fmtK(gl)} gain removed</b> — the full sale proceeds belong in <em>investing</em>; leaving the gain inside net income would double-count it.`);
+      else if (gl < 0) out.push(`<b class="add">+${fmtK(-gl)} loss added back</b> — the loss dented net income, but the cash story of the sale lives in investing. Undo it here.`);
+      else out.push(`No gain or loss on asset sales — nothing to scrub out of net income.`);
+
+      const dar = v("dar");
+      if (dar > 0) out.push(`<b class="sub">AR up ${fmtK(dar)} → subtract</b> — you booked ${fmtK(dar)} of revenue customers haven't paid yet. Income got it; cash didn't.`);
+      else if (dar < 0) out.push(`<b class="add">AR down ${fmtK(-dar)} → add</b> — you collected old receivables on top of this period's billings. Cash beat income.`);
+      else out.push(`AR flat — collections matched billings; no timing gap.`);
+
+      const di = v("dinv");
+      if (di > 0) out.push(`<b class="sub">Inventory up ${fmtK(di)} → subtract</b> — cash went into goods that haven't hit COGS yet. Cash leads income.`);
+      else if (di < 0) out.push(`<b class="add">Inventory down ${fmtK(-di)} → add</b> — you sold goods paid for in a prior period; COGS hit income now, but the cash left earlier.`);
+      else out.push(`Inventory flat — purchases matched COGS.`);
+
+      const dp = v("dap");
+      if (dp > 0) out.push(`<b class="add">AP up ${fmtK(dp)} → add</b> — suppliers floated you ${fmtK(dp)}: expense recorded, cash still in your pocket.`);
+      else if (dp < 0) out.push(`<b class="sub">AP down ${fmtK(-dp)} → subtract</b> — you paid down old supplier bills; cash out exceeded this period's expense.`);
+      else out.push(`AP flat — you paid suppliers as fast as you accrued them.`);
+
+      const dw = v("dwag");
+      if (dw > 0) out.push(`<b class="add">Accrued wages up ${fmtK(dw)} → add</b> — wage expense booked, paychecks not yet cut.`);
+      else if (dw < 0) out.push(`<b class="sub">Accrued wages down ${fmtK(-dw)} → subtract</b> — you paid off old wage obligations beyond this period's expense.`);
+      else out.push(`Accrued wages flat.`);
+
+      return out.map(t => `<div>${t}</div>`).join("");
+    }
+
+    function render() {
+      S.forEach(s => {
+        document.getElementById("v-" + s.id).textContent = signedK(s.val);
+      });
+      const cfo = v("ni") + v("da") - v("gl") - v("dar") - v("dinv") + v("dap") + v("dwag");
+      drawWaterfall("wf2", [
+        { label:"Net income", value:v("ni"), kind:"abs", color:"#334155" },
+        { label:"+D&A", value:v("da"), kind:"delta" },
+        { label:"−Gain/+Loss", value:-v("gl"), kind:"delta" },
+        { label:"−ΔAR", value:-v("dar"), kind:"delta" },
+        { label:"−ΔInv", value:-v("dinv"), kind:"delta" },
+        { label:"+ΔAP", value:v("dap"), kind:"delta" },
+        { label:"+ΔAccr", value:v("dwag"), kind:"delta" },
+        { label:"CFO", value:cfo, kind:"abs", color:"#1d4ed8" },
+      ]);
+      document.getElementById("eqline2").textContent =
+        `CFO = ${v("ni")} + ${v("da")} − (${v("gl")}) − (${v("dar")})` +
+        ` − (${v("dinv")}) + (${v("dap")}) + (${v("dwag")}) = ${cfo}  ($k)`;
+      document.getElementById("annot2").innerHTML = annot();
+    }
+    render();
+  })();
+
+  /* ================= viz-3: lifecycle signatures ================= */
+  (function () {
+    const PRESETS = [
+      { name:"Startup",    o:-40, i:-60, f:120 },
+      { name:"Growth",     o:50,  i:-90, f:60 },
+      { name:"Mature",     o:100, i:-40, f:-50 },
+      { name:"Distressed", o:-30, i:25,  f:-20 },
+    ];
+    const INTERP = {
+      "--+": ["Startup", "Operations burn cash and the firm is building capacity, all funded by outside capital (venture money, loans). Entirely normal early — but the runway is finite: the clock is set by CFF divided by the burn."],
+      "+-+": ["Growth", "The core engine generates cash, but not enough to fund the expansion, so the firm still raises outside capital. Healthy if the investments earn their keep; watch whether CFO grows into the capex."],
+      "+--": ["Mature", "Self-funding: operations cover investment with room to spare, and the surplus flows back out as dividends, buybacks, and debt paydown. The signature of a steady-state cash machine."],
+      "-+-": ["Distress", "Operations bleed cash while the firm sells assets and pays down creditors — shrinking the productive base to stay alive. Classic restructuring-or-liquidation profile."],
+      "-++": ["Distressed but still funded", "Operations burn cash; the firm is both selling assets and raising new money to cover it. Someone still believes in the turnaround — but the firm is consuming itself while it waits."],
+      "++-": ["Harvesting", "Operations are positive and the firm is also selling assets, with the combined cash going to funders. Deliberate downsizing: milking a business it no longer wants to grow."],
+      "---": ["Living off the pile", "Every section is an outflow — only possible while a previously raised cash hoard lasts (think post-IPO war chest funding losses, capex, and buybacks at once). Sustainable exactly until the tank empties."],
+      "+++": ["Hoarding", "Cash in from everywhere: operations, asset sales, and new financing. Rare — usually a firm building a war chest ahead of something big (an acquisition) or de-risking before a storm."],
+    };
+    const st = { o:100, i:-40, f:-50 };
+    const KEYS = ["o","i","f"];
+    const LBL = { o:"Operating", i:"Investing", f:"Financing" };
+
+    const pbox = document.getElementById("presets3");
+    PRESETS.forEach(p => {
+      const b = document.createElement("button");
+      b.type = "button"; b.textContent = p.name;
+      b.addEventListener("click", () => {
+        st.o = p.o; st.i = p.i; st.f = p.f; render();
+      });
+      pbox.appendChild(b);
+    });
+
+    const sbox = document.getElementById("signs3");
+    KEYS.forEach(k => {
+      const b = document.createElement("button");
+      b.type = "button"; b.id = "sgn-" + k;
+      b.addEventListener("click", () => { st[k] = -st[k]; render(); });
+      sbox.appendChild(b);
+    });
+
+    function render() {
+      const key = KEYS.map(k => st[k] >= 0 ? "+" : "-").join("");
+      KEYS.forEach(k => {
+        const b = document.getElementById("sgn-" + k);
+        const pos = st[k] >= 0;
+        b.className = pos ? "pos" : "neg";
+        b.textContent = `CF${k.toUpperCase()} ${pos ? "+" : "−"}`;
+      });
+      // highlight matching preset
+      [...pbox.children].forEach((b, idx) => {
+        const p = PRESETS[idx];
+        const pkey = ["o","i","f"].map(k => p[k] >= 0 ? "+" : "-").join("");
+        b.classList.toggle("active", pkey === key);
+      });
+
+      // bars
+      const W = 680, H = 240, ml = 56, mr = 10, mt = 18, mb = 36;
+      const vals = KEYS.map(k => st[k]);
+      const net = vals.reduce((a, b) => a + b, 0);
+      let lo = Math.min(0, ...vals), hi = Math.max(0, ...vals);
+      const pad = (hi - lo) * 0.15 || 10; lo -= pad; hi += pad;
+      const y = v => mt + (hi - v) / (hi - lo) * (H - mt - mb);
+      const band = (W - ml - mr) / 3, bw = 90;
+      let s = `<line x1="${ml}" x2="${W - mr}" y1="${y(0)}" y2="${y(0)}" stroke="#9ca3af" stroke-width="1.5"/>`;
+      KEYS.forEach((k, i) => {
+        const x = ml + band * i + (band - bw) / 2;
+        const vv = st[k];
+        const top = y(Math.max(0, vv));
+        const h = Math.max(Math.abs(y(0) - y(vv)), 2);
+        s += `<rect x="${x}" y="${top}" width="${bw}" height="${h}" rx="4"
+                fill="${vv >= 0 ? "#2d6a4f" : "#b91c1c"}" opacity=".9"/>`;
+        s += `<text x="${x + bw / 2}" y="${vv >= 0 ? top - 6 : top + h + 14}"
+                text-anchor="middle">${signedK(vv)}</text>`;
+        s += `<text x="${x + bw / 2}" y="${H - 8}" text-anchor="middle" class="lab">${LBL[k]}</text>`;
+      });
+      s += `<text x="${W - mr}" y="${mt}" text-anchor="end" class="lab">net Δcash: ${signedK(net)}</text>`;
+      document.getElementById("bars3").innerHTML = s;
+
+      const [name, body] = INTERP[key];
+      document.getElementById("interp3").innerHTML =
+        `<b>(${key.split("").join(", ").replace(/-/g, "−")}) — ${name}</b> ${body}`;
+    }
+    render();
+  })();
+
+  /* ---------- Quiz: collect answers, grade server-side ---------- */
+  document.getElementById("quizForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const fd = new FormData(e.target);
+    const answers = {};
+    document.querySelectorAll(".q").forEach(q => {
+      answers[q.dataset.qid] = fd.get(q.dataset.qid);
+    });
+    const payload = { address: LESSON_ADDRESS, answers, ts: Date.now() };
+
+    try {
+      const res = await fetch("http://127.0.0.1:8753/record", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (data.error) {
+        document.getElementById("result").textContent = "Recorder error: " + data.error;
+        return;
+      }
+      document.getElementById("result").textContent =
+        `Score: ${data.correct}/${data.total}. ` +
+        (data.weak_topics?.length ? `Review: ${data.weak_topics.join(", ")}` : "Nice work.");
+      // Per-question feedback from the graded response; the page never sees the key.
+      (data.results || []).forEach(r => {
+        const q = document.querySelector(`.q[data-qid="${r.qid}"]`);
+        if (!q) return;
+        q.classList.remove("right", "wrong");
+        q.classList.add(r.is_correct ? "right" : "wrong");
+        let fb = q.querySelector(".fb");
+        if (!fb) { fb = document.createElement("div"); fb.className = "fb"; q.appendChild(fb); }
+        fb.textContent = "";
+        const mark = document.createElement("b");
+        mark.textContent = r.is_correct ? "✓ Correct" : "✗ Incorrect";
+        fb.appendChild(mark);
+        if (!r.is_correct && r.explanation) fb.append(" — " + r.explanation);
+      });
+    } catch (err) {
+      const blob = new Blob([JSON.stringify(payload, null, 2)], {type:"application/json"});
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = `${LESSON_ADDRESS}.attempt.json`;
+      a.click();
+      document.getElementById("result").textContent =
+        "Recorder offline — downloaded attempt JSON. Run scripts/serve.py and import it.";
+    }
+  });
+</script>
+</body>
+</html>
