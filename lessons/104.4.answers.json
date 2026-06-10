@@ -1,0 +1,64 @@
+{
+  "address": "104.4",
+  "title": "Decision-Making Models and Biases",
+  "questions": [
+    {
+      "qid": "q1",
+      "type": "mc",
+      "correct": "b",
+      "topic": "bounded rationality",
+      "explanation": "Satisficing (Simon) = searching until the first alternative that is good enough against your criteria, then stopping. It's the rational response to bounded rationality — limited information, cognition, and time make exhaustive optimization costly or impossible. Option (a) is the full rational model; (d) is the maximin rule."
+    },
+    {
+      "qid": "q2",
+      "type": "num",
+      "correct": 180,
+      "tolerance": 0.5,
+      "topic": "expected value",
+      "explanation": "EV = Σ(probability × payoff) = 0.6 × 400 + 0.4 × (−150) = 240 − 60 = $180k. Remember the weak-demand branch enters with its negative sign — and that EV is a long-run average: the single play still carries a 40% chance of losing $150k."
+    },
+    {
+      "qid": "q3",
+      "type": "num",
+      "correct": 20,
+      "tolerance": 0.5,
+      "topic": "decision rules under uncertainty",
+      "explanation": "Build the regret table. State bests: high demand 80, low demand 50. Regrets (best − yours): A: (80−80, 50−20) = (0, 30); B: (80−60, 50−50) = (20, 0); C: (80−30, 50−40) = (50, 10). Maximum regrets: A 30, B 20, C 50. Minimax regret picks the smallest maximum → B, whose worst-case regret is 20."
+    },
+    {
+      "qid": "q4",
+      "type": "mc",
+      "correct": "b",
+      "topic": "decision rules under uncertainty",
+      "explanation": "Maximin looks only at each alternative's worst case: A's worst is 20, B's is 50, C's is 30. The best of the worsts is B's 50, so the pessimist builds the small plant — a guaranteed floor of 50. Maximax (the optimist's rule) would instead chase A's 80; rules under uncertainty differ exactly because no probabilities adjudicate."
+    },
+    {
+      "qid": "q5",
+      "type": "mc",
+      "correct": "a",
+      "topic": "sunk cost and escalation",
+      "explanation": "Spending more to 'not waste' money already spent is escalation of commitment, powered by the sunk-cost fallacy. The $4M is identical across all go-forward options, so it can't favor any of them — only incremental costs and benefits are decision-relevant. The right question: 'starting from today, is finishing the ERP the best use of the next dollar?'"
+    },
+    {
+      "qid": "q6",
+      "type": "mc",
+      "correct": "c",
+      "topic": "judgment biases",
+      "explanation": "Anchoring: the first number put on the table drags subsequent estimates and offers toward itself, even when known to be arbitrary. Framing changes choices by gain/loss wording (not by a numeric anchor); representativeness judges by resemblance; hindsight makes outcomes feel predictable after the fact. Counter-move in negotiation: anchor first, or re-anchor explicitly with independent data."
+    },
+    {
+      "qid": "q7",
+      "type": "mc",
+      "correct": "b",
+      "topic": "judgment biases",
+      "explanation": "Judging risk by how easily examples come to mind is the availability heuristic. A vivid, recent, widely reported fire is highly available; the chronic forklift injuries — larger in expected cost — generate no headlines, so they're underweighted. The fix is base rates and loss data, not memory: decide from the spreadsheet, not the news cycle."
+    },
+    {
+      "qid": "q8",
+      "type": "mc",
+      "correct": "b",
+      "topic": "groupthink",
+      "explanation": "Groupthink remedies work by making dissent cheap and structural: a rotating devil's advocate legitimizes criticism, and written positions collected before discussion prevent early consensus from anchoring everyone. A leader stating a preference first (a) and homogeneous membership (c) are causes of groupthink; unanimity requirements (d) amplify the pressure to self-censor."
+    }
+  ]
+}

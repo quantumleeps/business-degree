@@ -1,0 +1,64 @@
+{
+  "address": "104.3",
+  "title": "Organizational Structure and Design",
+  "questions": [
+    {
+      "qid": "q1",
+      "type": "mc",
+      "correct": "b",
+      "topic": "span of control",
+      "explanation": "Span of control is the number of direct reports per manager. It's distinct from the number of levels (which the span determines, inversely), from delegated decision authority (centralization), and from rule-governedness (formalization). Wide spans flatten the pyramid; narrow spans deepen it."
+    },
+    {
+      "qid": "q2",
+      "type": "num",
+      "correct": 85,
+      "tolerance": 0.5,
+      "topic": "span of control",
+      "explanation": "Work up the pyramid dividing by the span: 256 workers need 256/4 = 64 first-line managers; they need 64/4 = 16; then 16/4 = 4; then 4/4 = 1 CEO. Total managers = 64 + 16 + 4 + 1 = 85. (A span of 8 would need 32 + 4 + 1 = 37 — the cost logic of wide spans in one comparison.)"
+    },
+    {
+      "qid": "q3",
+      "type": "num",
+      "correct": 3,
+      "tolerance": 0.4,
+      "topic": "span of control",
+      "explanation": "512/8 = 64 first-line managers (level 1); 64/8 = 8 middle managers (level 2); 8/8 = 1 chief (level 3). Three management levels above the front line. Each widening of the span removes layers logarithmically — that's why span is the lever behind every 'delayering' initiative."
+    },
+    {
+      "qid": "q4",
+      "type": "mc",
+      "correct": "b",
+      "topic": "matrix structure",
+      "explanation": "Unity of command (Fayol) says each employee answers to exactly one superior. The matrix deliberately breaks it — functional boss for expertise and standards, project boss for delivery — accepting two-boss conflict and negotiation overhead as the price of getting both. It works only when the two lines' decision rights are explicitly divided."
+    },
+    {
+      "qid": "q5",
+      "type": "mc",
+      "correct": "c",
+      "topic": "departmentalization",
+      "explanation": "Grouping by the type of customer served (retail, small business, institutional) is customer departmentalization — chosen when segments have distinct needs worth dedicated capability. Functional groups by skill, process by workflow stage, geographic by region. The giveaway is what the unit names refer to: customers, not skills, stages, or places."
+    },
+    {
+      "qid": "q6",
+      "type": "mc",
+      "correct": "b",
+      "topic": "mechanistic vs organic",
+      "explanation": "Mechanistic designs (standardization, central control, narrow spans) win where conditions are stable and repeatable — a mature utility. Turbulent markets, custom work, and search-mode startups all need organic adaptability: decisions near the information, broad roles, low formalization. This is the contingency view applied to structure — environment is the headline variable."
+    },
+    {
+      "qid": "q7",
+      "type": "mc",
+      "correct": "a",
+      "topic": "centralization",
+      "explanation": "Moving the complaint decision from the manager to the front desk relocates decision authority downward — decentralization. The rule of thumb: push each decision to the lowest level that has the information and competence to make it; the desk clerk facing the guest has the freshest information. (The $250 limit is a guardrail on the delegation, not its essence.)"
+    },
+    {
+      "qid": "q8",
+      "type": "mc",
+      "correct": "c",
+      "topic": "design elements",
+      "explanation": "Formalization is the degree to which jobs are standardized and behavior is guided by written rules and procedures. Work specialization is how finely tasks are divided; centralization is where decisions are made; departmentalization is how jobs are grouped. High formalization substitutes rules for supervision — which is exactly what makes wide spans workable."
+    }
+  ]
+}

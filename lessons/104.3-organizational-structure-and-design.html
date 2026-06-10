@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>104.3 — Organizational Structure and Design</title>
+<style>
+  :root { --ink:#1a1a2e; --paper:#fdfdfb; --accent:#2d6a4f; --muted:#6b7280; }
+  body { margin:0; font:16px/1.6 system-ui,sans-serif; color:var(--ink);
+         background:var(--paper); }
+  .wrap { max-width:820px; margin:0 auto; padding:32px 20px 80px; }
+  header .addr { font:600 13px ui-monospace,monospace; color:var(--accent);
+                 letter-spacing:.05em; }
+  h1 { font-size:30px; margin:.2em 0 .1em; }
+  .why { color:var(--muted); font-style:italic; margin-bottom:2em; }
+  section { margin:2.5em 0; }
+  h2 { border-bottom:2px solid var(--accent); padding-bottom:4px; }
+  h3 { margin:1.6em 0 .4em; }
+  .visual { border:1px solid #e5e7eb; border-radius:12px; padding:16px;
+            background:#fff; }
+  table.t { border-collapse:collapse; width:100%; font-size:14px; margin:1em 0; }
+  table.t th, table.t td { border:1px solid #e5e7eb; padding:6px 9px; text-align:left; }
+  table.t th { background:#f3f4f6; }
+  table.t td.num { text-align:right; font-family:ui-monospace,monospace; }
+  .ex { background:#f0f7f4; border-left:4px solid var(--accent); padding:12px 16px;
+        border-radius:0 8px 8px 0; margin:1.2em 0; }
+  .ex .lbl { font:600 12px ui-monospace,monospace; color:var(--accent);
+             text-transform:uppercase; letter-spacing:.06em; }
+  code { background:#f3f4f6; padding:1px 5px; border-radius:4px; font-size:14px; }
+  .q { margin:1.2em 0; padding:14px; border:1px solid #e5e7eb;
+       border-radius:10px; }
+  .q .opts label { display:block; margin:4px 0; cursor:pointer; }
+  .q.right { border-color:var(--accent); background:#f0f7f4; }
+  .q.wrong { border-color:#b91c1c; background:#fef2f2; }
+  .q .fb { margin-top:10px; padding-top:8px; border-top:1px dashed #d1d5db;
+       font-size:14px; }
+  .q.right .fb b { color:var(--accent); }
+  .q.wrong .fb b { color:#b91c1c; }
+  button { background:var(--accent); color:#fff; border:0; padding:10px 18px;
+           border-radius:8px; font-size:15px; cursor:pointer; }
+  button.small { padding:6px 12px; font-size:13px; }
+  button.ghost { background:#fff; color:var(--accent); border:1px solid var(--accent); }
+  #result { margin-top:1em; font-weight:600; }
+  .lesson-nav { display:flex; justify-content:space-between; margin-top:3em;
+       padding-top:1em; border-top:1px solid #e5e7eb; }
+  .lesson-nav a { color:var(--accent); font-weight:600; text-decoration:none; }
+  .lesson-nav a:hover { text-decoration:underline; }
+  .ctrl { display:flex; flex-wrap:wrap; gap:10px 18px; align-items:center;
+          margin:10px 0; font-size:14px; }
+  .ctrl label { display:flex; align-items:center; gap:6px; }
+  .readout { font:600 13px ui-monospace,monospace; }
+  .verdict { margin-top:8px; padding:9px 12px; background:#fffbeb;
+             border:1px solid #fde68a; border-radius:8px; font-size:14px; }
+  .panel { margin-top:10px; padding:12px; background:#f9fafb; border:1px solid #e5e7eb;
+           border-radius:8px; font-size:14px; }
+  .dial { display:grid; grid-template-columns: 170px 1fr 170px; gap:4px 10px;
+          align-items:center; font-size:13px; margin:4px 0; }
+  .dial .bar { height:10px; background:#f3f4f6; border-radius:5px; position:relative; }
+  .dial .bar i { position:absolute; top:-3px; width:16px; height:16px; border-radius:50%;
+                 background:var(--accent); transform:translateX(-50%); transition:left .25s; }
+  .dial .left { text-align:right; color:var(--muted); }
+  .dial .right { color:var(--muted); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="addr">104.3</div>
+    <h1>Organizational Structure and Design</h1>
+    <p class="why">Structure is strategy made physical: who reports to whom, who decides what, and how wide each manager's reach is — and every choice trades coordination against speed and cost.</p>
+  </header>
+
+  <!-- 1. LEARN -->
+  <section id="learn">
+    <h2>Learn</h2>
+
+    <h3>1. The six design decisions</h3>
+    <p>Designing an organization means answering six questions; the standard list:</p>
+    <table class="t">
+      <tr><th>Element</th><th>The question</th><th>The dial runs from … to …</th></tr>
+      <tr><td><strong>Work specialization</strong></td><td>How finely are tasks divided?</td><td>broad jobs ↔ narrow repeated tasks</td></tr>
+      <tr><td><strong>Departmentalization</strong></td><td>On what basis are jobs grouped?</td><td>function, product, geography, process, customer</td></tr>
+      <tr><td><strong>Chain of command</strong></td><td>Who reports to whom?</td><td>clear single line ↔ multiple/dual reporting</td></tr>
+      <tr><td><strong>Span of control</strong></td><td>How many report to each manager?</td><td>narrow (2–4) ↔ wide (10+)</td></tr>
+      <tr><td><strong>Centralization</strong></td><td>Where are decisions made?</td><td>concentrated at top ↔ pushed to the front line</td></tr>
+      <tr><td><strong>Formalization</strong></td><td>How rule-governed is work?</td><td>improvised ↔ standardized by written procedure</td></tr>
+    </table>
+    <p>Specialization raises proficiency and lowers training cost — until monotony, handoff friction, and absenteeism eat the gains. Chain of command carries two classical principles from Fayol: <strong>authority</strong> (the right, attached to the position, to direct work) and <strong>unity of command</strong> (one boss per person). <strong>Line authority</strong> directs the core work; <strong>staff authority</strong> (legal, HR, finance) advises and supports it.</p>
+
+    <h3>2. Span of control: the arithmetic of hierarchy</h3>
+    <p>Span of control is the design element with the most visible cost consequences, because it sets how many layers a given workforce needs. With <em>N</em> front-line workers and a uniform span <em>s</em>, each management level is roughly 1/<em>s</em> the size of the one below, until a single chief remains:</p>
+    <div class="ex">
+      <span class="lbl">Worked example — what widening the span buys</span>
+      <p>A firm has <strong>1,024 front-line employees</strong>. Average fully loaded manager cost: <strong>$120,000</strong>.</p>
+      <p><strong>Span of 4:</strong> levels of 256 → 64 → 16 → 4 → 1 managers = <strong>341 managers, 5 layers</strong>.<br>
+      <strong>Span of 8:</strong> levels of 128 → 16 → 2 → 1 = <strong>147 managers, 4 layers</strong>.</p>
+      <p>Difference: 194 fewer managers ≈ <strong>$23.3M/year</strong>, plus one fewer layer for every decision and message to traverse. So why not always go wide? Because each manager now coaches 8 instead of 4 — wide spans only work when work is standardized, employees are experienced, and the manager's job is enabling rather than checking. Narrow spans buy close supervision at the price of cost, slower vertical communication, and micromanagement risk. The modern trend is wider spans and flatter pyramids, with formalization and training absorbing what supervision used to do.</p>
+    </div>
+
+    <h3>3. Departmentalization: five bases for grouping</h3>
+    <ul>
+      <li><strong>Functional</strong> — group by skill (engineering, marketing, finance). Deep expertise and scale economies; weak cross-functional coordination, slow product decisions, “silo” pathology.</li>
+      <li><strong>Product (divisional)</strong> — group by product line, each division with its own functions. Clear P&amp;L accountability and product focus; duplicates functions across divisions.</li>
+      <li><strong>Geographic</strong> — group by region. Local responsiveness (regulation, taste); duplication plus the risk of regional fiefdoms.</li>
+      <li><strong>Process</strong> — group by workflow stage (intake → assembly → finishing). Efficient flow; handoff boundaries.</li>
+      <li><strong>Customer</strong> — group by customer type (enterprise, SMB, consumer). Tailored service; duplicated capability per segment.</li>
+    </ul>
+    <p>Large firms mix bases by level — e.g., product divisions at the top, functions inside each division, geography inside sales.</p>
+
+    <h3>4. The structural forms</h3>
+    <ul>
+      <li><strong>Simple structure</strong> — an owner and everyone else; fast, informal, collapses past ~20–30 people.</li>
+      <li><strong>Functional structure</strong> — the functional grouping writ large; the default for single-product firms.</li>
+      <li><strong>Divisional structure</strong> — product/geographic divisions as semi-autonomous businesses.</li>
+      <li><strong>Matrix structure</strong> — functional and product/project lines <em>simultaneously</em>: an engineer reports to the engineering manager <em>and</em> a project manager. It deliberately violates unity of command to get both deep expertise and project focus; the price is two-boss conflict, negotiation overhead, and stress — manageable only with clear protocols for whose call is whose.</li>
+      <li><strong>Team and network/virtual structures</strong> — work organized in cross-functional teams; or a small core firm contracting out manufacture, logistics, even design. Flexibility at the price of control and culture.</li>
+    </ul>
+
+    <h3>5. Mechanistic vs. organic — and what decides</h3>
+    <p>The six dials cluster into two coherent profiles. A <strong>mechanistic</strong> design: high specialization, rigid departmentalization, narrow spans, high centralization and formalization — a machine for efficiency in repeatable conditions. An <strong>organic</strong> design: broad jobs, cross-functional teams, wide spans, decentralized decisions, low formalization — built to adapt. Neither is better; the <strong>contingency factors</strong> decide:</p>
+    <ul>
+      <li><strong>Strategy</strong> — cost leadership favors mechanistic; innovation favors organic.</li>
+      <li><strong>Size</strong> — growth pushes toward mechanistic (you cannot improvise at 10,000 people).</li>
+      <li><strong>Technology</strong> — Joan Woodward's classic finding: mass production fit mechanistic structures; unit/custom and continuous-process production fit organic ones.</li>
+      <li><strong>Environment</strong> — the headline variable: stable, predictable environments reward mechanistic efficiency; turbulent ones (shifting tech, demand, regulation) demand organic adaptability. Lawrence &amp; Lorsch: the more uncertain the environment, the more decentralized and flexible the better performers.</li>
+    </ul>
+
+    <h3>6. Centralization, delegation, and where decisions should live</h3>
+    <p>Centralization concentrates decisions where the widest view lives; decentralization moves them to where the information is freshest. The practical rule: <strong>push each decision to the lowest level that has the information and competence to make it</strong>, and keep at the top only what truly requires the whole-firm view (capital allocation, brand, major risk). Delegation is the mechanism — assigning responsibility <em>with matching authority</em> — and its classical failure is delegating responsibility while hoarding authority, which produces accountable people who can't act.</p>
+  </section>
+
+  <!-- 2. VISUALS -->
+  <section id="see-1" class="see">
+    <h2>See it: span of control builds (or shrinks) the pyramid</h2>
+    <p>Set the workforce and the span. The pyramid redraws; the readout prices it. Widen the span and watch layers and payroll fall — then ask what each manager's day now looks like.</p>
+    <div class="visual" id="viz-1">
+      <div class="ctrl">
+        <label>Front-line employees: <input type="range" id="nWork" min="64" max="4096" step="64" value="1024" />
+          <span class="readout" id="nWorkV">1024</span></label>
+        <label>Span of control: <input type="range" id="span" min="2" max="16" value="4" />
+          <span class="readout" id="spanV">4</span></label>
+      </div>
+      <canvas id="pyrCanvas" width="760" height="240" style="width:100%;max-width:760px;"></canvas>
+      <div class="verdict" id="pyrNote"></div>
+    </div>
+  </section>
+
+  <section id="see-2" class="see">
+    <h2>See it: same company, three groupings</h2>
+    <p>Twelve employees of a software firm. Toggle the departmentalization basis: the people never change, but who sits together — and therefore which conversations are easy and which require crossing a boundary — changes completely.</p>
+    <div class="visual" id="viz-2">
+      <div class="ctrl">
+        <button class="small" id="byFunc">By function</button>
+        <button class="small ghost" id="byProd">By product</button>
+        <button class="small ghost" id="byGeo">By geography</button>
+      </div>
+      <canvas id="deptCanvas" width="760" height="270" style="width:100%;max-width:760px;"></canvas>
+      <div class="verdict" id="deptNote"></div>
+    </div>
+  </section>
+
+  <section id="see-3" class="see">
+    <h2>See it: the environment sets the dials</h2>
+    <p>Drag the environment from stable to turbulent and watch all six design dials shift between their mechanistic and organic poles — the contingency view in one picture.</p>
+    <div class="visual" id="viz-3">
+      <div class="ctrl">
+        <label>Stable, predictable <input type="range" id="envSlider" min="0" max="100" value="20" style="width:240px"/> Turbulent, uncertain</label>
+      </div>
+      <div id="dials"></div>
+      <div class="verdict" id="envNote"></div>
+    </div>
+  </section>
+
+  <!-- 3. QUIZ -->
+  <section id="quiz">
+    <h2>Check yourself</h2>
+    <form id="quizForm">
+
+      <div class="q" data-qid="q1" data-type="mc">
+        <p><strong>1.</strong> “Span of control” refers to:</p>
+        <div class="opts">
+          <label><input type="radio" name="q1" value="a"> The number of organizational levels between CEO and front line</label>
+          <label><input type="radio" name="q1" value="b"> The number of subordinates reporting directly to a manager</label>
+          <label><input type="radio" name="q1" value="c"> The range of decisions a manager is authorized to make</label>
+          <label><input type="radio" name="q1" value="d"> The degree to which jobs are standardized by rules</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q2" data-type="num">
+        <p><strong>2.</strong> A firm has 256 front-line employees and uses a uniform span of control of 4 at every level, up to a single chief executive. How many <strong>managers in total</strong> does the hierarchy contain? (Count every level above the front line, including the CEO.)</p>
+        <input type="number" name="q2" step="any" />
+      </div>
+
+      <div class="q" data-qid="q3" data-type="num">
+        <p><strong>3.</strong> A firm has 512 front-line employees and a uniform span of control of 8. How many <strong>levels of management</strong> sit above the front line (counting the CEO's level)?</p>
+        <input type="number" name="q3" step="any" />
+      </div>
+
+      <div class="q" data-qid="q4" data-type="mc">
+        <p><strong>4.</strong> In a matrix structure, an engineer reports simultaneously to a functional manager and a project manager. This design knowingly violates which classical principle?</p>
+        <div class="opts">
+          <label><input type="radio" name="q4" value="a"> Division of work</label>
+          <label><input type="radio" name="q4" value="b"> Unity of command</label>
+          <label><input type="radio" name="q4" value="c"> Esprit de corps</label>
+          <label><input type="radio" name="q4" value="d"> Management by exception</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q5" data-type="mc">
+        <p><strong>5.</strong> A bank reorganizes from departments like “Lending” and “Operations” into units serving “Retail customers,” “Small business,” and “Institutional clients,” each with its own staff. The new basis of departmentalization is:</p>
+        <div class="opts">
+          <label><input type="radio" name="q5" value="a"> Functional</label>
+          <label><input type="radio" name="q5" value="b"> Process</label>
+          <label><input type="radio" name="q5" value="c"> Customer</label>
+          <label><input type="radio" name="q5" value="d"> Geographic</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q6" data-type="mc">
+        <p><strong>6.</strong> Which environment most favors a mechanistic structure (high formalization, centralization, narrow spans)?</p>
+        <div class="opts">
+          <label><input type="radio" name="q6" value="a"> A fast-moving consumer-AI market with shifting technology and regulation</label>
+          <label><input type="radio" name="q6" value="b"> A stable, mature utility business with predictable demand and technology</label>
+          <label><input type="radio" name="q6" value="c"> A design consultancy where every engagement is custom</label>
+          <label><input type="radio" name="q6" value="d"> A startup searching for product-market fit</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q7" data-type="mc">
+        <p><strong>7.</strong> A hotel chain authorizes front-desk staff to resolve guest complaints up to $250 on the spot, without manager approval. This is an example of:</p>
+        <div class="opts">
+          <label><input type="radio" name="q7" value="a"> Decentralization — pushing decisions to where the information is freshest</label>
+          <label><input type="radio" name="q7" value="b"> Increased formalization — adding a written rule</label>
+          <label><input type="radio" name="q7" value="c"> Widening the span of control</label>
+          <label><input type="radio" name="q7" value="d"> Violating the chain of command</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q8" data-type="mc">
+        <p><strong>8.</strong> “The degree to which jobs within the organization are standardized and employee behavior is guided by written rules and procedures” defines:</p>
+        <div class="opts">
+          <label><input type="radio" name="q8" value="a"> Work specialization</label>
+          <label><input type="radio" name="q8" value="b"> Centralization</label>
+          <label><input type="radio" name="q8" value="c"> Formalization</label>
+          <label><input type="radio" name="q8" value="d"> Departmentalization</label>
+        </div>
+      </div>
+
+      <button type="submit">Submit answers</button>
+    </form>
+    <div id="result"></div>
+  </section>
+
+  <!-- 4. NAV -->
+  <nav class="lesson-nav">
+    <a href="index.html">← All lessons</a>
+    <a href="../harness/results.html">Results &amp; mastery →</a>
+  </nav>
+
+</div>
+
+<script>
+  const LESSON_ADDRESS = "104.3";
+
+  /* ---------- Visual 1: span-of-control pyramid ---------- */
+  (function(){
+    const cv = document.getElementById("pyrCanvas"), cx = cv.getContext("2d");
+    function levels(N, s){
+      const lv = [];
+      let cur = N;
+      while (cur > 1){
+        cur = Math.ceil(cur/s);
+        lv.push(cur);
+        if (cur === 1) break;
+      }
+      if (lv[lv.length-1] !== 1) lv.push(1);
+      return lv; // managers per level, bottom-up
+    }
+    function draw(){
+      const N = +nWork.value, s = +span.value;
+      nWorkV.textContent = N; spanV.textContent = s;
+      const lv = levels(N, s);
+      const managers = lv.reduce((a,b)=>a+b,0);
+      cx.clearRect(0,0,cv.width,cv.height);
+      const rows = lv.length + 1; // + worker row
+      const rowH = Math.min(36, (cv.height-30)/rows);
+      const maxW = cv.width - 80;
+      // worker row
+      const widths = [N, ...lv];
+      const maxCount = N;
+      widths.forEach((count,i)=>{
+        const w = Math.max(26, Math.sqrt(count/maxCount)*maxW);
+        const y = cv.height - 20 - i*rowH;
+        cx.fillStyle = i===0 ? "rgba(45,106,79,.35)" : "rgba(180,83,9,.6)";
+        cx.fillRect((cv.width-w)/2, y-rowH+6, w, rowH-9);
+        cx.fillStyle="#1a1a2e"; cx.font="600 11px ui-monospace,monospace";
+        cx.fillText(count + (i===0?" workers":" mgrs"), (cv.width+w)/2+6, y-rowH/2+8);
+      });
+      pyrNote.textContent =
+        `${lv.length} management layer${lv.length>1?"s":""}, ${managers} managers total. At $120k each: $${(managers*0.12).toFixed(1)}M/yr in management payroll. `+
+        (s<=4 ? "Narrow span: close supervision, but a tall, expensive pyramid and long vertical paths."
+         : s<=9 ? "Moderate span — the common modern range; workable when jobs are standardized and people trained."
+         : "Very wide span: cheap and flat, but each manager now 'supervises' mostly by exception — formalization and employee skill must carry the load.");
+    }
+    const nWork=document.getElementById("nWork"), span=document.getElementById("span"),
+          nWorkV=document.getElementById("nWorkV"), spanV=document.getElementById("spanV"),
+          pyrNote=document.getElementById("pyrNote");
+    [nWork,span].forEach(el=>el.addEventListener("input", draw));
+    draw();
+  })();
+
+  /* ---------- Visual 2: departmentalization switcher ---------- */
+  (function(){
+    const cv = document.getElementById("deptCanvas"), cx = cv.getContext("2d");
+    // 12 employees: function, product, region
+    const EMP = [
+      {n:"Ana", f:"Eng", p:"App", g:"East"}, {n:"Ben", f:"Eng", p:"App", g:"West"},
+      {n:"Cleo", f:"Eng", p:"Platform", g:"East"}, {n:"Dev", f:"Eng", p:"Platform", g:"West"},
+      {n:"Eli", f:"Sales", p:"App", g:"East"}, {n:"Fay", f:"Sales", p:"App", g:"West"},
+      {n:"Gus", f:"Sales", p:"Platform", g:"East"}, {n:"Hana", f:"Sales", p:"Platform", g:"West"},
+      {n:"Ivo", f:"Support", p:"App", g:"East"}, {n:"Jia", f:"Support", p:"App", g:"West"},
+      {n:"Kai", f:"Support", p:"Platform", g:"East"}, {n:"Lex", f:"Support", p:"Platform", g:"West"}
+    ];
+    const MODES = {
+      f: {key:"f", title:"Functional: deep expertise pools, silo risk",
+          note:"Engineers sit with engineers: skills deepen, tooling standardizes — but shipping one App feature now needs a conversation across all three boxes. Silos form along these walls.",
+          color:{Eng:"#2d6a4f", Sales:"#b45309", Support:"#1d4ed8"}},
+      p: {key:"p", title:"Product: accountability per line, duplicated functions",
+          note:"Each product owns its engineers, sellers, and support — clear P&L, fast product decisions. The cost is duplication: two sales playbooks, two support queues, two of everything.",
+          color:{App:"#7c3aed", Platform:"#0f766e"}},
+      g: {key:"g", title:"Geographic: local responsiveness, regional fiefdoms",
+          note:"East serves East: local regulation, local taste, local hours. Watch for divergence — two regions can quietly become two companies.",
+          color:{East:"#be185d", West:"#a16207"}}
+    };
+    let mode = "f";
+    function draw(){
+      const m = MODES[mode];
+      cx.clearRect(0,0,cv.width,cv.height);
+      const groups = {};
+      EMP.forEach(e=>{ const k=e[m.key]; (groups[k]=groups[k]||[]).push(e); });
+      const keys = Object.keys(groups);
+      const boxW = (cv.width-40)/keys.length - 16;
+      keys.forEach((k,gi)=>{
+        const x = 28 + gi*(boxW+22);
+        cx.strokeStyle = m.color[k]; cx.lineWidth=2;
+        cx.strokeRect(x, 34, boxW, 200);
+        cx.fillStyle = m.color[k]; cx.font="600 14px system-ui";
+        cx.fillText(k, x+8, 24);
+        groups[k].forEach((e,ei)=>{
+          const ey = 56 + ei*46;
+          cx.fillStyle="#f9fafb"; cx.strokeStyle="#d1d5db"; cx.lineWidth=1;
+          cx.fillRect(x+10, ey-16, boxW-20, 36);
+          cx.strokeRect(x+10, ey-16, boxW-20, 36);
+          cx.fillStyle="#1a1a2e"; cx.font="600 12px system-ui";
+          cx.fillText(e.n, x+18, ey);
+          cx.fillStyle="#6b7280"; cx.font="11px system-ui";
+          cx.fillText(`${e.f} · ${e.p} · ${e.g}`, x+18, ey+14);
+        });
+      });
+      document.getElementById("deptNote").innerHTML = `<b>${m.title}.</b> ${m.note}`;
+    }
+    function setMode(k, btn){
+      mode = k;
+      ["byFunc","byProd","byGeo"].forEach(id=>
+        document.getElementById(id).classList.add("ghost"));
+      btn.classList.remove("ghost");
+      draw();
+    }
+    document.getElementById("byFunc").onclick = e=>{e.preventDefault(); setMode("f", e.target);};
+    document.getElementById("byProd").onclick = e=>{e.preventDefault(); setMode("p", e.target);};
+    document.getElementById("byGeo").onclick = e=>{e.preventDefault(); setMode("g", e.target);};
+    draw();
+  })();
+
+  /* ---------- Visual 3: mechanistic vs organic dials ---------- */
+  (function(){
+    const DIALS = [
+      {l:"Narrow tasks, high specialization", r:"Broad, enriched jobs", mPos:10, oPos:90},
+      {l:"Rigid functional departments", r:"Cross-functional teams", mPos:12, oPos:88},
+      {l:"Strict single chain of command", r:"Fluid, networked reporting", mPos:8, oPos:80},
+      {l:"Narrow spans (close supervision)", r:"Wide spans (enabling)", mPos:15, oPos:85},
+      {l:"Centralized decisions", r:"Decentralized decisions", mPos:10, oPos:90},
+      {l:"High formalization (rulebooks)", r:"Low formalization (judgment)", mPos:8, oPos:86}
+    ];
+    const wrap = document.getElementById("dials");
+    DIALS.forEach(d=>{
+      const row = document.createElement("div"); row.className="dial";
+      row.innerHTML = `<div class="left">${d.l}</div><div class="bar"><i></i></div><div class="right">${d.r}</div>`;
+      wrap.appendChild(row);
+      d._dot = row.querySelector("i");
+    });
+    function draw(){
+      const t = +envSlider.value/100;
+      DIALS.forEach(d=>{
+        const pos = d.mPos + (d.oPos-d.mPos)*t;
+        d._dot.style.left = pos+"%";
+      });
+      document.getElementById("envNote").textContent =
+        t<0.3 ? "Stable environment → mechanistic profile: efficiency through standardization, rules, and central control. The machine wins when tomorrow looks like today."
+        : t<0.7 ? "Mixed environment → hybrid: many real firms run mechanistic cores (operations, compliance) with organic edges (product, innovation labs)."
+        : "Turbulent environment → organic profile: decisions pushed to the information, broad roles, little procedure. Adaptability is worth the lost efficiency because the target keeps moving.";
+    }
+    const envSlider = document.getElementById("envSlider");
+    envSlider.addEventListener("input", draw);
+    draw();
+  })();
+
+  /* ---------- quiz submit (server-graded) ---------- */
+  document.getElementById("quizForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const fd = new FormData(e.target);
+    const answers = {};
+    document.querySelectorAll(".q").forEach(q => {
+      const qid = q.dataset.qid;
+      answers[qid] = fd.get(qid);
+    });
+
+    const payload = { address: LESSON_ADDRESS, answers, ts: Date.now() };
+
+    try {
+      const res = await fetch(location.protocol === "file:"
+          ? "http://127.0.0.1:8753/record" : "/record", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (data.error) {
+        document.getElementById("result").textContent = "Recorder error: " + data.error;
+        return;
+      }
+      document.getElementById("result").textContent =
+        `Score: ${data.correct}/${data.total}. ` +
+        (data.weak_topics?.length ? `Review: ${data.weak_topics.join(", ")}` : "Nice work.");
+      (data.results || []).forEach(r => {
+        const q = document.querySelector(`.q[data-qid="${r.qid}"]`);
+        if (!q) return;
+        q.classList.remove("right", "wrong");
+        q.classList.add(r.is_correct ? "right" : "wrong");
+        let fb = q.querySelector(".fb");
+        if (!fb) { fb = document.createElement("div"); fb.className = "fb"; q.appendChild(fb); }
+        fb.textContent = "";
+        const mark = document.createElement("b");
+        mark.textContent = r.is_correct ? "✓ Correct" : "✗ Incorrect";
+        fb.appendChild(mark);
+        if (!r.is_correct && r.explanation) fb.append(" — " + r.explanation);
+      });
+    } catch (err) {
+      const blob = new Blob([JSON.stringify(payload, null, 2)],
+                            {type:"application/json"});
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = `${LESSON_ADDRESS}.attempt.json`;
+      a.click();
+      document.getElementById("result").textContent =
+        "Recorder offline — downloaded attempt JSON. Run scripts/serve.py and import it.";
+    }
+  });
+</script>
+</body>
+</html>

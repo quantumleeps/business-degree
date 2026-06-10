@@ -1,0 +1,64 @@
+{
+  "address": "104.1",
+  "title": "What Managers Do: Planning, Organizing, Leading, Controlling",
+  "questions": [
+    {
+      "qid": "q1",
+      "type": "mc",
+      "correct": "b",
+      "topic": "POLC functions",
+      "explanation": "The conventional order is Planning, Organizing, Leading, Controlling — and it has a logic: plans create the goals, organizing builds the structure to pursue them, leading supplies the willing human effort, and controlling checks results against the plan, feeding the next planning cycle."
+    },
+    {
+      "qid": "q2",
+      "type": "mc",
+      "correct": "d",
+      "topic": "POLC functions",
+      "explanation": "Comparing actual results to a standard and initiating corrective action is the controlling function in its textbook four steps: standard → measure → compare → correct. The coaching she schedules is the corrective action; the activity is anchored in measurement against plan, which is what distinguishes controlling from leading."
+    },
+    {
+      "qid": "q3",
+      "type": "mc",
+      "correct": "b",
+      "topic": "Mintzberg roles",
+      "explanation": "Transmitting the unit's information outward to external audiences is the spokesperson role (informational cluster). Figurehead is ceremonial duty; disturbance handler reacts to crises; monitor takes information IN. The direction of information flow — inward (monitor), within (disseminator), outward (spokesperson) — is what separates the three informational roles."
+    },
+    {
+      "qid": "q4",
+      "type": "mc",
+      "correct": "b",
+      "topic": "Katz skills",
+      "explanation": "Katz's scheme: technical skill dominates at first-line level and fades with altitude; conceptual skill (seeing the organization whole) grows to dominate at the top; and human skill stays roughly constant in importance at every level — the empirical surprise, and the reason people skills are treated as the core managerial competency."
+    },
+    {
+      "qid": "q5",
+      "type": "num",
+      "correct": 7.2,
+      "tolerance": 0.05,
+      "topic": "control process",
+      "explanation": "Percent variance = (actual − standard)/standard × 100 = (232 − 250)/250 = −18/250 = −7.2%, so the magnitude is 7.2%. Against a ±5% tolerance band this breaches the threshold, so management by exception says investigate — the variance is the trigger, the diagnosis (one-off vs. systemic cause) determines the corrective action."
+    },
+    {
+      "qid": "q6",
+      "type": "mc",
+      "correct": "a",
+      "topic": "effectiveness vs efficiency",
+      "explanation": "Effectiveness is goal attainment (doing the right things): every feature ships on time, so the startup is effective. Efficiency is output relative to resources consumed (doing things right): burning twice the cash of peers for the same output is inefficient. Meeting goals never by itself establishes efficiency — that requires comparing inputs."
+    },
+    {
+      "qid": "q7",
+      "type": "num",
+      "correct": 12,
+      "tolerance": 0.05,
+      "topic": "efficiency measurement",
+      "explanation": "Labor productivity = output ÷ labor input = 5,400 units / 450 hours = 12 units per labor-hour. Efficiency measures always normalize output by input — raw output comparisons reward being big, not being well managed."
+    },
+    {
+      "qid": "q8",
+      "type": "mc",
+      "correct": "c",
+      "topic": "POLC functions",
+      "explanation": "Communicating the why of a change, coaching individuals through anxiety, and recognizing wins are the leading function — securing willing effort through motivation and communication. No standard is being measured (controlling), no structure designed (organizing), no goals set (planning); the work runs entirely through people."
+    }
+  ]
+}

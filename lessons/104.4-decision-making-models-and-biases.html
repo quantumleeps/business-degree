@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>104.4 — Decision-Making Models and Biases</title>
+<style>
+  :root { --ink:#1a1a2e; --paper:#fdfdfb; --accent:#2d6a4f; --muted:#6b7280; }
+  body { margin:0; font:16px/1.6 system-ui,sans-serif; color:var(--ink);
+         background:var(--paper); }
+  .wrap { max-width:820px; margin:0 auto; padding:32px 20px 80px; }
+  header .addr { font:600 13px ui-monospace,monospace; color:var(--accent);
+                 letter-spacing:.05em; }
+  h1 { font-size:30px; margin:.2em 0 .1em; }
+  .why { color:var(--muted); font-style:italic; margin-bottom:2em; }
+  section { margin:2.5em 0; }
+  h2 { border-bottom:2px solid var(--accent); padding-bottom:4px; }
+  h3 { margin:1.6em 0 .4em; }
+  .visual { border:1px solid #e5e7eb; border-radius:12px; padding:16px;
+            background:#fff; }
+  table.t { border-collapse:collapse; width:100%; font-size:14px; margin:1em 0; }
+  table.t th, table.t td { border:1px solid #e5e7eb; padding:6px 9px; text-align:left; }
+  table.t th { background:#f3f4f6; }
+  table.t td.num { text-align:right; font-family:ui-monospace,monospace; }
+  .ex { background:#f0f7f4; border-left:4px solid var(--accent); padding:12px 16px;
+        border-radius:0 8px 8px 0; margin:1.2em 0; }
+  .ex .lbl { font:600 12px ui-monospace,monospace; color:var(--accent);
+             text-transform:uppercase; letter-spacing:.06em; }
+  code { background:#f3f4f6; padding:1px 5px; border-radius:4px; font-size:14px; }
+  .formula { text-align:center; font-size:18px; margin:14px 0;
+             font-family:Georgia,serif; }
+  .q { margin:1.2em 0; padding:14px; border:1px solid #e5e7eb;
+       border-radius:10px; }
+  .q .opts label { display:block; margin:4px 0; cursor:pointer; }
+  .q.right { border-color:var(--accent); background:#f0f7f4; }
+  .q.wrong { border-color:#b91c1c; background:#fef2f2; }
+  .q .fb { margin-top:10px; padding-top:8px; border-top:1px dashed #d1d5db;
+       font-size:14px; }
+  .q.right .fb b { color:var(--accent); }
+  .q.wrong .fb b { color:#b91c1c; }
+  button { background:var(--accent); color:#fff; border:0; padding:10px 18px;
+           border-radius:8px; font-size:15px; cursor:pointer; }
+  button.small { padding:6px 12px; font-size:13px; }
+  button.ghost { background:#fff; color:var(--accent); border:1px solid var(--accent); }
+  #result { margin-top:1em; font-weight:600; }
+  .lesson-nav { display:flex; justify-content:space-between; margin-top:3em;
+       padding-top:1em; border-top:1px solid #e5e7eb; }
+  .lesson-nav a { color:var(--accent); font-weight:600; text-decoration:none; }
+  .lesson-nav a:hover { text-decoration:underline; }
+  .ctrl { display:flex; flex-wrap:wrap; gap:10px 18px; align-items:center;
+          margin:10px 0; font-size:14px; }
+  .ctrl label { display:flex; align-items:center; gap:6px; }
+  .readout { font:600 13px ui-monospace,monospace; }
+  .verdict { margin-top:8px; padding:9px 12px; background:#fffbeb;
+             border:1px solid #fde68a; border-radius:8px; font-size:14px; }
+  .pm { border-collapse:collapse; margin:8px 0; }
+  .pm th, .pm td { border:1px solid #d1d5db; padding:6px 10px; text-align:center;
+                   font-size:14px; }
+  .pm input { width:62px; font:600 14px ui-monospace,monospace; text-align:right;
+              border:1px solid #9ca3af; border-radius:5px; padding:3px; }
+  .pm tr.win td { background:#f0f7f4; }
+  .pm .reg { color:#b91c1c; font-size:12px; display:block; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="addr">104.4</div>
+    <h1>Decision-Making Models and Biases</h1>
+    <p class="why">Organizations are decision factories — and both the formal machinery (expected value, decision rules) and the predictable ways human judgment breaks are now standard equipment for any manager.</p>
+  </header>
+
+  <!-- 1. LEARN -->
+  <section id="learn">
+    <h2>Learn</h2>
+
+    <h3>1. The rational model — and its assumptions</h3>
+    <p>The textbook <strong>rational decision-making model</strong> runs in steps: (1) identify and define the problem; (2) establish decision criteria; (3) weight the criteria; (4) generate alternatives; (5) evaluate each alternative against the weighted criteria; (6) choose the best; then implement and evaluate. It produces the <em>optimal</em> choice — given assumptions that should make you suspicious: the problem is clear, all alternatives and consequences are known, preferences are stable, and time and cost don't constrain the search.</p>
+    <p>Herbert Simon's Nobel-winning correction: real decision makers operate under <strong>bounded rationality</strong> — limited information, limited cognitive capacity, limited time. So they construct simplified models of the problem and <strong>satisfice</strong>: search until the first alternative that is <em>good enough</em> against their criteria, then stop. Satisficing is not laziness; when search is costly and the environment forgiving, stopping early is itself rational. Managers also lean on <strong>intuition</strong> — pattern recognition compiled from experience — which performs well precisely where the manager has deep, feedback-rich experience, and treacherously elsewhere.</p>
+
+    <h3>2. Decision conditions: certainty, risk, uncertainty</h3>
+    <p>Decision theory classifies situations by what you know about the future:</p>
+    <ul>
+      <li><strong>Certainty</strong> — outcomes of each alternative are known (choosing between two fixed-rate deposits). Rare and easy.</li>
+      <li><strong>Risk</strong> — possible outcomes <em>and their probabilities</em> are known or estimable. The standard tool is <strong>expected value</strong>.</li>
+      <li><strong>Uncertainty</strong> — outcomes are known but probabilities are not. Choice then reveals temperament: optimist, pessimist, or regret-minimizer.</li>
+    </ul>
+
+    <h3>3. Deciding under risk: expected value</h3>
+    <div class="formula">EV(alternative) = Σ (probability of state × payoff in that state)</div>
+    <div class="ex">
+      <span class="lbl">Worked example — the launch decision</span>
+      <p>Launching a product costs money up front; demand may be strong (probability 0.6, payoff <strong>+$400k</strong>) or weak (probability 0.4, payoff <strong>−$150k</strong>). The safe alternative — licensing the design — pays a sure <strong>+$120k</strong>.</p>
+      <p>EV(launch) = 0.6 × 400 + 0.4 × (−150) = 240 − 60 = <strong>+$180k</strong> &gt; $120k → launch, <em>if the firm can afford the 40% chance of losing $150k</em>. Expected value is a long-run average over many such bets; a firm that cannot survive the bad branch should weight downside risk beyond its probability (that judgment, formalized, is risk aversion and expected utility — later courses). A useful companion number: the probability p* that makes you indifferent solves 400p − 150(1−p) = 120 → p* = 270/550 ≈ <strong>0.49</strong>. The launch decision is robust as long as you believe strong demand is more likely than a coin flip.</p>
+    </div>
+    <p><strong>Decision trees</strong> chain these computations: decision nodes (squares) where you choose, chance nodes (circles) where probability chooses, rolled back from the leaves by expected value.</p>
+
+    <h3>4. Deciding under uncertainty: three classic rules</h3>
+    <p>With no probabilities, three rules give defensible — and different — answers. Consider three capacity options against two demand states (payoffs in $k):</p>
+    <table class="t">
+      <tr><th>Alternative</th><th>Demand high</th><th>Demand low</th></tr>
+      <tr><td>A: Build large plant</td><td class="num">80</td><td class="num">20</td></tr>
+      <tr><td>B: Build small plant</td><td class="num">60</td><td class="num">50</td></tr>
+      <tr><td>C: Subcontract</td><td class="num">30</td><td class="num">40</td></tr>
+    </table>
+    <ul>
+      <li><strong>Maximax</strong> (optimist): best of the best outcomes → A (80).</li>
+      <li><strong>Maximin</strong> (pessimist): best of the worst outcomes → worst payoffs are A: 20, B: 50, C: 30 → <strong>B</strong>.</li>
+      <li><strong>Minimax regret</strong>: build the <em>regret table</em> — in each state, regret = (best payoff in that state) − (your payoff). High-demand best is 80, low-demand best is 50:
+        regrets A: (0, 30), B: (20, 0), C: (50, 10). Maximum regrets: A 30, B 20, C 50. Minimize the maximum → <strong>B</strong> (worst-case regret 20).</li>
+    </ul>
+
+    <h3>5. The biases: predictable failures of judgment</h3>
+    <p>Behavioral research (Kahneman &amp; Tversky and successors) shows judgment errs in <em>systematic</em>, not random, directions. The manager's shortlist:</p>
+    <table class="t">
+      <tr><th>Bias</th><th>The error</th><th>Business signature</th></tr>
+      <tr><td><strong>Anchoring</strong></td><td>First number dominates subsequent estimates</td><td>Opening offer frames the negotiation; last year's budget frames this year's</td></tr>
+      <tr><td><strong>Confirmation</strong></td><td>Seek and overweight evidence that fits the existing belief</td><td>Pilot studies designed to succeed; dashboards that only track the happy metric</td></tr>
+      <tr><td><strong>Availability</strong></td><td>Judge frequency by ease of recall</td><td>Overreacting to vivid, recent failures; underpricing quiet chronic risks</td></tr>
+      <tr><td><strong>Representativeness</strong></td><td>Judge by resemblance to a stereotype, ignoring base rates</td><td>“He looks like our best rep did” hiring; small-sample pattern reading</td></tr>
+      <tr><td><strong>Overconfidence</strong></td><td>Confidence outruns accuracy</td><td>Project plans missing their own deadlines (planning fallacy)</td></tr>
+      <tr><td><strong>Escalation of commitment</strong></td><td>Increasing investment in a failing course because of what's already sunk</td><td>“We've spent $4M, we can't stop now” — sunk costs are gone either way</td></tr>
+      <tr><td><strong>Framing</strong></td><td>Same facts, different choice depending on gain/loss wording</td><td>“90% retention” sells what “10% churn” scares; risk-seeking under loss frames</td></tr>
+      <tr><td><strong>Hindsight</strong></td><td>Past events feel predictable after the fact</td><td>Post-mortems that punish defensible bets for unlucky outcomes</td></tr>
+    </table>
+    <p>The escalation/sunk-cost pair deserves the formal statement: only <strong>incremental</strong> costs and benefits — those that differ between go-forward options — are decision-relevant. Money already spent is identical across every option and therefore can never justify any of them.</p>
+
+    <h3>6. Group decisions: better and worse</h3>
+    <p>Groups bring more information and legitimacy, but add <strong>groupthink</strong> — the suppression of dissent to preserve cohesion (Janis's diagnosis of the Bay of Pigs). Symptoms: illusions of unanimity and invulnerability, self-censorship, pressure on dissenters. Standard remedies are structural, not exhortative: assign a rotating <strong>devil's advocate</strong>, have the leader withhold their view until last, solicit positions independently and in writing <em>before</em> discussion, invite outside experts, and run a <strong>premortem</strong> (“it's a year from now and this decision failed — write its history”). Each remedy works the same way: it makes dissent cheap and silence informative.</p>
+  </section>
+
+  <!-- 2. VISUALS -->
+  <section id="see-1" class="see">
+    <h2>See it: a decision tree that rolls itself back</h2>
+    <p>Drag the probability and payoffs. The chance node recomputes its expected value and the decision node flips when the EV crosses the sure thing. The dashed marker shows the break-even probability p* — the exact belief at which you should be indifferent.</p>
+    <div class="visual" id="viz-1">
+      <canvas id="treeCanvas" width="760" height="300" style="width:100%;max-width:760px;"></canvas>
+      <div class="ctrl">
+        <label>P(strong demand): <input type="range" id="pStrong" min="0" max="100" value="60" />
+          <span class="readout" id="pV">0.60</span></label>
+        <label>Strong payoff: <input type="range" id="hiPay" min="100" max="700" step="10" value="400" />
+          <span class="readout" id="hiPayV">$400k</span></label>
+        <label>Weak payoff: <input type="range" id="loPay" min="-400" max="0" step="10" value="-150" />
+          <span class="readout" id="loPayV">−$150k</span></label>
+        <label>Sure alternative: <input type="range" id="sure" min="0" max="300" step="10" value="120" />
+          <span class="readout" id="sureV">$120k</span></label>
+      </div>
+      <div class="verdict" id="treeNote"></div>
+    </div>
+  </section>
+
+  <section id="see-2" class="see">
+    <h2>See it: three rules, one payoff matrix</h2>
+    <p>Edit the payoffs, then apply each rule. Maximax chases the best cell, maximin armors the worst row, and minimax regret asks a different question entirely: “looking back, how wrong could my choice prove?” Note how often they disagree — under uncertainty, the rule you pick <em>is</em> a statement about who you are.</p>
+    <div class="visual" id="viz-2">
+      <table class="pm" id="pmTable">
+        <tr><th></th><th>Demand high</th><th>Demand low</th><th id="pmCol"></th></tr>
+        <tr data-alt="A"><th>A: Large plant</th>
+          <td><input type="number" id="a1" value="80" /></td>
+          <td><input type="number" id="a2" value="20" /></td><td class="readout" id="ra"></td></tr>
+        <tr data-alt="B"><th>B: Small plant</th>
+          <td><input type="number" id="b1" value="60" /></td>
+          <td><input type="number" id="b2" value="50" /></td><td class="readout" id="rb"></td></tr>
+        <tr data-alt="C"><th>C: Subcontract</th>
+          <td><input type="number" id="c1" value="30" /></td>
+          <td><input type="number" id="c2" value="40" /></td><td class="readout" id="rc"></td></tr>
+      </table>
+      <div class="ctrl">
+        <button class="small" id="doMaximax">Maximax</button>
+        <button class="small" id="doMaximin">Maximin</button>
+        <button class="small" id="doRegret">Minimax regret</button>
+      </div>
+      <div class="verdict" id="pmNote">Pick a rule to see its reasoning, step by step.</div>
+    </div>
+  </section>
+
+  <section id="see-3" class="see">
+    <h2>See it: framing — the same numbers, told two ways</h2>
+    <p>A plant employing 600 faces closure. Two programs are on the table; toggle how they're described. The outcomes are mathematically identical in both framings — yet the gain frame makes most people pick the sure thing, and the loss frame flips them to gambling. Watch which option <em>feels</em> right as you switch.</p>
+    <div class="visual" id="viz-3">
+      <div class="ctrl">
+        <button class="small" id="frameGain">Gain frame (“jobs saved”)</button>
+        <button class="small ghost" id="frameLoss">Loss frame (“jobs lost”)</button>
+      </div>
+      <canvas id="frameCanvas" width="760" height="240" style="width:100%;max-width:760px;"></canvas>
+      <div class="verdict" id="frameNote"></div>
+    </div>
+  </section>
+
+  <!-- 3. QUIZ -->
+  <section id="quiz">
+    <h2>Check yourself</h2>
+    <form id="quizForm">
+
+      <div class="q" data-qid="q1" data-type="mc">
+        <p><strong>1.</strong> Herbert Simon's concept of <em>satisficing</em> describes a decision maker who:</p>
+        <div class="opts">
+          <label><input type="radio" name="q1" value="a"> Evaluates all alternatives and selects the optimal one</label>
+          <label><input type="radio" name="q1" value="b"> Searches until finding the first alternative that meets acceptable criteria, then stops</label>
+          <label><input type="radio" name="q1" value="c"> Delegates decisions downward to where information is freshest</label>
+          <label><input type="radio" name="q1" value="d"> Chooses the alternative with the least bad worst case</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q2" data-type="num">
+        <p><strong>2.</strong> A product launch pays +$400k if demand is strong (probability 0.6) and −$150k if weak (probability 0.4). What is the expected value of launching, in $k?</p>
+        <input type="number" name="q2" step="any" />
+      </div>
+
+      <div class="q" data-qid="q3" data-type="num">
+        <p><strong>3.</strong> Three alternatives, two states (payoffs in $k): A pays 80/20, B pays 60/50, C pays 30/40 (high demand / low demand). Using <strong>minimax regret</strong>: compute each alternative's maximum regret and choose the alternative that minimizes it. What is the <strong>maximum regret of the chosen alternative</strong>, in $k?</p>
+        <input type="number" name="q3" step="any" />
+      </div>
+
+      <div class="q" data-qid="q4" data-type="mc">
+        <p><strong>4.</strong> Using the same payoff table (A: 80/20, B: 60/50, C: 30/40), which alternative does the <strong>maximin</strong> rule select?</p>
+        <div class="opts">
+          <label><input type="radio" name="q4" value="a"> A — its best case (80) is the largest</label>
+          <label><input type="radio" name="q4" value="b"> B — its worst case (50) is the best of the worst cases</label>
+          <label><input type="radio" name="q4" value="c"> C — subcontracting avoids commitment</label>
+          <label><input type="radio" name="q4" value="d"> The rule cannot choose without probabilities</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q5" data-type="mc">
+        <p><strong>5.</strong> A division head argues for continuing a failing ERP implementation: “We've already invested $4 million; walking away would waste it.” The argument exemplifies:</p>
+        <div class="opts">
+          <label><input type="radio" name="q5" value="a"> Escalation of commitment driven by the sunk-cost fallacy</label>
+          <label><input type="radio" name="q5" value="b"> Bounded rationality — a reasonable simplification</label>
+          <label><input type="radio" name="q5" value="c"> Anchoring on the project's original budget</label>
+          <label><input type="radio" name="q5" value="d"> The availability heuristic</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q6" data-type="mc">
+        <p><strong>6.</strong> In a salary negotiation, the first number named tends to pull the final agreement toward itself, even when both sides know it was arbitrary. This is:</p>
+        <div class="opts">
+          <label><input type="radio" name="q6" value="a"> Framing</label>
+          <label><input type="radio" name="q6" value="b"> Representativeness</label>
+          <label><input type="radio" name="q6" value="c"> Anchoring</label>
+          <label><input type="radio" name="q6" value="d"> Hindsight bias</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q7" data-type="mc">
+        <p><strong>7.</strong> After a widely reported warehouse fire at a competitor, a COO sharply raises fire-risk spending while leaving unaddressed a chronic forklift-injury rate that costs more annually. The judgment error is:</p>
+        <div class="opts">
+          <label><input type="radio" name="q7" value="a"> Confirmation bias</label>
+          <label><input type="radio" name="q7" value="b"> The availability heuristic — vivid, recent events crowd out quiet, chronic risks</label>
+          <label><input type="radio" name="q7" value="c"> Escalation of commitment</label>
+          <label><input type="radio" name="q7" value="d"> Maximin reasoning</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q8" data-type="mc">
+        <p><strong>8.</strong> Which intervention most directly counteracts groupthink?</p>
+        <div class="opts">
+          <label><input type="radio" name="q8" value="a"> Having the leader state a preferred option first to focus discussion</label>
+          <label><input type="radio" name="q8" value="b"> Assigning a rotating devil's advocate and collecting written positions before discussion</label>
+          <label><input type="radio" name="q8" value="c"> Limiting the group to members who share context and values</label>
+          <label><input type="radio" name="q8" value="d"> Requiring unanimous agreement before any action</label>
+        </div>
+      </div>
+
+      <button type="submit">Submit answers</button>
+    </form>
+    <div id="result"></div>
+  </section>
+
+  <!-- 4. NAV -->
+  <nav class="lesson-nav">
+    <a href="index.html">← All lessons</a>
+    <a href="../harness/results.html">Results &amp; mastery →</a>
+  </nav>
+
+</div>
+
+<script>
+  const LESSON_ADDRESS = "104.4";
+
+  /* ---------- Visual 1: decision tree ---------- */
+  (function(){
+    const cv = document.getElementById("treeCanvas"), cx = cv.getContext("2d");
+    function draw(){
+      const p = +pStrong.value/100, hi = +hiPay.value, lo = +loPay.value, s = +sure.value;
+      pV.textContent = p.toFixed(2);
+      hiPayV.textContent = "$"+hi+"k";
+      loPayV.textContent = (lo<0?"−$"+Math.abs(lo):"$"+lo)+"k";
+      sureV.textContent = "$"+s+"k";
+      const ev = p*hi + (1-p)*lo;
+      const launch = ev > s;
+      // break-even p*: hi*p + lo*(1-p) = s  →  p = (s - lo)/(hi - lo)
+      const pStar = (s - lo)/(hi - lo);
+      cx.clearRect(0,0,cv.width,cv.height);
+      const dx=90, dy=150;
+      cx.font="600 13px system-ui";
+      // decision node (square)
+      cx.fillStyle="#1a1a2e"; cx.fillRect(dx-13, dy-13, 26, 26);
+      // branches
+      function branch(x1,y1,x2,y2,on){
+        cx.strokeStyle = on ? "#2d6a4f" : "#c4c8cf";
+        cx.lineWidth = on ? 3.2 : 1.6;
+        cx.beginPath(); cx.moveTo(x1,y1); cx.lineTo(x2,y2); cx.stroke(); cx.lineWidth=1;
+      }
+      const cnx=350, cny=72;
+      branch(dx+13, dy-8, cnx-16, cny, launch);
+      branch(dx+13, dy+8, cnx-16, 232, !launch);
+      // chance node (circle)
+      cx.strokeStyle = launch ? "#2d6a4f" : "#c4c8cf"; cx.lineWidth=2.4;
+      cx.beginPath(); cx.arc(cnx, cny, 15, 0, 7); cx.stroke(); cx.lineWidth=1;
+      branch(cnx+15, cny-6, 600, 36, launch);
+      branch(cnx+15, cny+6, 600, 122, launch);
+      cx.fillStyle="#1a1a2e";
+      cx.fillText("LAUNCH", dx+34, dy-26);
+      cx.fillText("LICENSE (sure)", dx+34, dy+44);
+      cx.fillText(`strong  p = ${p.toFixed(2)}`, 432, 30);
+      cx.fillText(`weak  p = ${(1-p).toFixed(2)}`, 432, 142);
+      cx.font="600 14px ui-monospace,monospace";
+      cx.fillStyle="#2d6a4f";
+      cx.fillText(`+$${hi}k`, 614, 40);
+      cx.fillStyle = lo<0 ? "#b91c1c" : "#2d6a4f";
+      cx.fillText(`${lo<0?"−$"+Math.abs(lo):"+$"+lo}k`, 614, 126);
+      cx.fillStyle="#1a1a2e";
+      cx.fillText(`+$${s}k`, 614, 236);
+      branch(cnx+15, 232, 600, 232, !launch);
+      // EV label at chance node
+      cx.fillStyle = launch ? "#2d6a4f" : "#6b7280";
+      cx.fillText(`EV = $${ev.toFixed(0)}k`, cnx-40, cny-26);
+      document.getElementById("treeNote").textContent =
+        `EV(launch) = ${p.toFixed(2)}×${hi} + ${(1-p).toFixed(2)}×(${lo}) = $${ev.toFixed(1)}k vs sure $${s}k → ${launch?"LAUNCH":"take the sure licensing deal"}. `+
+        `Break-even belief p* = (${s} − (${lo}))/(${hi} − (${lo})) = ${pStar.toFixed(2)}: above it launch wins, below it the sure thing wins. `+
+        (launch && lo<0 ? `Caveat: EV is a long-run average — the firm still faces a ${( (1-p)*100).toFixed(0)}% chance of losing $${Math.abs(lo)}k on this single play.` : "");
+    }
+    const pStrong=document.getElementById("pStrong"), hiPay=document.getElementById("hiPay"),
+          loPay=document.getElementById("loPay"), sure=document.getElementById("sure"),
+          pV=document.getElementById("pV"), hiPayV=document.getElementById("hiPayV"),
+          loPayV=document.getElementById("loPayV"), sureV=document.getElementById("sureV");
+    [pStrong,hiPay,loPay,sure].forEach(el=>el.addEventListener("input", draw));
+    draw();
+  })();
+
+  /* ---------- Visual 2: payoff matrix rules ---------- */
+  (function(){
+    const get = id => +document.getElementById(id).value || 0;
+    const rows = [["A","a1","a2","ra"],["B","b1","b2","rb"],["C","c1","c2","rc"]];
+    function clearHl(){
+      document.querySelectorAll("#pmTable tr[data-alt]").forEach(tr=>tr.classList.remove("win"));
+    }
+    function setCol(label, vals, winner, note){
+      document.getElementById("pmCol").textContent = label;
+      rows.forEach((r,i)=>document.getElementById(r[3]).textContent = vals[i]);
+      clearHl();
+      document.querySelector(`#pmTable tr[data-alt="${winner}"]`).classList.add("win");
+      document.getElementById("pmNote").innerHTML = note;
+    }
+    document.getElementById("doMaximax").onclick = e=>{
+      e.preventDefault();
+      const best = rows.map(r=>Math.max(get(r[1]),get(r[2])));
+      const w = rows[best.indexOf(Math.max(...best))][0];
+      setCol("best case", best.map(String), w,
+        `<b>Maximax (optimist):</b> best payoffs are ${rows.map((r,i)=>r[0]+": "+best[i]).join(", ")}. `+
+        `Take the largest → <b>${w}</b>. The rule assumes the world will cooperate — it never looks at the downside column.`);
+    };
+    document.getElementById("doMaximin").onclick = e=>{
+      e.preventDefault();
+      const worst = rows.map(r=>Math.min(get(r[1]),get(r[2])));
+      const w = rows[worst.indexOf(Math.max(...worst))][0];
+      setCol("worst case", worst.map(String), w,
+        `<b>Maximin (pessimist):</b> worst payoffs are ${rows.map((r,i)=>r[0]+": "+worst[i]).join(", ")}. `+
+        `Take the best of the worsts → <b>${w}</b>. The rule guarantees a floor and ignores everything above it.`);
+    };
+    document.getElementById("doRegret").onclick = e=>{
+      e.preventDefault();
+      const c1 = rows.map(r=>get(r[1])), c2 = rows.map(r=>get(r[2]));
+      const b1 = Math.max(...c1), b2 = Math.max(...c2);
+      const reg = rows.map((r,i)=>[b1-c1[i], b2-c2[i]]);
+      const maxReg = reg.map(r=>Math.max(...r));
+      const w = rows[maxReg.indexOf(Math.min(...maxReg))][0];
+      setCol("max regret", maxReg.map(String), w,
+        `<b>Minimax regret:</b> state bests are ${b1} (high) and ${b2} (low). Regret = state best − your payoff: `+
+        rows.map((r,i)=>`${r[0]}: (${reg[i][0]}, ${reg[i][1]})`).join(", ")+
+        `. Maximum regrets: ${rows.map((r,i)=>r[0]+": "+maxReg[i]).join(", ")} → minimize the maximum → <b>${w}</b>. `+
+        `This rule protects you from the post-mortem question “how much better could you have done?”`);
+    };
+    ["a1","a2","b1","b2","c1","c2"].forEach(id=>
+      document.getElementById(id).addEventListener("input", ()=>{
+        clearHl();
+        document.getElementById("pmCol").textContent="";
+        rows.forEach(r=>document.getElementById(r[3]).textContent="");
+        document.getElementById("pmNote").textContent="Payoffs changed — re-run a rule.";
+      }));
+  })();
+
+  /* ---------- Visual 3: framing ---------- */
+  (function(){
+    const cv = document.getElementById("frameCanvas"), cx = cv.getContext("2d");
+    let mode = "gain";
+    function draw(){
+      cx.clearRect(0,0,cv.width,cv.height);
+      const gain = mode==="gain";
+      const opts = gain
+        ? [{t:"Program 1: 200 of 600 jobs are SAVED for certain.", sure:true},
+           {t:"Program 2: 1/3 chance all 600 jobs are saved; 2/3 chance none are.", sure:false}]
+        : [{t:"Program 1: 400 of 600 jobs are LOST for certain.", sure:true},
+           {t:"Program 2: 1/3 chance no jobs are lost; 2/3 chance all 600 are lost.", sure:false}];
+      opts.forEach((o,i)=>{
+        const y = 30 + i*100;
+        cx.fillStyle="#f9fafb"; cx.strokeStyle="#d1d5db";
+        cx.fillRect(20,y,cv.width-40,76); cx.strokeRect(20,y,cv.width-40,76);
+        cx.fillStyle="#1a1a2e"; cx.font="600 14px system-ui";
+        cx.fillText(o.t, 36, y+30);
+        // outcome bar: 600 jobs
+        const bw = cv.width-220, bx=36, by=y+44, bh=16;
+        cx.fillStyle="#e5e7eb"; cx.fillRect(bx,by,bw,bh);
+        if (o.sure){
+          cx.fillStyle="#2d6a4f"; cx.fillRect(bx,by,bw*(200/600),bh);
+          cx.fillStyle="#b91c1c"; cx.fillRect(bx+bw*(200/600),by,bw*(400/600),bh);
+          cx.fillStyle="#6b7280"; cx.font="11px system-ui";
+          cx.fillText("certain: 200 kept / 400 lost — EV = 200 jobs", bx+bw+10, by+12);
+        } else {
+          cx.fillStyle="rgba(45,106,79,.45)"; cx.fillRect(bx,by,bw/3,bh);
+          cx.fillStyle="rgba(185,28,28,.45)"; cx.fillRect(bx+bw/3,by,bw*2/3,bh);
+          cx.fillStyle="#6b7280"; cx.font="11px system-ui";
+          cx.fillText("gamble: ⅓ × 600 + ⅔ × 0 — EV = 200 jobs", bx+bw+10, by+12);
+        }
+      });
+      document.getElementById("frameNote").textContent = gain
+        ? "Gain frame: both programs have an expected value of exactly 200 jobs kept — yet stated as gains, most people choose the certain Program 1. We are risk-AVERSE over gains: a sure win feels better than a gamble of equal expected value."
+        : "Loss frame: identical numbers — 400 lost for certain vs a gamble with the same expectation — but stated as losses, most people now choose the gamble. We are risk-SEEKING over losses: a certain loss feels worse than a chance to avoid it. Same facts, opposite choices: that's framing.";
+    }
+    document.getElementById("frameGain").onclick = e=>{e.preventDefault(); mode="gain";
+      e.target.classList.remove("ghost"); document.getElementById("frameLoss").classList.add("ghost"); draw();};
+    document.getElementById("frameLoss").onclick = e=>{e.preventDefault(); mode="loss";
+      e.target.classList.remove("ghost"); document.getElementById("frameGain").classList.add("ghost"); draw();};
+    draw();
+  })();
+
+  /* ---------- quiz submit (server-graded) ---------- */
+  document.getElementById("quizForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const fd = new FormData(e.target);
+    const answers = {};
+    document.querySelectorAll(".q").forEach(q => {
+      const qid = q.dataset.qid;
+      answers[qid] = fd.get(qid);
+    });
+
+    const payload = { address: LESSON_ADDRESS, answers, ts: Date.now() };
+
+    try {
+      const res = await fetch(location.protocol === "file:"
+          ? "http://127.0.0.1:8753/record" : "/record", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (data.error) {
+        document.getElementById("result").textContent = "Recorder error: " + data.error;
+        return;
+      }
+      document.getElementById("result").textContent =
+        `Score: ${data.correct}/${data.total}. ` +
+        (data.weak_topics?.length ? `Review: ${data.weak_topics.join(", ")}` : "Nice work.");
+      (data.results || []).forEach(r => {
+        const q = document.querySelector(`.q[data-qid="${r.qid}"]`);
+        if (!q) return;
+        q.classList.remove("right", "wrong");
+        q.classList.add(r.is_correct ? "right" : "wrong");
+        let fb = q.querySelector(".fb");
+        if (!fb) { fb = document.createElement("div"); fb.className = "fb"; q.appendChild(fb); }
+        fb.textContent = "";
+        const mark = document.createElement("b");
+        mark.textContent = r.is_correct ? "✓ Correct" : "✗ Incorrect";
+        fb.appendChild(mark);
+        if (!r.is_correct && r.explanation) fb.append(" — " + r.explanation);
+      });
+    } catch (err) {
+      const blob = new Blob([JSON.stringify(payload, null, 2)],
+                            {type:"application/json"});
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = `${LESSON_ADDRESS}.attempt.json`;
+      a.click();
+      document.getElementById("result").textContent =
+        "Recorder offline — downloaded attempt JSON. Run scripts/serve.py and import it.";
+    }
+  });
+</script>
+</body>
+</html>

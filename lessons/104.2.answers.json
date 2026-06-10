@@ -1,0 +1,64 @@
+{
+  "address": "104.2",
+  "title": "A Short History of Management Thought",
+  "questions": [
+    {
+      "qid": "q1",
+      "type": "mc",
+      "correct": "b",
+      "topic": "scientific management",
+      "explanation": "Taylor's program: study each task scientifically to find the one best way, scientifically select and train workers, cooperate (including incentive pay) to ensure the method is followed, and split planning (managers) from execution (workers). Autonomy is the opposite of his prescription; impersonal rules are Weber; social conditions are the Hawthorne-era behavioral school."
+    },
+    {
+      "qid": "q2",
+      "type": "num",
+      "correct": 33.6,
+      "tolerance": 0.05,
+      "topic": "differential piece rate",
+      "explanation": "Output of 56 meets the 50-unit standard, so the high rate applies to ALL units: 56 × $0.60 = $33.60. The high rate isn't paid only on units above the standard — applying it to the whole day's output is what creates the pay cliff at the standard."
+    },
+    {
+      "qid": "q3",
+      "type": "num",
+      "correct": 22.5,
+      "tolerance": 0.05,
+      "topic": "differential piece rate",
+      "explanation": "Output of 45 is below the 50-unit standard, so every unit pays the low rate: 45 × $0.50 = $22.50. Compare reaching the standard: 50 × $0.60 = $30.00 — $7.50 more for five more units. The deliberately steep gap is the scheme's motivational engine."
+    },
+    {
+      "qid": "q4",
+      "type": "mc",
+      "correct": "c",
+      "topic": "bureaucracy",
+      "explanation": "Weber's ideal bureaucracy was a reform AGAINST personal loyalty as a basis for careers: positions and promotions go by technical qualification and merit, decisions follow written rules applied impersonally, within a clear hierarchy and division of labor. Loyalty-based promotion is the patrimonial system bureaucracy was designed to replace."
+    },
+    {
+      "qid": "q5",
+      "type": "mc",
+      "correct": "b",
+      "topic": "Hawthorne studies",
+      "explanation": "Output rising regardless of the direction of the lighting change — and in the untouched control group — meant illumination wasn't the operative variable. Being observed, consulted, and treated as a group that matters moved productivity; informal group norms regulate output too (the bank-wiring room). That's the finding that launched the behavioral school. Note it doesn't say physical conditions are irrelevant — only that social factors were the dominant unexplained force."
+    },
+    {
+      "qid": "q6",
+      "type": "mc",
+      "correct": "a",
+      "topic": "Theory X and Y",
+      "explanation": "Assuming people inherently avoid work and must be watched and coerced is McGregor's Theory X, and surveillance plus approval gates is its natural architecture. The self-fulfilling part: treated as untrustworthy, employees withdraw discretionary effort and game the metrics, 'confirming' the assumption. Theory Y assumptions (work is natural, people seek responsibility) build delegation instead."
+    },
+    {
+      "qid": "q7",
+      "type": "mc",
+      "correct": "b",
+      "topic": "contingency view",
+      "explanation": "'No one best way — it depends on identifiable factors like size, technology, and environmental uncertainty' is the contingency view, the field's correction to every universal-principles school before it. The administrative school claimed universal principles; the quantitative school computes operational optima; Theory Y is a set of assumptions about people."
+    },
+    {
+      "qid": "q8",
+      "type": "mc",
+      "correct": "b",
+      "topic": "administrative principles",
+      "explanation": "Unity of command: each employee takes orders from exactly one superior, preventing conflicting instructions and diluted accountability. (Centralization is a different Fayol principle; planning/execution split is Taylor; authority-equals-responsibility is also Fayol but a separate principle.) Matrix structures knowingly violate unity of command — that tension returns in lesson 104.3."
+    }
+  ]
+}
