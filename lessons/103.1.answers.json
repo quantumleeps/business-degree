@@ -1,0 +1,64 @@
+{
+  "address": "103.1",
+  "title": "Data Types, Populations vs. Samples, Levels of Measurement",
+  "questions": [
+    {
+      "qid": "q1",
+      "type": "mc",
+      "correct": "c",
+      "topic": "levels of measurement",
+      "explanation": "The four levels stack: nominal adds categories, ordinal adds order, interval adds equal differences, and ratio adds a true zero. Only with a true zero do ratios make sense — $200 is twice $100 because $0 means none at all, whereas 80°F is not twice 40°F because 0°F is an arbitrary point."
+    },
+    {
+      "qid": "q2",
+      "type": "mc",
+      "correct": "b",
+      "topic": "levels of measurement",
+      "explanation": "A 1–5 rating has a meaningful order (5 beats 4) but no guarantee of equal gaps — the jump from 4 to 5 need not equal the jump from 2 to 3. Order without equal intervals is the definition of ordinal. Interval would require the differences themselves to be meaningful quantities."
+    },
+    {
+      "qid": "q3",
+      "type": "mc",
+      "correct": "b",
+      "topic": "parameter vs statistic",
+      "explanation": "The dividing line is what the number was computed from, not what it describes. 8.4% came from the 120 sampled invoices, so it is a statistic (p̂) — a different random 120 would give a different value. The parameter is the unknown error rate p among all 9,400 invoices that p̂ estimates."
+    },
+    {
+      "qid": "q4",
+      "type": "mc",
+      "correct": "c",
+      "topic": "sampling methods",
+      "explanation": "Picking a random start and then every k-th case (here k = 25) is systematic sampling. Stratified would divide callers into groups and sample within each; cluster would take whole groups; voluntary response would let callers opt in themselves."
+    },
+    {
+      "qid": "q5",
+      "type": "num",
+      "correct": 50,
+      "tolerance": 0.5,
+      "topic": "stratified sampling",
+      "explanation": "Proportional allocation gives each stratum its population share of the sample: n_h = n × N_h / N = 300 × 1,500 / 9,000 = 300 × 1/6 = 50 Platinum members. (Silver gets 150 and Gold gets 100 by the same rule.)"
+    },
+    {
+      "qid": "q6",
+      "type": "num",
+      "correct": 30,
+      "tolerance": 0.5,
+      "topic": "systematic sampling",
+      "explanation": "The systematic interval is k = N / n = 12,000 / 400 = 30: choose a random start among the first 30 units, then inspect every 30th unit thereafter, yielding exactly 400 inspections across the run."
+    },
+    {
+      "qid": "q7",
+      "type": "mc",
+      "correct": "b",
+      "topic": "bias",
+      "explanation": "When respondents select themselves, those with strong (usually negative) feelings dominate — voluntary response bias. Because the error is systematic, not random, collecting more self-selected responses does not fix it; it just estimates the wrong number more precisely (the Literary Digest lesson). Sample size cures sampling error, never bias."
+    },
+    {
+      "qid": "q8",
+      "type": "text",
+      "correct": ["sampling frame", "the sampling frame", "frame"],
+      "topic": "sampling frame",
+      "explanation": "The sampling frame is the concrete list you actually draw from (the loyalty database, a phone directory). Gaps between the frame and the true population — customers not in the loyalty program — are a built-in source of selection bias before a single case is drawn."
+    }
+  ]
+}

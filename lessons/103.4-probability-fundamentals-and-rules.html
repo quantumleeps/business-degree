@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>103.4 — Probability Fundamentals and Rules</title>
+<style>
+  :root { --ink:#1a1a2e; --paper:#fdfdfb; --accent:#2d6a4f; --muted:#6b7280; }
+  body { margin:0; font:16px/1.6 system-ui,sans-serif; color:var(--ink);
+         background:var(--paper); }
+  .wrap { max-width:820px; margin:0 auto; padding:32px 20px 80px; }
+  header .addr { font:600 13px ui-monospace,monospace; color:var(--accent);
+                 letter-spacing:.05em; }
+  h1 { font-size:30px; margin:.2em 0 .1em; }
+  .why { color:var(--muted); font-style:italic; margin-bottom:2em; }
+  section { margin:2.5em 0; }
+  h2 { border-bottom:2px solid var(--accent); padding-bottom:4px; }
+  h3 { margin:1.6em 0 .4em; }
+  .visual { border:1px solid #e5e7eb; border-radius:12px; padding:16px;
+            background:#fff; }
+  table.t { border-collapse:collapse; width:100%; font-size:14px; margin:1em 0; }
+  table.t th, table.t td { border:1px solid #e5e7eb; padding:6px 9px; text-align:left; }
+  table.t th { background:#f3f4f6; }
+  table.t td.num { text-align:right; font-family:ui-monospace,monospace; }
+  .ex { background:#f0f7f4; border-left:4px solid var(--accent); padding:12px 16px;
+        border-radius:0 8px 8px 0; margin:1.2em 0; }
+  .ex .lbl { font:600 12px ui-monospace,monospace; color:var(--accent);
+             text-transform:uppercase; letter-spacing:.06em; }
+  code { background:#f3f4f6; padding:1px 5px; border-radius:4px; font-size:14px; }
+  .formula { text-align:center; font-size:18px; margin:14px 0;
+             font-family:Georgia,serif; }
+  .q { margin:1.2em 0; padding:14px; border:1px solid #e5e7eb;
+       border-radius:10px; }
+  .q .opts label { display:block; margin:4px 0; cursor:pointer; }
+  .q.right { border-color:var(--accent); background:#f0f7f4; }
+  .q.wrong { border-color:#b91c1c; background:#fef2f2; }
+  .q .fb { margin-top:10px; padding-top:8px; border-top:1px dashed #d1d5db;
+       font-size:14px; }
+  .q.right .fb b { color:var(--accent); }
+  .q.wrong .fb b { color:#b91c1c; }
+  button { background:var(--accent); color:#fff; border:0; padding:10px 18px;
+           border-radius:8px; font-size:15px; cursor:pointer; }
+  button.small { padding:6px 12px; font-size:13px; }
+  button.ghost { background:#fff; color:var(--accent); border:1px solid var(--accent); }
+  #result { margin-top:1em; font-weight:600; }
+  .lesson-nav { display:flex; justify-content:space-between; margin-top:3em;
+       padding-top:1em; border-top:1px solid #e5e7eb; }
+  .lesson-nav a { color:var(--accent); font-weight:600; text-decoration:none; }
+  .lesson-nav a:hover { text-decoration:underline; }
+  .ctrl { display:flex; flex-wrap:wrap; gap:10px 18px; align-items:center;
+          margin:10px 0; font-size:14px; }
+  .ctrl label { display:flex; align-items:center; gap:6px; }
+  .readout { font:600 13px ui-monospace,monospace; }
+  .verdict { margin-top:8px; padding:9px 12px; background:#fffbeb;
+             border:1px solid #fde68a; border-radius:8px; font-size:14px; }
+  .ct { border-collapse:collapse; margin:8px 0; }
+  .ct th, .ct td { border:1px solid #d1d5db; padding:6px 10px; text-align:center;
+                   font-size:14px; }
+  .ct input { width:64px; font:600 14px ui-monospace,monospace; text-align:right;
+              border:1px solid #9ca3af; border-radius:5px; padding:3px; }
+  .ct .tot { background:#f3f4f6; font-weight:600; }
+  .probgrid { font:13px ui-monospace,monospace; line-height:1.8; }
+  .legend { display:flex; flex-wrap:wrap; gap:6px 16px; font-size:13px; margin-top:6px; }
+  .legend span::before { content:"●"; margin-right:5px; }
+  .lg-tp::before { color:#b91c1c; } .lg-fn::before { color:#f59e0b; }
+  .lg-fp::before { color:#a16207; } .lg-tn::before { color:#a7d3be; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="addr">103.4</div>
+    <h1>Probability Fundamentals and Rules</h1>
+    <p class="why">Every forecast, risk premium, quality program, and A/B test rests on a handful of probability rules — and on not confusing the two that everyone confuses.</p>
+  </header>
+
+  <!-- 1. LEARN -->
+  <section id="learn">
+    <h2>Learn</h2>
+
+    <h3>1. The language: experiments, sample spaces, events</h3>
+    <p>An <strong>experiment</strong> is any process with an uncertain outcome: a customer arrives or doesn't, a part passes or fails. The <strong>sample space S</strong> is the set of all possible outcomes; an <strong>event</strong> is any subset of S. Probability assigns each event A a number P(A) obeying three basic facts: 0 ≤ P(A) ≤ 1; P(S) = 1; and for events that cannot co-occur, probabilities add.</p>
+    <p>Where do the numbers come from? Three classical answers:</p>
+    <ul>
+      <li><strong>Classical</strong> — when outcomes are equally likely by symmetry: P(A) = (outcomes in A) / (outcomes in S). Two qualified vendors, one contract drawn by lot: each has P = 1/2.</li>
+      <li><strong>Empirical (relative frequency)</strong> — P(A) ≈ the fraction of times A occurred in many repeated trials. If 38 of the last 500 shipments arrived late, P(late) ≈ 38/500 = 0.076. The <em>law of large numbers</em> guarantees the running fraction settles toward the true probability as trials accumulate — it says nothing about short runs.</li>
+      <li><strong>Subjective</strong> — a coherent degree of belief when neither symmetry nor repetition applies: “we put 30% on winning this acquisition.” Common and legitimate in business; just label it as judgment.</li>
+    </ul>
+
+    <h3>2. The complement rule and “at least one”</h3>
+    <div class="formula">P(A′) = 1 − P(A)</div>
+    <p>Trivial-looking, but it powers the single most useful trick in applied probability: <em>“at least one” is the complement of “none.”</em> If each of 3 independent components fails inspection with probability 0.05, then</p>
+    <div class="formula">P(at least one fails) = 1 − P(none fail) = 1 − 0.95³ = 1 − 0.857375 ≈ 0.1426</div>
+    <p>Computing it directly (exactly one, exactly two, exactly three…) takes seven terms; the complement takes one.</p>
+
+    <h3>3. The addition rule: P(A or B)</h3>
+    <div class="formula">P(A ∪ B) = P(A) + P(B) − P(A ∩ B)</div>
+    <p>Adding P(A) and P(B) double-counts the overlap, so subtract it once. If events are <strong>mutually exclusive</strong> (cannot both happen, P(A ∩ B) = 0) the rule collapses to simple addition.</p>
+    <div class="ex">
+      <span class="lbl">Worked example</span>
+      <p>Among a retailer's customers, 55% hold the store credit card (C), 30% use the mobile app (M), and 20% do both. The share who hold the card <em>or</em> use the app:</p>
+      <p>P(C ∪ M) = 0.55 + 0.30 − 0.20 = <strong>0.65</strong>. (Without the subtraction you'd get 0.85, double-counting the 20% who are in both groups.) And by the complement rule, 35% of customers have neither.</p>
+    </div>
+
+    <h3>4. Conditional probability: updating on information</h3>
+    <div class="formula">P(A | B) = P(A ∩ B) / P(B) &nbsp;&nbsp;&nbsp; (provided P(B) &gt; 0)</div>
+    <p>P(A | B) — “the probability of A <em>given</em> B” — shrinks the world to the cases where B happened and asks what fraction of those also have A. Most business probabilities are conditional: P(default | low credit score), P(churn | support ticket filed).</p>
+    <p>Conditional probabilities live naturally in a <strong>contingency table</strong>:</p>
+    <div class="ex">
+      <span class="lbl">Worked example — joint, marginal, conditional</span>
+      <p>Last month's 500 parts, by supplier and quality:</p>
+      <table class="t">
+        <tr><th></th><th>Defective</th><th>OK</th><th>Total</th></tr>
+        <tr><th>Supplier X</th><td class="num">12</td><td class="num">288</td><td class="num">300</td></tr>
+        <tr><th>Supplier Y</th><td class="num">16</td><td class="num">184</td><td class="num">200</td></tr>
+        <tr><th>Total</th><td class="num">28</td><td class="num">472</td><td class="num">500</td></tr>
+      </table>
+      <ul>
+        <li><strong>Joint:</strong> P(X ∩ Defective) = 12/500 = 0.024 — an inside cell over the grand total.</li>
+        <li><strong>Marginal:</strong> P(Defective) = 28/500 = 0.056 — a margin total over the grand total.</li>
+        <li><strong>Conditional:</strong> P(Defective | Y) = 16/200 = 0.08 — an inside cell over its <em>row</em> total. Compare P(Defective | X) = 12/300 = 0.04: supplier Y's defect rate is double X's.</li>
+        <li>Flip the conditioning: P(X | Defective) = 12/28 ≈ 0.429. <em>P(A|B) ≠ P(B|A)</em> — the most consequential confusion in applied probability.</li>
+      </ul>
+    </div>
+
+    <h3>5. The multiplication rule and independence</h3>
+    <div class="formula">P(A ∩ B) = P(A) · P(B | A)</div>
+    <p>Events A and B are <strong>independent</strong> when knowing one tells you nothing about the other: P(A | B) = P(A), or equivalently</p>
+    <div class="formula">P(A ∩ B) = P(A) · P(B) &nbsp;&nbsp;(independence)</div>
+    <p>Check independence by comparing P(A ∩ B) to P(A)P(B); don't assume it. Sampling <em>without replacement</em> breaks independence: drawing 2 parts from a lot of 20 containing 3 defectives, P(both defective) = (3/20)(2/19) ≈ 0.0158 — the second factor is conditional because the first draw changed the lot.</p>
+    <p><strong>Mutually exclusive ≠ independent — they are nearly opposites.</strong> If A and B are mutually exclusive and both have positive probability, then seeing A happen tells you B <em>certainly didn't</em>: P(B | A) = 0 ≠ P(B). Maximum information transfer — maximal dependence. Independent events, by contrast, <em>must</em> be able to co-occur.</p>
+
+    <h3>6. Total probability and Bayes' theorem</h3>
+    <p>When a scenario splits into cases B₁, B₂, … (mutually exclusive, covering everything), an overall probability assembles from the cases — the <strong>law of total probability</strong> — and Bayes' theorem runs a conditional backwards:</p>
+    <div class="formula">P(A) = Σ P(A | Bᵢ) P(Bᵢ) &nbsp;&nbsp;&nbsp;&nbsp; P(B₁ | A) = P(A | B₁) P(B₁) / P(A)</div>
+    <div class="ex">
+      <span class="lbl">Worked example — the inspection paradox</span>
+      <p>A production line runs <strong>2% defective</strong>. An automated inspection flags <strong>98% of defective parts</strong> (its sensitivity) but also falsely flags <strong>5% of good parts</strong>. A part just got flagged — what's the probability it's actually defective?</p>
+      <p>P(flag) = P(flag | def)P(def) + P(flag | good)P(good) = (0.98)(0.02) + (0.05)(0.98) = 0.0196 + 0.0490 = 0.0686.</p>
+      <p>P(def | flag) = 0.0196 / 0.0686 ≈ <strong>0.286</strong>.</p>
+      <p>A “98% accurate” test, and yet less than a third of flagged parts are bad — because good parts are so numerous that their 5% false-flag rate produces more flags (0.049) than all the defectives combined (0.0196). The base rate dominates. This same arithmetic governs fraud alerts, medical screening, and spam filters: a rare condition plus an imperfect test means most alarms are false.</p>
+    </div>
+
+    <h3>7. Counting: when outcomes must be enumerated</h3>
+    <p>Classical probability needs counts of outcomes, and three tools do the counting:</p>
+    <ul>
+      <li><strong>Multiplication principle:</strong> k₁ choices then k₂ then k₃ → k₁k₂k₃ total. A dashboard with 4 layouts × 3 color themes × 2 currencies = 24 configurations.</li>
+      <li><strong>Permutations</strong> (order matters): the number of ways to arrange r of n distinct items is <em>n</em>P<em>r</em> = n!/(n−r)!. Ranking 3 finalists out of 8 candidates: 8·7·6 = 336.</li>
+      <li><strong>Combinations</strong> (order doesn't matter): <em>n</em>C<em>r</em> = n! / [r!(n−r)!]. Choosing 3 of 8 projects to fund: 8!/(3!5!) = (8·7·6)/(3·2·1) = <strong>56</strong> — each unordered trio was counted 3! = 6 times among the 336 ordered rankings, so divide it out.</li>
+    </ul>
+  </section>
+
+  <!-- 2. VISUALS -->
+  <section id="see-1" class="see">
+    <h2>See it: the addition rule on a Venn diagram</h2>
+    <p>Set P(A), P(B), and the overlap. Circle areas are drawn to scale. Watch the union obey P(A) + P(B) − P(A∩B), the conditionals shift, and the independence verdict flip as the overlap crosses P(A)·P(B). Slide the overlap to zero for mutually exclusive — and notice the verdict says <em>dependent</em>.</p>
+    <div class="visual" id="viz-1">
+      <canvas id="vennCanvas" width="760" height="250" style="width:100%;max-width:760px;"></canvas>
+      <div class="ctrl">
+        <label>P(A): <input type="range" id="pA" min="5" max="80" value="40" />
+          <span class="readout" id="pAv">0.40</span></label>
+        <label>P(B): <input type="range" id="pB" min="5" max="80" value="50" />
+          <span class="readout" id="pBv">0.50</span></label>
+        <label>P(A∩B): <input type="range" id="pAB" min="0" max="50" value="20" />
+          <span class="readout" id="pABv">0.20</span></label>
+      </div>
+      <div class="probgrid" id="vennStats"></div>
+      <div class="verdict" id="vennVerdict"></div>
+    </div>
+  </section>
+
+  <section id="see-2" class="see">
+    <h2>See it: joint, marginal, conditional — one table, three probabilities</h2>
+    <p>Edit the four counts. Every probability below recomputes: joints divide by the grand total, marginals come from the margins, conditionals divide a cell by its <em>row</em> total. The independence check compares each cell to what independence would predict (row share × column share).</p>
+    <div class="visual" id="viz-2">
+      <table class="ct">
+        <tr><th></th><th>Defective</th><th>OK</th><th class="tot">Total</th></tr>
+        <tr><th>Supplier X</th>
+            <td><input type="number" id="c00" value="12" min="0" max="9999" /></td>
+            <td><input type="number" id="c01" value="288" min="0" max="9999" /></td>
+            <td class="tot" id="rt0">300</td></tr>
+        <tr><th>Supplier Y</th>
+            <td><input type="number" id="c10" value="16" min="0" max="9999" /></td>
+            <td><input type="number" id="c11" value="184" min="0" max="9999" /></td>
+            <td class="tot" id="rt1">200</td></tr>
+        <tr><th class="tot">Total</th><td class="tot" id="ct0">28</td>
+            <td class="tot" id="ct1">472</td><td class="tot" id="gt">500</td></tr>
+      </table>
+      <div class="probgrid" id="ctStats"></div>
+      <div class="verdict" id="ctVerdict"></div>
+    </div>
+  </section>
+
+  <section id="see-3" class="see">
+    <h2>See it: Bayes' theorem as a population of parts</h2>
+    <p>400 parts, drawn to scale. Red = defective &amp; flagged (true alarms), amber-dark = good but flagged (false alarms), orange = defective but missed. The posterior P(defective | flagged) is just red ÷ (red + amber). Drop the defect rate and watch a “98% accurate” test drown in false alarms.</p>
+    <div class="visual" id="viz-3">
+      <canvas id="bayesCanvas" width="760" height="330" style="width:100%;max-width:760px;"></canvas>
+      <div class="ctrl">
+        <label>Defect rate: <input type="range" id="prev" min="1" max="30" value="2" />
+          <span class="readout" id="prevV">2%</span></label>
+        <label>Catches defects (sensitivity): <input type="range" id="sens" min="50" max="100" value="98" />
+          <span class="readout" id="sensV">98%</span></label>
+        <label>False-flags good parts: <input type="range" id="fpr" min="0" max="30" value="5" />
+          <span class="readout" id="fprV">5%</span></label>
+      </div>
+      <div class="legend">
+        <span class="lg-tp">defective, flagged</span>
+        <span class="lg-fn">defective, missed</span>
+        <span class="lg-fp">good, flagged</span>
+        <span class="lg-tn">good, passed</span>
+      </div>
+      <div class="verdict" id="bayesVerdict"></div>
+    </div>
+  </section>
+
+  <section id="see-4" class="see">
+    <h2>See it: the law of large numbers</h2>
+    <p>Each trial is a shipment that arrives late with the true probability you set. The jagged line is the running observed late-rate. Early on it swings wildly — short runs prove nothing — then it settles onto the true value. This is why empirical probability needs <em>many</em> trials.</p>
+    <div class="visual" id="viz-4">
+      <canvas id="llnCanvas" width="760" height="240" style="width:100%;max-width:760px;"></canvas>
+      <div class="ctrl">
+        <label>True P(late): <input type="range" id="pTrue" min="5" max="95" value="20" />
+          <span class="readout" id="pTrueV">0.20</span></label>
+        <button class="small" id="run200">Run 200 trials</button>
+        <button class="small ghost" id="run2000">Run 2,000</button>
+        <button class="small ghost" id="llnReset">Reset</button>
+      </div>
+      <div class="readout" id="llnReadout"></div>
+    </div>
+  </section>
+
+  <!-- 3. QUIZ -->
+  <section id="quiz">
+    <h2>Check yourself</h2>
+    <form id="quizForm">
+
+      <div class="q" data-qid="q1" data-type="mc">
+        <p><strong>1.</strong> A logistics manager estimates P(shipment arrives late) = 38/500 = 0.076 from last quarter's delivery records. Which approach to probability is this?</p>
+        <div class="opts">
+          <label><input type="radio" name="q1" value="a"> Classical — outcomes are equally likely</label>
+          <label><input type="radio" name="q1" value="b"> Empirical — relative frequency from repeated trials</label>
+          <label><input type="radio" name="q1" value="c"> Subjective — a coherent degree of belief</label>
+          <label><input type="radio" name="q1" value="d"> Axiomatic — derived from the complement rule</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q2" data-type="mc">
+        <p><strong>2.</strong> 55% of customers hold the store credit card, 30% use the mobile app, and 20% do both. What share holds the card <strong>or</strong> uses the app?</p>
+        <div class="opts">
+          <label><input type="radio" name="q2" value="a"> 0.85</label>
+          <label><input type="radio" name="q2" value="b"> 0.65</label>
+          <label><input type="radio" name="q2" value="c"> 0.45</label>
+          <label><input type="radio" name="q2" value="d"> 0.05</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q3" data-type="num">
+        <p><strong>3.</strong> Supplier X delivered 300 parts of which 12 were defective; Supplier Y delivered 200 parts of which 16 were defective. A defective part is pulled from the combined shipment at random. What is P(it came from Supplier X | it is defective)? (Round to three decimals.)</p>
+        <input type="number" name="q3" step="any" />
+      </div>
+
+      <div class="q" data-qid="q4" data-type="mc">
+        <p><strong>4.</strong> For two events, P(A) = 0.4, P(B) = 0.5, and P(A ∩ B) = 0.2. The events are:</p>
+        <div class="opts">
+          <label><input type="radio" name="q4" value="a"> Mutually exclusive, since P(A ∩ B) is small</label>
+          <label><input type="radio" name="q4" value="b"> Dependent, since A and B overlap</label>
+          <label><input type="radio" name="q4" value="c"> Independent, since P(A ∩ B) = P(A) · P(B)</label>
+          <label><input type="radio" name="q4" value="d"> Impossible — the numbers are inconsistent</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q5" data-type="num">
+        <p><strong>5.</strong> Each of three independent suppliers delivers on time with probability 0.95. What is the probability that <strong>at least one</strong> of the three deliveries is late? (Round to four decimals.)</p>
+        <input type="number" name="q5" step="any" />
+      </div>
+
+      <div class="q" data-qid="q6" data-type="num">
+        <p><strong>6.</strong> A production line runs 2% defective. Inspection flags 98% of defective parts but also flags 5% of good parts. A part has just been flagged. What is the probability it is actually defective? (Round to three decimals.)</p>
+        <input type="number" name="q6" step="any" />
+      </div>
+
+      <div class="q" data-qid="q7" data-type="num">
+        <p><strong>7.</strong> A committee must choose 3 of 8 proposed projects to fund (the order of selection doesn't matter). How many different sets of funded projects are possible?</p>
+        <input type="number" name="q7" step="any" />
+      </div>
+
+      <div class="q" data-qid="q8" data-type="mc">
+        <p><strong>8.</strong> Events A and B are mutually exclusive, and both have positive probability. Which statement is true?</p>
+        <div class="opts">
+          <label><input type="radio" name="q8" value="a"> They are independent, because they don't influence each other</label>
+          <label><input type="radio" name="q8" value="b"> They are dependent — if A occurs, B's probability collapses to zero</label>
+          <label><input type="radio" name="q8" value="c"> They are independent only if P(A) = P(B)</label>
+          <label><input type="radio" name="q8" value="d"> Nothing can be concluded without P(A ∪ B)</label>
+        </div>
+      </div>
+
+      <button type="submit">Submit answers</button>
+    </form>
+    <div id="result"></div>
+  </section>
+
+  <!-- 4. NAV -->
+  <nav class="lesson-nav">
+    <a href="index.html">← All lessons</a>
+    <a href="../harness/results.html">Results &amp; mastery →</a>
+  </nav>
+
+</div>
+
+<script>
+  const LESSON_ADDRESS = "103.4";
+
+  /* ---------- Visual 1: Venn ---------- */
+  (function(){
+    const cv = document.getElementById("vennCanvas"), cx = cv.getContext("2d");
+    function lensArea(r1, r2, d){
+      if (d >= r1+r2) return 0;
+      if (d <= Math.abs(r1-r2)) return Math.PI*Math.min(r1,r2)**2;
+      const a1 = r1*r1*Math.acos((d*d + r1*r1 - r2*r2)/(2*d*r1));
+      const a2 = r2*r2*Math.acos((d*d + r2*r2 - r1*r1)/(2*d*r2));
+      const a3 = 0.5*Math.sqrt((-d+r1+r2)*(d+r1-r2)*(d-r1+r2)*(d+r1+r2));
+      return a1 + a2 - a3;
+    }
+    function solveDistance(r1, r2, target){
+      let lo = Math.abs(r1-r2), hi = r1+r2;
+      if (target <= 0) return hi;
+      if (target >= Math.PI*Math.min(r1,r2)**2 - 1e-9) return lo;
+      for(let i=0;i<60;i++){
+        const mid = (lo+hi)/2;
+        (lensArea(r1,r2,mid) > target) ? lo = mid : hi = mid;
+      }
+      return (lo+hi)/2;
+    }
+    function clampAB(){
+      const a = +pA.value/100, b = +pB.value/100;
+      const maxAB = Math.min(a,b), minAB = Math.max(0, a+b-1);
+      pAB.max = Math.round(maxAB*100);
+      pAB.min = Math.round(minAB*100);
+      if (+pAB.value/100 > maxAB) pAB.value = Math.round(maxAB*100);
+      if (+pAB.value/100 < minAB) pAB.value = Math.round(minAB*100);
+    }
+    function draw(){
+      clampAB();
+      const a = +pA.value/100, b = +pB.value/100, ab = +pAB.value/100;
+      pAv.textContent=a.toFixed(2); pBv.textContent=b.toFixed(2); pABv.textContent=ab.toFixed(2);
+      const K = 26000; // px² per unit probability
+      const r1 = Math.sqrt(a*K/Math.PI), r2 = Math.sqrt(b*K/Math.PI);
+      const d = solveDistance(r1, r2, ab*K);
+      const cxm = cv.width/2, cym = cv.height/2 + 8;
+      cx.clearRect(0,0,cv.width,cv.height);
+      cx.globalAlpha = .45;
+      cx.fillStyle = "#2d6a4f";
+      cx.beginPath(); cx.arc(cxm-d/2, cym, r1, 0, 7); cx.fill();
+      cx.fillStyle = "#b45309";
+      cx.beginPath(); cx.arc(cxm+d/2, cym, r2, 0, 7); cx.fill();
+      cx.globalAlpha = 1;
+      cx.font = "600 14px system-ui";
+      cx.fillStyle="#2d6a4f"; cx.fillText("A", cxm-d/2-r1*0.45, cym-r1*0.55);
+      cx.fillStyle="#b45309"; cx.fillText("B", cxm+d/2+r2*0.35, cym-r2*0.55);
+      const union = a + b - ab;
+      const pAgB = b>0 ? ab/b : NaN, pBgA = a>0 ? ab/a : NaN;
+      document.getElementById("vennStats").innerHTML =
+        `P(A∪B) = ${a.toFixed(2)} + ${b.toFixed(2)} − ${ab.toFixed(2)} = <b>${union.toFixed(2)}</b> &nbsp;·&nbsp; `+
+        `P(neither) = ${(1-union).toFixed(2)}<br>`+
+        `P(A|B) = ${ab.toFixed(2)}/${b.toFixed(2)} = <b>${pAgB.toFixed(3)}</b> &nbsp;·&nbsp; `+
+        `P(B|A) = ${ab.toFixed(2)}/${a.toFixed(2)} = <b>${pBgA.toFixed(3)}</b> &nbsp;·&nbsp; `+
+        `P(A)·P(B) = ${(a*b).toFixed(3)}`;
+      const prod = a*b;
+      let verdict;
+      if (ab === 0) verdict = "Mutually exclusive (overlap = 0) — and strongly DEPENDENT: seeing A guarantees not-B. P(A|B) = 0 ≠ P(A).";
+      else if (Math.abs(ab - prod) < 0.005) verdict = "≈ Independent: the overlap equals P(A)·P(B), so knowing B doesn't change A's probability — P(A|B) ≈ P(A).";
+      else if (ab > prod) verdict = `Positively dependent: overlap ${ab.toFixed(2)} > P(A)·P(B) = ${prod.toFixed(3)}, so each event makes the other MORE likely.`;
+      else verdict = `Negatively dependent: overlap ${ab.toFixed(2)} < P(A)·P(B) = ${prod.toFixed(3)}, so each event makes the other LESS likely.`;
+      document.getElementById("vennVerdict").textContent = verdict;
+    }
+    const pA=document.getElementById("pA"), pB=document.getElementById("pB"),
+          pAB=document.getElementById("pAB"),
+          pAv=document.getElementById("pAv"), pBv=document.getElementById("pBv"),
+          pABv=document.getElementById("pABv");
+    [pA,pB,pAB].forEach(el=>el.addEventListener("input", draw));
+    draw();
+  })();
+
+  /* ---------- Visual 2: contingency table ---------- */
+  (function(){
+    const ids = ["c00","c01","c10","c11"];
+    function update(){
+      const [a,b,c,d] = ids.map(i=>Math.max(0, +document.getElementById(i).value||0));
+      const r0=a+b, r1=c+d, c0=a+c, c1=b+d, N=r0+r1;
+      rt0.textContent=r0; rt1.textContent=r1;
+      ct0.textContent=c0; ct1.textContent=c1; gt.textContent=N;
+      if (!N){ document.getElementById("ctStats").textContent="Enter some counts."; return; }
+      const f=v=>(v).toFixed(3);
+      document.getElementById("ctStats").innerHTML =
+        `<b>Joint:</b> P(X∩Def) = ${a}/${N} = ${f(a/N)} &nbsp;·&nbsp; P(Y∩Def) = ${c}/${N} = ${f(c/N)}<br>`+
+        `<b>Marginal:</b> P(Def) = ${c0}/${N} = ${f(c0/N)} &nbsp;·&nbsp; P(X) = ${r0}/${N} = ${f(r0/N)}<br>`+
+        `<b>Conditional:</b> P(Def|X) = ${a}/${r0||"–"} = ${r0?f(a/r0):"–"} &nbsp;·&nbsp; `+
+        `P(Def|Y) = ${c}/${r1||"–"} = ${r1?f(c/r1):"–"} &nbsp;·&nbsp; `+
+        `P(X|Def) = ${a}/${c0||"–"} = ${c0?f(a/c0):"–"}`;
+      const exp = r0*c0/N;
+      const indep = r0&&r1&&c0&&c1 ? Math.abs(a - exp) < Math.max(0.5, 0.02*N) : false;
+      document.getElementById("ctVerdict").textContent = indep
+        ? `≈ Independent: cell X∩Def holds ${a}, almost exactly the ${exp.toFixed(1)} that independence predicts (row share × column share × N). Supplier tells you nothing about quality.`
+        : `Dependent: independence would put ${exp.toFixed(1)} in the X∩Def cell, but it holds ${a}. Defect rates differ by supplier — P(Def|X) ${r0?f(a/r0):"–"} vs P(Def|Y) ${r1?f(c/r1):"–"}.`;
+    }
+    ids.forEach(i=>document.getElementById(i).addEventListener("input", update));
+    update();
+  })();
+
+  /* ---------- Visual 3: Bayes grid ---------- */
+  (function(){
+    const cv = document.getElementById("bayesCanvas"), cx = cv.getContext("2d");
+    const N=400, cols=40, rows=10;
+    function draw(){
+      const p = +prev.value/100, se = +sens.value/100, fp = +fpr.value/100;
+      prevV.textContent = Math.round(p*100)+"%";
+      sensV.textContent = Math.round(se*100)+"%";
+      fprV.textContent = Math.round(fp*100)+"%";
+      const nDef = Math.round(N*p);
+      const nTP = Math.round(nDef*se), nFN = nDef-nTP;
+      const nGood = N-nDef;
+      const nFP = Math.round(nGood*fp), nTN = nGood-nFP;
+      // build color list in blocks: TP, FN, FP, TN
+      const colors = [
+        ...Array(nTP).fill("#b91c1c"),
+        ...Array(nFN).fill("#f59e0b"),
+        ...Array(nFP).fill("#a16207"),
+        ...Array(nTN).fill("#a7d3be")
+      ];
+      cx.clearRect(0,0,cv.width,cv.height);
+      const cw=cv.width/cols, chh=(cv.height-70)/rows;
+      colors.forEach((col,i)=>{
+        const x=(i%cols)*cw+cw/2, y=Math.floor(i/cols)*chh+chh/2+4;
+        cx.fillStyle=col;
+        cx.beginPath(); cx.arc(x,y,Math.min(cw,chh)*0.34,0,7); cx.fill();
+      });
+      const flagged = nTP+nFP;
+      const post = flagged? nTP/flagged : 0;
+      // posterior bar
+      const bx=40, bw=cv.width-80, by=cv.height-44;
+      cx.fillStyle="#e5e7eb"; cx.fillRect(bx,by,bw,18);
+      cx.fillStyle="#b91c1c"; cx.fillRect(bx,by,bw*post,18);
+      cx.strokeStyle="#9ca3af"; cx.strokeRect(bx,by,bw,18);
+      cx.fillStyle="#1a1a2e"; cx.font="600 13px system-ui";
+      cx.fillText(`P(defective | flagged) = ${nTP} / (${nTP} + ${nFP}) = ${(post*100).toFixed(1)}%`, bx, by-6);
+      document.getElementById("bayesVerdict").textContent =
+        `Of ${N} parts: ${nDef} defective → ${nTP} caught, ${nFN} missed. ${nGood} good → ${nFP} falsely flagged. `+
+        `So ${flagged} parts get flagged, and only ${nTP} of them are real defects (${(post*100).toFixed(1)}%). `+
+        (post<0.5 ? "Most alarms are false — the rare-event base rate overwhelms the test's accuracy."
+                  : "With a base rate this high, flags are now mostly trustworthy.");
+    }
+    const prev=document.getElementById("prev"), sens=document.getElementById("sens"),
+          fpr=document.getElementById("fpr"),
+          prevV=document.getElementById("prevV"), sensV=document.getElementById("sensV"),
+          fprV=document.getElementById("fprV");
+    [prev,sens,fpr].forEach(el=>el.addEventListener("input", draw));
+    draw();
+  })();
+
+  /* ---------- Visual 4: law of large numbers ---------- */
+  (function(){
+    const cv = document.getElementById("llnCanvas"), cx = cv.getContext("2d");
+    let lates=0, n=0, history=[];
+    const MAXN = 2000;
+    function axes(p){
+      cx.clearRect(0,0,cv.width,cv.height);
+      const PL=44, PB=28;
+      cx.strokeStyle="#9ca3af"; cx.beginPath();
+      cx.moveTo(PL,10); cx.lineTo(PL,cv.height-PB); cx.lineTo(cv.width-12,cv.height-PB); cx.stroke();
+      cx.fillStyle="#6b7280"; cx.font="11px system-ui";
+      [0,0.25,0.5,0.75,1].forEach(v=>{
+        const y = cv.height-PB - v*(cv.height-PB-12);
+        cx.fillText(v.toFixed(2), 8, y+4);
+        cx.strokeStyle="#f3f4f6"; cx.beginPath();
+        cx.moveTo(PL,y); cx.lineTo(cv.width-12,y); cx.stroke();
+      });
+      // true p line
+      const yp = cv.height-PB - p*(cv.height-PB-12);
+      cx.strokeStyle="#b45309"; cx.setLineDash([5,4]); cx.beginPath();
+      cx.moveTo(PL,yp); cx.lineTo(cv.width-12,yp); cx.stroke(); cx.setLineDash([]);
+      cx.fillStyle="#b45309"; cx.fillText("true P", cv.width-48, yp-5);
+      return {PL,PB};
+    }
+    function draw(){
+      const p = +pTrue.value/100;
+      pTrueV.textContent = p.toFixed(2);
+      const {PL,PB} = axes(p);
+      if (history.length>1){
+        cx.strokeStyle="#2d6a4f"; cx.lineWidth=1.8; cx.beginPath();
+        history.forEach((f,i)=>{
+          const x = PL + (i/(MAXN-1))*(cv.width-PL-14);
+          const y = cv.height-PB - f*(cv.height-PB-12);
+          i? cx.lineTo(x,y) : cx.moveTo(x,y);
+        });
+        cx.stroke(); cx.lineWidth=1;
+      }
+      document.getElementById("llnReadout").textContent = n
+        ? `after ${n} shipments: observed late-rate = ${(lates/n).toFixed(4)}  (true = ${p.toFixed(2)}, gap = ${Math.abs(lates/n-p).toFixed(4)})`
+        : "";
+    }
+    function run(k){
+      const p = +pTrue.value/100;
+      for(let i=0;i<k && n<MAXN;i++){
+        n++; if (Math.random()<p) lates++;
+        history.push(lates/n);
+      }
+      draw();
+    }
+    const pTrue=document.getElementById("pTrue"), pTrueV=document.getElementById("pTrueV");
+    pTrue.addEventListener("input", ()=>{ lates=0;n=0;history=[]; draw(); });
+    document.getElementById("run200").onclick = e=>{e.preventDefault(); run(200);};
+    document.getElementById("run2000").onclick = e=>{e.preventDefault(); run(2000);};
+    document.getElementById("llnReset").onclick = e=>{e.preventDefault(); lates=0;n=0;history=[]; draw();};
+    draw();
+  })();
+
+  /* ---------- quiz submit (server-graded) ---------- */
+  document.getElementById("quizForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const fd = new FormData(e.target);
+    const answers = {};
+    document.querySelectorAll(".q").forEach(q => {
+      const qid = q.dataset.qid;
+      answers[qid] = fd.get(qid);
+    });
+
+    const payload = { address: LESSON_ADDRESS, answers, ts: Date.now() };
+
+    try {
+      const res = await fetch(location.protocol === "file:"
+          ? "http://127.0.0.1:8753/record" : "/record", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (data.error) {
+        document.getElementById("result").textContent = "Recorder error: " + data.error;
+        return;
+      }
+      document.getElementById("result").textContent =
+        `Score: ${data.correct}/${data.total}. ` +
+        (data.weak_topics?.length ? `Review: ${data.weak_topics.join(", ")}` : "Nice work.");
+      (data.results || []).forEach(r => {
+        const q = document.querySelector(`.q[data-qid="${r.qid}"]`);
+        if (!q) return;
+        q.classList.remove("right", "wrong");
+        q.classList.add(r.is_correct ? "right" : "wrong");
+        let fb = q.querySelector(".fb");
+        if (!fb) { fb = document.createElement("div"); fb.className = "fb"; q.appendChild(fb); }
+        fb.textContent = "";
+        const mark = document.createElement("b");
+        mark.textContent = r.is_correct ? "✓ Correct" : "✗ Incorrect";
+        fb.appendChild(mark);
+        if (!r.is_correct && r.explanation) fb.append(" — " + r.explanation);
+      });
+    } catch (err) {
+      const blob = new Blob([JSON.stringify(payload, null, 2)],
+                            {type:"application/json"});
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = `${LESSON_ADDRESS}.attempt.json`;
+      a.click();
+      document.getElementById("result").textContent =
+        "Recorder offline — downloaded attempt JSON. Run scripts/serve.py and import it.";
+    }
+  });
+</script>
+</body>
+</html>

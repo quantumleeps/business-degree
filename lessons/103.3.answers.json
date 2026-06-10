@@ -1,0 +1,65 @@
+{
+  "address": "103.3",
+  "title": "Data Visualization: Histograms, Boxplots, Scatterplots",
+  "questions": [
+    {
+      "qid": "q1",
+      "type": "mc",
+      "correct": "b",
+      "topic": "histogram construction",
+      "explanation": "A histogram's classes chop up a continuous numeric axis, so where one class ends the next begins — the touching bars express that continuity. A bar chart's categories are separate labels with no shared boundary, hence the gaps. This is also why a histogram's shape (skew, modality) is meaningful and a bar chart's isn't: shuffle a bar chart's bars and nothing is lost."
+    },
+    {
+      "qid": "q2",
+      "type": "num",
+      "correct": 10,
+      "tolerance": 0.5,
+      "topic": "class width",
+      "explanation": "Width ≈ range / k = (87 − 19)/7 = 68/7 ≈ 9.71, rounded UP to 10. You round up, never down: rounding down to 9 would make the seven classes span only 63 minutes, leaving the largest values without a class."
+    },
+    {
+      "qid": "q3",
+      "type": "num",
+      "correct": 64,
+      "tolerance": 0.5,
+      "topic": "boxplot fences",
+      "explanation": "IQR = Q₃ − Q₁ = 40 − 24 = 16. Upper fence = Q₃ + 1.5 × IQR = 40 + 1.5(16) = 40 + 24 = 64 minutes. Any delivery above 64 minutes is plotted as an individual outlier dot; the whisker stops at the largest value that is still ≤ 64."
+    },
+    {
+      "qid": "q4",
+      "type": "mc",
+      "correct": "c",
+      "topic": "shape reading",
+      "explanation": "Skew follows the long tail. A median crowded toward Q₁ with a stretched upper whisker and high outliers means the upper half of the data is spread far to the right — a long right tail, i.e., right-skewed (typical of invoice amounts: many small, a few huge)."
+    },
+    {
+      "qid": "q5",
+      "type": "mc",
+      "correct": "a",
+      "topic": "scatterplots",
+      "explanation": "Describe a scatterplot by direction, form, and strength. Upper-left to lower-right means y falls as x rises: negative direction. Points falling tightly along a straight line: linear form, strong strength. Different units never prevent association — that's exactly what scatterplots (and r) are for."
+    },
+    {
+      "qid": "q6",
+      "type": "num",
+      "correct": 62.5,
+      "tolerance": 0.2,
+      "topic": "cumulative frequency",
+      "explanation": "Cumulative frequency through the third class = 4 + 9 + 12 = 25 days. As a percent of n = 40: 25/40 = 0.625 = 62.5%. This is exactly what a cumulative relative frequency column reports — the share of data at or below a class boundary."
+    },
+    {
+      "qid": "q7",
+      "type": "mc",
+      "correct": "b",
+      "topic": "graph literacy",
+      "explanation": "Bar charts encode value as bar LENGTH, so the axis must start at zero — truncating it at $300k makes an 18k-vs-5k stub comparison stand in for a 318-vs-305 one, exaggerating a 4.3% difference into a ~4:1 visual. (Line charts can zoom because they encode change by position, not length; bars cannot.)"
+    },
+    {
+      "qid": "q8",
+      "type": "mc",
+      "correct": "c",
+      "topic": "causation",
+      "explanation": "Association alone never establishes causation. Here a lurking (confounding) variable — hot summer weather — plausibly drives both ice-cream sales and swimming (hence drownings). The association is real, not coincidental, but the causal arrow runs from the hidden third variable to both plotted ones; only controlled experiments can rule that out."
+    }
+  ]
+}

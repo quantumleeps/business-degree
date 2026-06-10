@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>103.2 — Descriptive Statistics: Center, Spread, Shape</title>
+<style>
+  :root { --ink:#1a1a2e; --paper:#fdfdfb; --accent:#2d6a4f; --muted:#6b7280; }
+  body { margin:0; font:16px/1.6 system-ui,sans-serif; color:var(--ink);
+         background:var(--paper); }
+  .wrap { max-width:820px; margin:0 auto; padding:32px 20px 80px; }
+  header .addr { font:600 13px ui-monospace,monospace; color:var(--accent);
+                 letter-spacing:.05em; }
+  h1 { font-size:30px; margin:.2em 0 .1em; }
+  .why { color:var(--muted); font-style:italic; margin-bottom:2em; }
+  section { margin:2.5em 0; }
+  h2 { border-bottom:2px solid var(--accent); padding-bottom:4px; }
+  h3 { margin:1.6em 0 .4em; }
+  .visual { border:1px solid #e5e7eb; border-radius:12px; padding:16px;
+            background:#fff; }
+  table.t { border-collapse:collapse; width:100%; font-size:14px; margin:1em 0; }
+  table.t th, table.t td { border:1px solid #e5e7eb; padding:6px 9px; text-align:left; }
+  table.t th { background:#f3f4f6; }
+  table.t td.num { text-align:right; font-family:ui-monospace,monospace; }
+  .ex { background:#f0f7f4; border-left:4px solid var(--accent); padding:12px 16px;
+        border-radius:0 8px 8px 0; margin:1.2em 0; }
+  .ex .lbl { font:600 12px ui-monospace,monospace; color:var(--accent);
+             text-transform:uppercase; letter-spacing:.06em; }
+  code { background:#f3f4f6; padding:1px 5px; border-radius:4px; font-size:14px; }
+  .formula { text-align:center; font-size:18px; margin:14px 0;
+             font-family:Georgia,serif; }
+  .q { margin:1.2em 0; padding:14px; border:1px solid #e5e7eb;
+       border-radius:10px; }
+  .q .opts label { display:block; margin:4px 0; cursor:pointer; }
+  .q.right { border-color:var(--accent); background:#f0f7f4; }
+  .q.wrong { border-color:#b91c1c; background:#fef2f2; }
+  .q .fb { margin-top:10px; padding-top:8px; border-top:1px dashed #d1d5db;
+       font-size:14px; }
+  .q.right .fb b { color:var(--accent); }
+  .q.wrong .fb b { color:#b91c1c; }
+  button { background:var(--accent); color:#fff; border:0; padding:10px 18px;
+           border-radius:8px; font-size:15px; cursor:pointer; }
+  button.small { padding:6px 12px; font-size:13px; }
+  button.ghost { background:#fff; color:var(--accent); border:1px solid var(--accent); }
+  #result { margin-top:1em; font-weight:600; }
+  .lesson-nav { display:flex; justify-content:space-between; margin-top:3em;
+       padding-top:1em; border-top:1px solid #e5e7eb; }
+  .lesson-nav a { color:var(--accent); font-weight:600; text-decoration:none; }
+  .lesson-nav a:hover { text-decoration:underline; }
+  .ctrl { display:flex; flex-wrap:wrap; gap:10px 18px; align-items:center;
+          margin:10px 0; font-size:14px; }
+  .ctrl label { display:flex; align-items:center; gap:6px; }
+  .readout { font:600 14px ui-monospace,monospace; }
+  .stats { display:flex; flex-wrap:wrap; gap:8px 22px; font:600 13px ui-monospace,monospace;
+           margin-top:8px; }
+  .stats .mean { color:#b45309; } .stats .med { color:#1d4ed8; }
+  .stats .sd { color:#7c3aed; } .stats .iqr { color:#0f766e; }
+  canvas { touch-action:none; }
+  .cvpanel { display:flex; flex-wrap:wrap; gap:16px; }
+  .cvbox { flex:1; min-width:300px; border:1px solid #e5e7eb; border-radius:8px;
+           padding:10px; }
+  .verdict { margin-top:10px; padding:10px; background:#fffbeb;
+             border:1px solid #fde68a; border-radius:8px; font-size:14px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="addr">103.2</div>
+    <h1>Descriptive Statistics: Center, Spread, Shape</h1>
+    <p class="why">“Average” hides four different numbers and a dozen judgment calls — choosing the right summary, and knowing what it conceals, is the first real skill of data literacy.</p>
+  </header>
+
+  <!-- 1. LEARN -->
+  <section id="learn">
+    <h2>Learn</h2>
+
+    <h3>1. Measures of center: mean, median, mode</h3>
+    <p>The <strong>arithmetic mean</strong> is the sum of values divided by the count. For a sample of <em>n</em> observations and for a population of <em>N</em>:</p>
+    <div class="formula">x̄ = Σxᵢ / n &nbsp;&nbsp;&nbsp;&nbsp; μ = Σxᵢ / N</div>
+    <p>The mean is the <em>balance point</em>: deviations above and below it cancel exactly, Σ(xᵢ − x̄) = 0. That property is also its weakness — a single extreme value tips the balance hard.</p>
+    <p>The <strong>median</strong> is the middle value once data are sorted: position (n+1)/2. With even <em>n</em>, average the two middle values. Because only the <em>position</em> of values matters, the median is <strong>resistant</strong> — outliers barely move it.</p>
+    <p>The <strong>mode</strong> is the most frequent value — the only measure of center available for nominal data (the most common payment method), and useful for spotting multiple clusters.</p>
+
+    <div class="ex">
+      <span class="lbl">Worked example — resistance</span>
+      <p>Nine ordinary days of store sales (in $000): 38, 39, 41, 42, 44, 45, 47, 48, 51. Mean = 395/9 ≈ <strong>$43.9k</strong>; median = <strong>$44k</strong>. They agree.</p>
+      <p>Add Black Friday at 325: mean = 720/10 = <strong>$72.0k</strong> — higher than 9 of the 10 days, describing nobody. Median = (44+45)/2 = <strong>$44.5k</strong>, barely moved. For skewed business data (income, deal sizes, claim amounts), report the median; if you report the mean, say why.</p>
+    </div>
+
+    <p>The <strong>weighted mean</strong> averages values whose importance differs, weighting each by wᵢ:</p>
+    <div class="formula">x̄<sub>w</sub> = Σwᵢxᵢ / Σwᵢ</div>
+    <p>A portfolio that is 60% in a fund returning 5%, 30% in one returning 8%, and 10% in one returning −2% earns 0.60(5) + 0.30(8) + 0.10(−2) = 3.0 + 2.4 − 0.2 = <strong>5.2%</strong> — not the unweighted (5+8−2)/3 ≈ 3.7%.</p>
+
+    <h3>2. Measures of spread</h3>
+    <p>Two datasets can share a mean and be utterly different. Spread measures how far values lie from the center.</p>
+    <ul>
+      <li><strong>Range</strong> = max − min. Quick, but determined entirely by the two most extreme values.</li>
+      <li><strong>Interquartile range (IQR)</strong> = Q₃ − Q₁, the span of the middle 50%. Quartiles split sorted data into four parts: Q₁ is the median of the lower half, Q₃ of the upper half. The IQR is resistant — it ignores the tails completely.</li>
+      <li><strong>Variance and standard deviation</strong> — the workhorses. Both average the <em>squared</em> deviations from the mean:</li>
+    </ul>
+    <div class="formula">σ² = Σ(xᵢ − μ)² / N &nbsp;&nbsp;(population) &nbsp;&nbsp;&nbsp; s² = Σ(xᵢ − x̄)² / (n − 1) &nbsp;&nbsp;(sample)</div>
+    <div class="formula">σ = √σ² &nbsp;&nbsp;&nbsp;&nbsp; s = √s²</div>
+    <p><strong>Why n − 1?</strong> Two ways to see it. First, the deviations are not free: they must sum to zero around x̄, so once n − 1 of them are known the last is determined — there are only n − 1 independent pieces of information (<em>degrees of freedom</em>). Second, x̄ sits closer to its own sample than μ does, so squared deviations measured from x̄ are systematically a bit too small; dividing by the smaller n − 1 corrects the underestimate on average, making s² an <em>unbiased</em> estimator of σ².</p>
+    <p>The standard deviation, being the square root of the variance, returns to the original units (dollars, minutes), which is why it — not the variance — is what gets quoted.</p>
+
+    <div class="ex">
+      <span class="lbl">Worked example — computing s step by step</span>
+      <p>Daily units sold over six days: 12, 15, 9, 18, 14, 10. &nbsp; x̄ = 78/6 = 13.</p>
+      <table class="t">
+        <tr><th>xᵢ</th><td class="num">12</td><td class="num">15</td><td class="num">9</td><td class="num">18</td><td class="num">14</td><td class="num">10</td><th>Σ</th></tr>
+        <tr><th>xᵢ − x̄</th><td class="num">−1</td><td class="num">2</td><td class="num">−4</td><td class="num">5</td><td class="num">1</td><td class="num">−3</td><td class="num"><strong>0</strong> ✓</td></tr>
+        <tr><th>(xᵢ − x̄)²</th><td class="num">1</td><td class="num">4</td><td class="num">16</td><td class="num">25</td><td class="num">1</td><td class="num">9</td><td class="num"><strong>56</strong></td></tr>
+      </table>
+      <p>s² = 56 / (6 − 1) = 11.2 &nbsp;→&nbsp; s = √11.2 ≈ <strong>3.35 units</strong>. (Had these six days been the entire population of interest, σ² = 56/6 ≈ 9.33 and σ ≈ 3.06.)</p>
+    </div>
+
+    <h3>3. Relative position and relative spread</h3>
+    <p>A <strong>z-score</strong> restates a value as “how many standard deviations from the mean”:</p>
+    <div class="formula">z = (x − x̄) / s</div>
+    <p>A salesperson booking $86k where the team mean is $74k with s = $8k sits at z = (86 − 74)/8 = <strong>+1.5</strong>. z-scores make different scales comparable and flag outliers (|z| &gt; 2 is unusual, |z| &gt; 3 rare in bell-shaped data).</p>
+    <p>Two rules connect s to “how much data lies near the mean”:</p>
+    <ul>
+      <li><strong>Empirical rule</strong> (bell-shaped data only): about 68% of values fall within ±1s of the mean, 95% within ±2s, 99.7% within ±3s.</li>
+      <li><strong>Chebyshev's theorem</strong> (any distribution whatsoever): at least 1 − 1/k² of values lie within ±k standard deviations. k = 2 → at least 75%; k = 3 → at least 88.9%.</li>
+    </ul>
+    <p>The <strong>coefficient of variation</strong> expresses spread relative to the mean, freeing comparisons from units and scale:</p>
+    <div class="formula">CV = (s / x̄) × 100%</div>
+    <p>Store A's daily sales: mean $50,000, s $5,000 → CV = 10%. A stock fund's monthly return: mean 0.8%, s 1.2% → CV = 150%. The fund is vastly more variable <em>relative to its typical size</em>, a comparison raw standard deviations ($5,000 vs 1.2 percentage points) cannot make.</p>
+
+    <h3>4. Linear transformations: what shifts, what scales</h3>
+    <p>Add a constant to every value (a flat $500 bonus): the mean and median shift by that constant; the spread — range, IQR, s — is <strong>unchanged</strong>, because the values move together. Multiply every value by a constant <em>c</em> (a 3% raise, a currency conversion): center multiplies by <em>c</em>, and so does s. The CV is untouched by multiplication but changed by addition — one more reason it's the right tool for relative comparisons.</p>
+
+    <h3>5. Shape: what center and spread don't tell you</h3>
+    <ul>
+      <li><strong>Symmetric</strong>: mirror image around the center; mean ≈ median.</li>
+      <li><strong>Right-skewed (positively skewed)</strong>: long tail toward high values — incomes, deal sizes, insurance claims. The tail drags the mean above the median.</li>
+      <li><strong>Left-skewed (negatively skewed)</strong>: long tail toward low values — exam scores with a ceiling, time-to-failure of reliable machines. Mean below median.</li>
+      <li><strong>Bimodal</strong>: two clusters — almost always a sign that two different groups are mixed in one dataset (weekday vs. weekend traffic, two customer segments). The first response to bimodality is to split the data, not to summarize it.</li>
+    </ul>
+    <p>The mean-vs-median comparison is a quick skew check, reliable for clearly skewed data (use it that way in this course), though textbooks note occasional exceptions in lumpy discrete data.</p>
+  </section>
+
+  <!-- 2. VISUALS -->
+  <section id="see-1" class="see">
+    <h2>See it: build a dataset, watch every statistic respond</h2>
+    <p><strong>Click</strong> on the strip to add a data point; <strong>click a dot</strong> to remove it. The mean (▲) balances the data; the median (│) splits it; the shaded band is the IQR. Load a preset, then drag the picture around in your head: add one far-right outlier and watch which summaries flinch.</p>
+    <div class="visual" id="viz-1">
+      <canvas id="dotCanvas" width="760" height="230" style="width:100%;max-width:760px;cursor:crosshair;"></canvas>
+      <div class="ctrl">
+        <button class="small ghost" id="presetSym">Symmetric</button>
+        <button class="small ghost" id="presetSkew">Right-skewed</button>
+        <button class="small ghost" id="presetOut">Outlier day</button>
+        <button class="small ghost" id="presetBi">Bimodal</button>
+        <button class="small ghost" id="clearPts">Clear</button>
+      </div>
+      <div class="stats" id="dotStats"></div>
+    </div>
+  </section>
+
+  <section id="see-2" class="see">
+    <h2>See it: the anatomy of a standard deviation</h2>
+    <p>Each data point's deviation from the mean becomes a literal square — its area is the squared deviation. The variance is the average square (toggle n vs. n−1); s is the side length of that average square. <strong>Drag points</strong> and notice the quadratic punishment: a point twice as far contributes four times the area.</p>
+    <div class="visual" id="viz-2">
+      <canvas id="sdCanvas" width="760" height="300" style="width:100%;max-width:760px;cursor:grab;"></canvas>
+      <div class="ctrl">
+        <label><input type="radio" name="divisor" value="n1" checked /> divide by n − 1 (sample, s)</label>
+        <label><input type="radio" name="divisor" value="n" /> divide by n (population, σ)</label>
+        <button class="small ghost" id="sdReset">Reset points</button>
+      </div>
+      <div class="readout" id="sdReadout" style="white-space:pre-line"></div>
+    </div>
+  </section>
+
+  <section id="see-3" class="see">
+    <h2>See it: comparing variability across scales — the CV</h2>
+    <p>Standard deviations in different units (dollars vs. percent) can't be compared directly. Set each series' mean and s; the curves show the spread, and the CV verdict says which is more variable <em>relative to its own scale</em>.</p>
+    <div class="visual" id="viz-3">
+      <div class="cvpanel">
+        <div class="cvbox">
+          <strong>Store daily sales ($000)</strong>
+          <canvas id="cvA" width="330" height="120" style="width:100%;"></canvas>
+          <div class="ctrl">
+            <label>mean <input type="range" id="meanA" min="20" max="80" value="50" /> <span class="readout" id="meanAv">50</span></label>
+            <label>s <input type="range" id="sdA" min="1" max="25" value="5" /> <span class="readout" id="sdAv">5</span></label>
+          </div>
+        </div>
+        <div class="cvbox">
+          <strong>Fund monthly return (%)</strong>
+          <canvas id="cvB" width="330" height="120" style="width:100%;"></canvas>
+          <div class="ctrl">
+            <label>mean <input type="range" id="meanB" min="2" max="20" value="8" step="0.5" /> <span class="readout" id="meanBv">8</span></label>
+            <label>s <input type="range" id="sdB" min="1" max="25" value="12" step="0.5" /> <span class="readout" id="sdBv">12</span></label>
+          </div>
+        </div>
+      </div>
+      <div class="verdict" id="cvVerdict"></div>
+    </div>
+  </section>
+
+  <!-- 3. QUIZ -->
+  <section id="quiz">
+    <h2>Check yourself</h2>
+    <form id="quizForm">
+
+      <div class="q" data-qid="q1" data-type="mc">
+        <p><strong>1.</strong> Which measure of center is most resistant to outliers?</p>
+        <div class="opts">
+          <label><input type="radio" name="q1" value="a"> The arithmetic mean</label>
+          <label><input type="radio" name="q1" value="b"> The weighted mean</label>
+          <label><input type="radio" name="q1" value="c"> The median</label>
+          <label><input type="radio" name="q1" value="d"> The range</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q2" data-type="num">
+        <p><strong>2.</strong> Six customer-service response times (minutes): 12, 7, 9, 15, 11, 9. What is the <strong>median</strong> response time?</p>
+        <input type="number" name="q2" step="any" />
+      </div>
+
+      <div class="q" data-qid="q3" data-type="num">
+        <p><strong>3.</strong> A sample of five daily defect counts: 4, 8, 6, 10, 7. Compute the <strong>sample standard deviation s</strong> (round to two decimals).</p>
+        <input type="number" name="q3" step="any" />
+      </div>
+
+      <div class="q" data-qid="q4" data-type="num">
+        <p><strong>4.</strong> A portfolio holds 60% in Fund A (return 5%), 30% in Fund B (return 8%), and 10% in Fund C (return −2%). What is the portfolio's weighted mean return, in percent?</p>
+        <input type="number" name="q4" step="any" />
+      </div>
+
+      <div class="q" data-qid="q5" data-type="mc">
+        <p><strong>5.</strong> Order sizes at a B2B distributor are strongly right-skewed. Which relationship between the mean and median should you expect?</p>
+        <div class="opts">
+          <label><input type="radio" name="q5" value="a"> Mean ≈ median, since both measure center</label>
+          <label><input type="radio" name="q5" value="b"> Mean &gt; median, because the long right tail pulls the mean up</label>
+          <label><input type="radio" name="q5" value="c"> Mean &lt; median, because most orders are small</label>
+          <label><input type="radio" name="q5" value="d"> No relationship can be expected</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q6" data-type="mc">
+        <p><strong>6.</strong> Product line A: mean weekly sales $50,000 with s = $5,000. Product line B: mean weekly sales $8,000 with s = $1,200. Which line has greater <em>relative</em> variability?</p>
+        <div class="opts">
+          <label><input type="radio" name="q6" value="a"> Line A, because $5,000 &gt; $1,200</label>
+          <label><input type="radio" name="q6" value="b"> Line B, because its CV (15%) exceeds A's (10%)</label>
+          <label><input type="radio" name="q6" value="c"> They are equally variable</label>
+          <label><input type="radio" name="q6" value="d"> Cannot be determined without the medians</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q7" data-type="mc">
+        <p><strong>7.</strong> Every employee receives a flat $500 monthly bonus added to salary. What happens to the mean and standard deviation of salaries?</p>
+        <div class="opts">
+          <label><input type="radio" name="q7" value="a"> Both increase by $500</label>
+          <label><input type="radio" name="q7" value="b"> Mean increases by $500; standard deviation is unchanged</label>
+          <label><input type="radio" name="q7" value="c"> Mean is unchanged; standard deviation increases by $500</label>
+          <label><input type="radio" name="q7" value="d"> Both are unchanged, since $500 is a constant</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q8" data-type="num">
+        <p><strong>8.</strong> A rep closed $86,000 in sales this quarter. Team mean: $74,000; team standard deviation: $8,000. What is the rep's z-score?</p>
+        <input type="number" name="q8" step="any" />
+      </div>
+
+      <button type="submit">Submit answers</button>
+    </form>
+    <div id="result"></div>
+  </section>
+
+  <!-- 4. NAV -->
+  <nav class="lesson-nav">
+    <a href="index.html">← All lessons</a>
+    <a href="../harness/results.html">Results &amp; mastery →</a>
+  </nav>
+
+</div>
+
+<script>
+  const LESSON_ADDRESS = "103.2";
+
+  /* ---------- helpers ---------- */
+  function quantiles(sorted){
+    const n = sorted.length;
+    const med = a => {
+      const m = a.length;
+      return m % 2 ? a[(m-1)/2] : (a[m/2-1]+a[m/2])/2;
+    };
+    const median = med(sorted);
+    const lower = sorted.slice(0, Math.floor(n/2));
+    const upper = sorted.slice(Math.ceil(n/2));
+    return {q1: med(lower), median, q3: med(upper)};
+  }
+  function stats(data){
+    const n = data.length;
+    if (!n) return null;
+    const mean = data.reduce((a,b)=>a+b,0)/n;
+    const sorted = [...data].sort((a,b)=>a-b);
+    const {q1, median, q3} = n>=4 ? quantiles(sorted)
+        : {q1:sorted[0], median: quantiles(sorted).median ?? sorted[0], q3:sorted[n-1]};
+    const ss = data.reduce((a,b)=>a+(b-mean)**2,0);
+    const s = n>1 ? Math.sqrt(ss/(n-1)) : 0;
+    return {n, mean, median, q1, q3, s, min:sorted[0], max:sorted[n-1]};
+  }
+
+  /* ---------- Visual 1: dot-plot builder ---------- */
+  (function(){
+    const cv = document.getElementById("dotCanvas"), cx = cv.getContext("2d");
+    const LO=0, HI=100, AXIS_Y = cv.height-46, R=7;
+    let data = [];
+    const X = v => 30 + (v-LO)/(HI-LO)*(cv.width-60);
+    const V = x => LO + (x-30)/(cv.width-60)*(HI-LO);
+
+    function dotPositions(){
+      // stack dots that share a rounded position
+      const counts = {};
+      return data.map(v=>{
+        const key = Math.round(v/2)*2;
+        counts[key] = (counts[key]||0)+1;
+        return {v, x:X(v), y:AXIS_Y - 12 - (counts[key]-1)*(R*2+2)};
+      });
+    }
+    function draw(){
+      cx.clearRect(0,0,cv.width,cv.height);
+      const st = stats(data);
+      // IQR band
+      if (st && data.length>=4){
+        cx.fillStyle="rgba(15,118,110,.12)";
+        cx.fillRect(X(st.q1), 18, X(st.q3)-X(st.q1), AXIS_Y-18);
+      }
+      // axis
+      cx.strokeStyle="#9ca3af"; cx.beginPath();
+      cx.moveTo(30,AXIS_Y); cx.lineTo(cv.width-30,AXIS_Y); cx.stroke();
+      cx.fillStyle="#6b7280"; cx.font="11px system-ui";
+      for(let v=LO; v<=HI; v+=10) cx.fillText(v, X(v)-6, AXIS_Y+16);
+      // dots
+      cx.fillStyle="#2d6a4f";
+      dotPositions().forEach(p=>{
+        cx.beginPath(); cx.arc(p.x,p.y,R,0,7); cx.fill();
+      });
+      if (st){
+        // median line
+        cx.strokeStyle="#1d4ed8"; cx.lineWidth=2.5; cx.beginPath();
+        cx.moveTo(X(st.median),18); cx.lineTo(X(st.median),AXIS_Y); cx.stroke();
+        cx.lineWidth=1;
+        // mean triangle (fulcrum)
+        cx.fillStyle="#b45309"; cx.beginPath();
+        cx.moveTo(X(st.mean), AXIS_Y+2);
+        cx.lineTo(X(st.mean)-9, AXIS_Y+20);
+        cx.lineTo(X(st.mean)+9, AXIS_Y+20);
+        cx.closePath(); cx.fill();
+        cx.font="600 11px system-ui";
+        cx.fillStyle="#b45309"; cx.fillText("mean ▲", X(st.mean)-20, AXIS_Y+34);
+        cx.fillStyle="#1d4ed8"; cx.fillText("median", X(st.median)-18, 14);
+        document.getElementById("dotStats").innerHTML =
+          `<span>n = ${st.n}</span>`+
+          `<span class="mean">mean = ${st.mean.toFixed(1)}</span>`+
+          `<span class="med">median = ${st.median.toFixed(1)}</span>`+
+          `<span class="sd">s = ${st.s.toFixed(2)}</span>`+
+          `<span class="iqr">IQR = ${(st.q3-st.q1).toFixed(1)} [${st.q1.toFixed(1)}–${st.q3.toFixed(1)}]</span>`+
+          `<span>range = ${(st.max-st.min).toFixed(1)}</span>`;
+      } else {
+        document.getElementById("dotStats").textContent = "Click the strip to add data.";
+      }
+    }
+    cv.addEventListener("pointerdown", e=>{
+      const r = cv.getBoundingClientRect();
+      const px = (e.clientX-r.left)*(cv.width/r.width);
+      const py = (e.clientY-r.top)*(cv.height/r.height);
+      // remove if clicking an existing dot
+      const hit = dotPositions().findIndex(p=>Math.hypot(p.x-px,p.y-py)<=R+3);
+      if (hit>=0) data.splice(hit,1);
+      else if (py < AXIS_Y+8){
+        const v = Math.max(LO, Math.min(HI, V(px)));
+        data.push(Math.round(v*2)/2);
+      }
+      draw();
+    });
+    const set = arr => { data=[...arr]; draw(); };
+    document.getElementById("presetSym").onclick = e=>{e.preventDefault();
+      set([30,38,42,46,48,50,50,52,54,58,62,70,44,56,50]);};
+    document.getElementById("presetSkew").onclick = e=>{e.preventDefault();
+      set([12,14,15,16,18,18,20,22,24,26,30,36,44,58,80]);};
+    document.getElementById("presetOut").onclick = e=>{e.preventDefault();
+      set([38,39,41,42,44,45,47,48,51,98]);};
+    document.getElementById("presetBi").onclick = e=>{e.preventDefault();
+      set([20,22,24,25,26,28,30,62,64,66,68,70,72,74]);};
+    document.getElementById("clearPts").onclick = e=>{e.preventDefault(); set([]);};
+    document.getElementById("presetOut").click();
+  })();
+
+  /* ---------- Visual 2: anatomy of SD ---------- */
+  (function(){
+    const cv = document.getElementById("sdCanvas"), cx = cv.getContext("2d");
+    const LO=0, HI=30, AXIS_Y=210, R=8;
+    const START = [12,15,9,18,14,10];
+    let data = [...START], dragging = -1;
+    const X = v => 40 + (v-LO)/(HI-LO)*(cv.width-80);
+    const V = x => LO + (x-40)/(cv.width-80)*(HI-LO);
+    const SCALE = (cv.width-80)/(HI-LO); // px per unit
+
+    function draw(){
+      cx.clearRect(0,0,cv.width,cv.height);
+      const n = data.length;
+      const mean = data.reduce((a,b)=>a+b,0)/n;
+      const useN1 = document.querySelector('input[name="divisor"]:checked').value==="n1";
+      const ss = data.reduce((a,b)=>a+(b-mean)**2,0);
+      const div = useN1 ? n-1 : n;
+      const variance = ss/div, sd = Math.sqrt(variance);
+      // axis
+      cx.strokeStyle="#9ca3af"; cx.beginPath();
+      cx.moveTo(40,AXIS_Y); cx.lineTo(cv.width-40,AXIS_Y); cx.stroke();
+      cx.fillStyle="#6b7280"; cx.font="11px system-ui";
+      for(let v=LO; v<=HI; v+=5) cx.fillText(v, X(v)-5, AXIS_Y+16);
+      // squares for squared deviations
+      data.forEach(d=>{
+        const w = Math.abs(d-mean)*SCALE;
+        const xleft = Math.min(X(d), X(mean));
+        cx.fillStyle="rgba(124,58,237,.14)";
+        cx.strokeStyle="rgba(124,58,237,.6)";
+        cx.fillRect(xleft, AXIS_Y- w, w, w);
+        cx.strokeRect(xleft, AXIS_Y- w, w, w);
+      });
+      // mean line
+      cx.strokeStyle="#b45309"; cx.lineWidth=2.5; cx.beginPath();
+      cx.moveTo(X(mean),30); cx.lineTo(X(mean),AXIS_Y); cx.stroke(); cx.lineWidth=1;
+      cx.fillStyle="#b45309"; cx.font="600 12px system-ui";
+      cx.fillText(`x̄ = ${mean.toFixed(2)}`, X(mean)+6, 42);
+      // average square (the variance) drawn at right in accent
+      const sdW = sd*SCALE;
+      cx.fillStyle="rgba(45,106,79,.18)"; cx.strokeStyle="#2d6a4f";
+      cx.fillRect(cv.width-40-sdW, AXIS_Y-sdW, sdW, sdW);
+      cx.strokeRect(cv.width-40-sdW, AXIS_Y-sdW, sdW, sdW);
+      cx.fillStyle="#2d6a4f"; cx.font="600 11px system-ui";
+      cx.fillText("average square →", cv.width-40-sdW-4, AXIS_Y-sdW-18);
+      cx.fillText(`side = ${useN1?"s":"σ"} = ${sd.toFixed(2)}`, cv.width-40-sdW-4, AXIS_Y-sdW-6);
+      // points
+      data.forEach(d=>{
+        cx.fillStyle="#2d6a4f"; cx.beginPath();
+        cx.arc(X(d), AXIS_Y, R, 0, 7); cx.fill();
+      });
+      document.getElementById("sdReadout").textContent =
+        `Σ(x−x̄)² = ${ss.toFixed(2)}   ÷ ${useN1?`(n−1) = ${n-1}`:`n = ${n}`}   →  variance = ${variance.toFixed(2)}   →  ${useN1?"s":"σ"} = √${variance.toFixed(2)} = ${sd.toFixed(2)}`;
+    }
+    cv.addEventListener("pointerdown", e=>{
+      const r=cv.getBoundingClientRect();
+      const px=(e.clientX-r.left)*(cv.width/r.width);
+      const py=(e.clientY-r.top)*(cv.height/r.height);
+      dragging = data.findIndex(d=>Math.hypot(X(d)-px, AXIS_Y-py)<=R+5);
+      if (dragging>=0) cv.setPointerCapture(e.pointerId);
+    });
+    cv.addEventListener("pointermove", e=>{
+      if (dragging<0) return;
+      const r=cv.getBoundingClientRect();
+      const px=(e.clientX-r.left)*(cv.width/r.width);
+      data[dragging] = Math.max(LO, Math.min(HI, Math.round(V(px)*2)/2));
+      draw();
+    });
+    cv.addEventListener("pointerup", ()=> dragging=-1);
+    document.querySelectorAll('input[name="divisor"]').forEach(r=>
+      r.addEventListener("change", draw));
+    document.getElementById("sdReset").onclick = e=>{e.preventDefault(); data=[...START]; draw();};
+    draw();
+  })();
+
+  /* ---------- Visual 3: CV comparison ---------- */
+  (function(){
+    function drawCurve(canvas, mean, sd, color){
+      const cx = canvas.getContext("2d");
+      cx.clearRect(0,0,canvas.width,canvas.height);
+      const lo = mean-4*sd, hi = mean+4*sd;
+      const X = v => 10 + (v-lo)/(hi-lo)*(canvas.width-20);
+      const peak = 1/(sd*Math.sqrt(2*Math.PI));
+      cx.strokeStyle=color; cx.lineWidth=2; cx.beginPath();
+      for(let i=0;i<=200;i++){
+        const v = lo + (hi-lo)*i/200;
+        const y = Math.exp(-((v-mean)**2)/(2*sd*sd))/(sd*Math.sqrt(2*Math.PI));
+        const py = canvas.height-14 - (y/peak)*(canvas.height-30);
+        i? cx.lineTo(X(v),py) : cx.moveTo(X(v),py);
+      }
+      cx.stroke();
+      cx.strokeStyle="#9ca3af"; cx.beginPath();
+      cx.moveTo(10,canvas.height-14); cx.lineTo(canvas.width-10,canvas.height-14); cx.stroke();
+      cx.fillStyle="#6b7280"; cx.font="10px system-ui";
+      cx.fillText((mean-2*sd).toFixed(1), X(mean-2*sd)-10, canvas.height-3);
+      cx.fillText(mean.toFixed(1), X(mean)-8, canvas.height-3);
+      cx.fillText((mean+2*sd).toFixed(1), X(mean+2*sd)-10, canvas.height-3);
+    }
+    function update(){
+      const mA=+meanA.value, sA=+sdA.value, mB=+meanB.value, sB=+sdB.value;
+      document.getElementById("meanAv").textContent=mA;
+      document.getElementById("sdAv").textContent=sA;
+      document.getElementById("meanBv").textContent=mB;
+      document.getElementById("sdBv").textContent=sB;
+      drawCurve(document.getElementById("cvA"), mA, sA, "#2d6a4f");
+      drawCurve(document.getElementById("cvB"), mB, sB, "#b45309");
+      const cvA_=(sA/mA*100), cvB_=(sB/mB*100);
+      const verdict = Math.abs(cvA_-cvB_)<0.5 ? "— about equally variable relative to their scales."
+        : (cvA_>cvB_ ? "→ the store's sales are more variable relative to scale."
+                     : "→ the fund's returns are more variable relative to scale.");
+      document.getElementById("cvVerdict").innerHTML =
+        `CV<sub>store</sub> = ${sA}/${mA} = <strong>${cvA_.toFixed(1)}%</strong> &nbsp;·&nbsp; `+
+        `CV<sub>fund</sub> = ${sB}/${mB} = <strong>${cvB_.toFixed(1)}%</strong> &nbsp; ${verdict}`;
+    }
+    const meanA=document.getElementById("meanA"), sdA=document.getElementById("sdA"),
+          meanB=document.getElementById("meanB"), sdB=document.getElementById("sdB");
+    [meanA,sdA,meanB,sdB].forEach(el=>el.addEventListener("input",update));
+    update();
+  })();
+
+  /* ---------- quiz submit (server-graded) ---------- */
+  document.getElementById("quizForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const fd = new FormData(e.target);
+    const answers = {};
+    document.querySelectorAll(".q").forEach(q => {
+      const qid = q.dataset.qid;
+      answers[qid] = fd.get(qid);
+    });
+
+    const payload = { address: LESSON_ADDRESS, answers, ts: Date.now() };
+
+    try {
+      const res = await fetch(location.protocol === "file:"
+          ? "http://127.0.0.1:8753/record" : "/record", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (data.error) {
+        document.getElementById("result").textContent = "Recorder error: " + data.error;
+        return;
+      }
+      document.getElementById("result").textContent =
+        `Score: ${data.correct}/${data.total}. ` +
+        (data.weak_topics?.length ? `Review: ${data.weak_topics.join(", ")}` : "Nice work.");
+      (data.results || []).forEach(r => {
+        const q = document.querySelector(`.q[data-qid="${r.qid}"]`);
+        if (!q) return;
+        q.classList.remove("right", "wrong");
+        q.classList.add(r.is_correct ? "right" : "wrong");
+        let fb = q.querySelector(".fb");
+        if (!fb) { fb = document.createElement("div"); fb.className = "fb"; q.appendChild(fb); }
+        fb.textContent = "";
+        const mark = document.createElement("b");
+        mark.textContent = r.is_correct ? "✓ Correct" : "✗ Incorrect";
+        fb.appendChild(mark);
+        if (!r.is_correct && r.explanation) fb.append(" — " + r.explanation);
+      });
+    } catch (err) {
+      const blob = new Blob([JSON.stringify(payload, null, 2)],
+                            {type:"application/json"});
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = `${LESSON_ADDRESS}.attempt.json`;
+      a.click();
+      document.getElementById("result").textContent =
+        "Recorder offline — downloaded attempt JSON. Run scripts/serve.py and import it.";
+    }
+  });
+</script>
+</body>
+</html>

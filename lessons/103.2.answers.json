@@ -1,0 +1,66 @@
+{
+  "address": "103.2",
+  "title": "Descriptive Statistics: Center, Spread, Shape",
+  "questions": [
+    {
+      "qid": "q1",
+      "type": "mc",
+      "correct": "c",
+      "topic": "center measures",
+      "explanation": "The median depends only on the position of the middle value, so dragging the largest value out to infinity doesn't move it. The mean is a balance point — Σ(x − x̄) = 0 — so a single extreme value tips it hard. (The range isn't a measure of center at all.)"
+    },
+    {
+      "qid": "q2",
+      "type": "num",
+      "correct": 10,
+      "tolerance": 0.01,
+      "topic": "median",
+      "explanation": "Sort first: 7, 9, 9, 11, 12, 15. With an even n = 6, the median is the average of the two middle values (positions 3 and 4): (9 + 11)/2 = 10. Forgetting to sort is the classic error here."
+    },
+    {
+      "qid": "q3",
+      "type": "num",
+      "correct": 2.24,
+      "tolerance": 0.02,
+      "topic": "standard deviation",
+      "explanation": "x̄ = 35/5 = 7. Deviations: −3, 1, −1, 3, 0 (they sum to 0 ✓). Squared: 9 + 1 + 1 + 9 + 0 = 20. Sample variance s² = 20/(5−1) = 5, so s = √5 ≈ 2.24. Dividing by n = 5 instead of n − 1 gives 2.00 — that's the population formula, wrong for a sample."
+    },
+    {
+      "qid": "q4",
+      "type": "num",
+      "correct": 5.2,
+      "tolerance": 0.05,
+      "topic": "weighted mean",
+      "explanation": "Weight each return by its portfolio share: 0.60(5) + 0.30(8) + 0.10(−2) = 3.0 + 2.4 − 0.2 = 5.2%. The unweighted average (5 + 8 − 2)/3 ≈ 3.7% ignores that 60% of the money sits in Fund A."
+    },
+    {
+      "qid": "q5",
+      "type": "mc",
+      "correct": "b",
+      "topic": "skewness",
+      "explanation": "A right (positive) skew means a long tail of unusually large orders. The mean chases that tail upward while the median stays with the bulk of the data, so mean > median. The reverse holds for left-skewed data; for symmetric data they roughly coincide."
+    },
+    {
+      "qid": "q6",
+      "type": "mc",
+      "correct": "b",
+      "topic": "coefficient of variation",
+      "explanation": "Raw standard deviations can't be compared across scales — $5,000 of spread on a $50,000 base is different from $1,200 on an $8,000 base. The CV normalizes: A = 5,000/50,000 = 10%; B = 1,200/8,000 = 15%. Line B fluctuates more relative to its own typical level."
+    },
+    {
+      "qid": "q7",
+      "type": "mc",
+      "correct": "b",
+      "topic": "linear transformation",
+      "explanation": "Adding a constant shifts every value — and therefore the mean — by exactly that constant, but the distances between values are untouched, so all spread measures (s, IQR, range) stay the same. Spread changes only when you multiply by a constant, which scales s by the same factor."
+    },
+    {
+      "qid": "q8",
+      "type": "num",
+      "correct": 1.5,
+      "tolerance": 0.01,
+      "topic": "z-score",
+      "explanation": "z = (x − x̄)/s = (86,000 − 74,000)/8,000 = 12,000/8,000 = +1.5: the rep sits one and a half standard deviations above the team mean. z-scores put any value on the common 'standard deviations from the mean' scale."
+    }
+  ]
+}

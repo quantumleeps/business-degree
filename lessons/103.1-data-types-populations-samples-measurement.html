@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>103.1 — Data Types, Populations vs. Samples, Levels of Measurement</title>
+<style>
+  :root { --ink:#1a1a2e; --paper:#fdfdfb; --accent:#2d6a4f; --muted:#6b7280; }
+  body { margin:0; font:16px/1.6 system-ui,sans-serif; color:var(--ink);
+         background:var(--paper); }
+  .wrap { max-width:820px; margin:0 auto; padding:32px 20px 80px; }
+  header .addr { font:600 13px ui-monospace,monospace; color:var(--accent);
+                 letter-spacing:.05em; }
+  h1 { font-size:30px; margin:.2em 0 .1em; }
+  .why { color:var(--muted); font-style:italic; margin-bottom:2em; }
+  section { margin:2.5em 0; }
+  h2 { border-bottom:2px solid var(--accent); padding-bottom:4px; }
+  h3 { margin:1.6em 0 .4em; }
+  .visual { border:1px solid #e5e7eb; border-radius:12px; padding:16px;
+            background:#fff; }
+  table.t { border-collapse:collapse; width:100%; font-size:14px; margin:1em 0; }
+  table.t th, table.t td { border:1px solid #e5e7eb; padding:6px 9px; text-align:left; }
+  table.t th { background:#f3f4f6; }
+  .ex { background:#f0f7f4; border-left:4px solid var(--accent); padding:12px 16px;
+        border-radius:0 8px 8px 0; margin:1.2em 0; }
+  .ex .lbl { font:600 12px ui-monospace,monospace; color:var(--accent);
+             text-transform:uppercase; letter-spacing:.06em; }
+  code { background:#f3f4f6; padding:1px 5px; border-radius:4px; font-size:14px; }
+  .q { margin:1.2em 0; padding:14px; border:1px solid #e5e7eb;
+       border-radius:10px; }
+  .q .opts label { display:block; margin:4px 0; cursor:pointer; }
+  .q.right { border-color:var(--accent); background:#f0f7f4; }
+  .q.wrong { border-color:#b91c1c; background:#fef2f2; }
+  .q .fb { margin-top:10px; padding-top:8px; border-top:1px dashed #d1d5db;
+       font-size:14px; }
+  .q.right .fb b { color:var(--accent); }
+  .q.wrong .fb b { color:#b91c1c; }
+  button { background:var(--accent); color:#fff; border:0; padding:10px 18px;
+           border-radius:8px; font-size:15px; cursor:pointer; }
+  button.small { padding:6px 12px; font-size:13px; }
+  button.ghost { background:#fff; color:var(--accent); border:1px solid var(--accent); }
+  #result { margin-top:1em; font-weight:600; }
+  .lesson-nav { display:flex; justify-content:space-between; margin-top:3em;
+       padding-top:1em; border-top:1px solid #e5e7eb; }
+  .lesson-nav a { color:var(--accent); font-weight:600; text-decoration:none; }
+  .lesson-nav a:hover { text-decoration:underline; }
+  .ctrl { display:flex; flex-wrap:wrap; gap:10px 18px; align-items:center;
+          margin:10px 0; font-size:14px; }
+  .ctrl label { display:flex; align-items:center; gap:6px; }
+  .readout { font:600 14px ui-monospace,monospace; }
+  /* ladder visual */
+  .ladder { display:flex; gap:18px; flex-wrap:wrap; }
+  .rungs { flex:0 0 210px; }
+  .rung { border:2px solid #e5e7eb; border-radius:8px; padding:8px 12px;
+          margin:6px 0; transition:all .25s; background:#fafafa; }
+  .rung.on { border-color:var(--accent); background:#f0f7f4;
+             box-shadow:0 2px 8px rgba(45,106,79,.25); }
+  .rung b { display:block; }
+  .rung small { color:var(--muted); }
+  .perm { flex:1; min-width:260px; }
+  .perm .row { display:flex; align-items:center; gap:8px; margin:5px 0;
+               font-size:14px; }
+  .perm .ok { color:var(--accent); font-weight:700; }
+  .perm .no { color:#b91c1c; font-weight:700; }
+  .reason { margin-top:10px; padding:10px; background:#fffbeb;
+            border:1px solid #fde68a; border-radius:8px; font-size:14px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="addr">103.1</div>
+    <h1>Data Types, Populations vs. Samples, Levels of Measurement</h1>
+    <p class="why">Every statistic you will ever compute is only as meaningful as the data behind it — knowing what kind of data you hold, and who it actually represents, is the difference between analysis and noise.</p>
+  </header>
+
+  <!-- 1. WRITTEN / TEACHING SECTION -->
+  <section id="learn">
+    <h2>Learn</h2>
+
+    <h3>1. Cases and variables: the shape of a dataset</h3>
+    <p>Statistics starts with a rectangular idea: a dataset is a table in which each <strong>row is a case</strong> (also called an <em>observational unit</em> or <em>element</em> — a customer, an invoice, a store-month) and each <strong>column is a variable</strong> — a characteristic measured on every case. Before any computation, a statistician asks two questions: <em>what are the cases?</em> and <em>what are the variables?</em></p>
+    <table class="t">
+      <tr><th>Customer ID</th><th>Region</th><th>Satisfaction (1–5)</th><th>Monthly spend ($)</th><th>Returns last year</th></tr>
+      <tr><td>10482</td><td>West</td><td>4</td><td>86.40</td><td>0</td></tr>
+      <tr><td>10519</td><td>South</td><td>2</td><td>41.15</td><td>3</td></tr>
+      <tr><td>10533</td><td>West</td><td>5</td><td>129.80</td><td>1</td></tr>
+    </table>
+    <p>Here the case is a customer; there are four substantive variables (the ID is a label, not a measurement — more on that below). One dataset, but the variables are of very different kinds, and the kind determines which statistics are legitimate.</p>
+
+    <h3>2. Qualitative vs. quantitative; discrete vs. continuous</h3>
+    <p>A <strong>qualitative (categorical) variable</strong> places each case into a category: region, payment method, bond rating. A <strong>quantitative (numerical) variable</strong> records a quantity for which arithmetic is meaningful: monthly spend, delivery time, number of returns.</p>
+    <p>Quantitative variables subdivide:</p>
+    <ul>
+      <li><strong>Discrete</strong> — countable values, usually counts: number of returns (0, 1, 2, …), units sold. Between 2 and 3 returns there is nothing.</li>
+      <li><strong>Continuous</strong> — any value in an interval, limited only by measurement precision: delivery time, revenue, weight. Between any two values another is possible.</li>
+    </ul>
+    <p><strong>Warning: digits do not make data quantitative.</strong> A ZIP code, a customer ID, or a jersey number is stored as a number but identifies a category. The test is whether arithmetic means anything: the average of ZIP codes 10001 and 90210 is 50105.5, which is the middle of nowhere — literally. Such variables are categorical no matter how they are typed in a spreadsheet.</p>
+
+    <h3>3. The four levels of measurement</h3>
+    <p>S. S. Stevens's classic hierarchy refines this into four <strong>levels of measurement</strong>. Each level supports everything below it plus one new property, and each new property licenses new statistics.</p>
+    <table class="t">
+      <tr><th>Level</th><th>New property</th><th>Business examples</th><th>Legitimate summaries</th></tr>
+      <tr><td><strong>Nominal</strong></td><td>Categories can be distinguished (= / ≠ only)</td><td>Region, industry code, payment method, ZIP code</td><td>Counts, proportions, mode</td></tr>
+      <tr><td><strong>Ordinal</strong></td><td>Categories have a meaningful order</td><td>Satisfaction 1–5, bond ratings (AAA &gt; AA &gt; A), job grade</td><td>+ median, percentiles</td></tr>
+      <tr><td><strong>Interval</strong></td><td>Differences between values are meaningful; zero is arbitrary</td><td>Temperature in °F, calendar year</td><td>+ mean, standard deviation</td></tr>
+      <tr><td><strong>Ratio</strong></td><td>True zero exists, so ratios are meaningful</td><td>Revenue, cost, delivery time, head-count</td><td>+ coefficient of variation, ratios (“twice as much”)</td></tr>
+    </table>
+    <p>Why the distinctions matter, concretely:</p>
+    <ul>
+      <li><strong>Ordinal gaps are not equal.</strong> On a 1–5 satisfaction scale, the jump from 4 to 5 need not equal the jump from 2 to 3. Strictly, that makes a mean of ratings questionable — the median is the defensible center. (In practice, business research often treats multi-item Likert scales as approximately interval; know that this is a convention, not a property of the data.)</li>
+      <li><strong>Interval data forbid ratios.</strong> 80&nbsp;°F is not “twice as hot” as 40&nbsp;°F, because 0&nbsp;°F is an arbitrary point, not the absence of temperature. Convert to Celsius and the “ratio” changes — a giveaway that it was never meaningful. (Kelvin, with a true zero, is ratio-level.)</li>
+      <li><strong>Ratio data allow everything.</strong> $200,000 of revenue genuinely is twice $100,000, because $0 means no revenue at all.</li>
+    </ul>
+
+    <h3>4. Populations and samples; parameters and statistics</h3>
+    <p>The <strong>population</strong> is the entire collection of cases about which you want a conclusion. A <strong>sample</strong> is the subset you actually measure. A <strong>census</strong> measures the whole population — rarely feasible at business scale (costly, slow, sometimes destructive: you cannot crash-test every car).</p>
+    <p>The vocabulary splits cleanly along that line:</p>
+    <table class="t">
+      <tr><th></th><th>Describes the population</th><th>Computed from a sample</th></tr>
+      <tr><td>Name</td><td><strong>Parameter</strong> (fixed, usually unknown)</td><td><strong>Statistic</strong> (known, varies by sample)</td></tr>
+      <tr><td>Mean</td><td>μ</td><td>x̄</td></tr>
+      <tr><td>Std. deviation</td><td>σ</td><td>s</td></tr>
+      <tr><td>Proportion</td><td>p</td><td>p̂</td></tr>
+    </table>
+    <p>The central drama of inferential statistics (courses 103.8–103.10 and 204) is using a statistic you can see to estimate a parameter you cannot. Two different errors threaten that move:</p>
+    <ul>
+      <li><strong>Sampling error</strong> — the statistic differs from the parameter just because of who happened to land in the sample. It is unavoidable, random, and <em>shrinks as the sample grows</em>.</li>
+      <li><strong>Bias (systematic error)</strong> — the sampling method itself tilts the result in a consistent direction. It does <em>not</em> shrink as the sample grows; a bigger biased sample just estimates the wrong number more precisely. The infamous 1936 <em>Literary Digest</em> poll reached 2.4 million respondents and still called the U.S. presidential election wrong by 19 points, because its mailing lists (car and telephone owners, mid-Depression) skewed wealthy.</li>
+    </ul>
+
+    <h3>5. How samples get drawn</h3>
+    <p>A <strong>sampling frame</strong> is the actual list of population members from which you draw — e.g., the loyalty-program database standing in for “all customers.” Gaps between frame and population are a first source of bias.</p>
+    <ul>
+      <li><strong>Simple random sample (SRS)</strong> — every subset of size <em>n</em> is equally likely. The gold standard; everything in inference assumes it unless told otherwise.</li>
+      <li><strong>Systematic sample</strong> — pick a random start, then every <em>k</em>-th case, where <code>k = N / n</code>. Convenient for lists and production lines; dangerous only if the list has a cycle that matches <em>k</em>.</li>
+      <li><strong>Stratified sample</strong> — divide the population into non-overlapping <strong>strata</strong> (e.g., regions), then sample randomly <em>within each</em>. Under <em>proportional allocation</em>, stratum <em>h</em> gets <code>n<sub>h</sub> = n × N<sub>h</sub> / N</code>. Guarantees every stratum is represented and usually reduces sampling error.</li>
+      <li><strong>Cluster sample</strong> — randomly select whole groups (stores, branches) and measure everyone inside the chosen clusters. Cheap when the population is geographically scattered; statistically noisier than stratifying.</li>
+      <li><strong>Convenience sample</strong> — whoever is easy to reach (shoppers near the entrance, your own followers). <strong>Voluntary response sample</strong> — whoever chooses to respond (online reviews, call-in polls); dominated by strong opinions. Both are biased by construction, and no sample size fixes them.</li>
+    </ul>
+    <p>Beyond selection bias, watch for <strong>nonresponse bias</strong> (those who answer differ from those who don't) and <strong>response bias</strong> (question wording, interviewer effects, or social pressure distorting answers).</p>
+
+    <div class="ex">
+      <span class="lbl">Worked example</span>
+      <p>A coffee chain wants the <strong>mean monthly spend of its 12,000 loyalty members</strong> but can afford to survey 300. Members split by region: West 6,000, South 4,200, East 1,800.</p>
+      <p><strong>Identify the pieces.</strong> Population: all 12,000 members. Parameter sought: μ = true mean monthly spend (unknown, fixed). Sampling frame: the loyalty database. Variable: monthly spend — quantitative, continuous, ratio level (true zero, ratios meaningful).</p>
+      <p><strong>Stratified design, proportional allocation:</strong></p>
+      <p>
+        n<sub>West</sub> = 300 × 6,000 / 12,000 = <strong>150</strong> &nbsp;|&nbsp;
+        n<sub>South</sub> = 300 × 4,200 / 12,000 = <strong>105</strong> &nbsp;|&nbsp;
+        n<sub>East</sub> = 300 × 1,800 / 12,000 = <strong>45</strong>
+      </p>
+      <p>The survey runs and yields x̄ = $86.40. That number is a <strong>statistic</strong>: a different random sample would give a slightly different x̄. The parameter μ is still unknown — x̄ is our estimate of it, and quantifying how far off it might be is exactly where this course is headed.</p>
+    </div>
+  </section>
+
+  <!-- 2. VISUAL SECTIONS -->
+  <section id="see-1" class="see">
+    <h2>See it: the measurement ladder</h2>
+    <p>Pick a business variable. The ladder highlights its level of measurement, and the checklist shows which operations and summary statistics are legitimate at that level — and why.</p>
+    <div class="visual" id="viz-1">
+      <div class="ctrl">
+        <label>Variable:
+          <select id="varSel"></select>
+        </label>
+      </div>
+      <div class="ladder">
+        <div class="rungs" id="rungs"></div>
+        <div class="perm">
+          <div id="permRows"></div>
+          <div class="reason" id="permReason"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="see-2" class="see">
+    <h2>See it: parameter fixed, statistic random</h2>
+    <p>Below is a whole population: 400 loyalty members, one dot each, darker = higher monthly spend. The population mean μ never moves. Draw random samples and watch x̄ scatter around μ — that scatter <em>is</em> sampling error. Increase n and watch it tighten.</p>
+    <div class="visual" id="viz-2">
+      <canvas id="popCanvas" width="760" height="240" style="width:100%;max-width:760px;"></canvas>
+      <div class="ctrl">
+        <label>Sample size n: <input type="range" id="nSlider" min="5" max="200" value="25" />
+          <span class="readout" id="nVal">25</span></label>
+        <button class="small" id="drawOne">Draw 1 sample</button>
+        <button class="small ghost" id="drawFifty">Draw 50 samples</button>
+        <button class="small ghost" id="resetTicks">Reset</button>
+      </div>
+      <div class="readout" id="srsReadout"></div>
+      <canvas id="stripCanvas" width="760" height="110" style="width:100%;max-width:760px;"></canvas>
+    </div>
+  </section>
+
+  <section id="see-3" class="see">
+    <h2>See it: bias doesn't average out</h2>
+    <p>Same population, but spend rises toward the flagship store on the right side of the map. Compare a true SRS against a convenience sample taken near the flagship entrance (right quarter only). The SRS estimates scatter <em>around</em> μ; the convenience estimates scatter around the <em>wrong number</em> — and raising n only makes them more confidently wrong.</p>
+    <div class="visual" id="viz-3">
+      <canvas id="biasCanvas" width="760" height="240" style="width:100%;max-width:760px;"></canvas>
+      <div class="ctrl">
+        <label><input type="radio" name="method" value="srs" checked /> Simple random sample</label>
+        <label><input type="radio" name="method" value="conv" /> Convenience (near flagship)</label>
+        <label>n: <input type="range" id="nSlider2" min="5" max="200" value="40" />
+          <span class="readout" id="nVal2">40</span></label>
+        <button class="small" id="drawOne2">Draw 1</button>
+        <button class="small ghost" id="drawFifty2">Draw 50</button>
+        <button class="small ghost" id="resetTicks2">Reset</button>
+      </div>
+      <div class="readout" id="biasReadout"></div>
+      <canvas id="stripCanvas2" width="760" height="130" style="width:100%;max-width:760px;"></canvas>
+    </div>
+  </section>
+
+  <!-- 3. QUIZ -->
+  <section id="quiz">
+    <h2>Check yourself</h2>
+    <form id="quizForm">
+
+      <div class="q" data-qid="q1" data-type="mc">
+        <p><strong>1.</strong> What property distinguishes ratio-level measurement from interval-level measurement?</p>
+        <div class="opts">
+          <label><input type="radio" name="q1" value="a"> Values can be put in a meaningful order</label>
+          <label><input type="radio" name="q1" value="b"> Differences between values are meaningful</label>
+          <label><input type="radio" name="q1" value="c"> A true zero exists, so statements like “twice as much” are meaningful</label>
+          <label><input type="radio" name="q1" value="d"> Values are categories that can only be counted</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q2" data-type="mc">
+        <p><strong>2.</strong> A hotel asks guests to rate their stay on a scale of 1 (“terrible”) to 5 (“excellent”). The rating variable is best classified as:</p>
+        <div class="opts">
+          <label><input type="radio" name="q2" value="a"> Nominal</label>
+          <label><input type="radio" name="q2" value="b"> Ordinal</label>
+          <label><input type="radio" name="q2" value="c"> Interval</label>
+          <label><input type="radio" name="q2" value="d"> Ratio</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q3" data-type="mc">
+        <p><strong>3.</strong> An auditor randomly selects 120 of a firm's 9,400 invoices and finds that 8.4% of the selected invoices contain errors. The 8.4% figure is:</p>
+        <div class="opts">
+          <label><input type="radio" name="q3" value="a"> A parameter, because it describes the invoices</label>
+          <label><input type="radio" name="q3" value="b"> A statistic, because it was computed from a sample</label>
+          <label><input type="radio" name="q3" value="c"> A parameter, because error rates are population properties</label>
+          <label><input type="radio" name="q3" value="d"> A census result, because invoices were selected at random</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q4" data-type="mc">
+        <p><strong>4.</strong> A call center wants feedback from today's callers. Software flags every 25th call, starting from a randomly chosen call among the first 25. This sampling design is:</p>
+        <div class="opts">
+          <label><input type="radio" name="q4" value="a"> Stratified sampling</label>
+          <label><input type="radio" name="q4" value="b"> Cluster sampling</label>
+          <label><input type="radio" name="q4" value="c"> Systematic sampling</label>
+          <label><input type="radio" name="q4" value="d"> Voluntary response sampling</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q5" data-type="num">
+        <p><strong>5.</strong> A retailer's 9,000 loyalty members fall into three tiers: Silver 4,500, Gold 3,000, Platinum 1,500. A stratified sample of 300 members uses proportional allocation. How many <strong>Platinum</strong> members should be sampled?</p>
+        <input type="number" name="q5" step="any" />
+      </div>
+
+      <div class="q" data-qid="q6" data-type="num">
+        <p><strong>6.</strong> A quality team will systematically sample 400 units from a production run of 12,000, checking every <em>k</em>-th unit after a random start. What value of <em>k</em> should they use?</p>
+        <input type="number" name="q6" step="any" />
+      </div>
+
+      <div class="q" data-qid="q7" data-type="mc">
+        <p><strong>7.</strong> A software company emails all users a link: “Tell us what you think of the new pricing!” 11,000 of 90,000 users respond, mostly unhappily. The company considers re-sending the email to get more responses. The fundamental problem with this study is:</p>
+        <div class="opts">
+          <label><input type="radio" name="q7" value="a"> The sample is too small a fraction of the population to be useful</label>
+          <label><input type="radio" name="q7" value="b"> It is a voluntary response sample, so it is biased no matter how large it gets</label>
+          <label><input type="radio" name="q7" value="c"> Pricing opinions are ordinal, so percentages cannot be computed</label>
+          <label><input type="radio" name="q7" value="d"> The sampling frame excludes non-users</label>
+        </div>
+      </div>
+
+      <div class="q" data-qid="q8" data-type="text">
+        <p><strong>8.</strong> What is the term for the actual list of population members from which a sample is drawn (e.g., the loyalty database standing in for “all customers”)?</p>
+        <input type="text" name="q8" />
+      </div>
+
+      <button type="submit">Submit answers</button>
+    </form>
+    <div id="result"></div>
+  </section>
+
+  <!-- 4. NAV -->
+  <nav class="lesson-nav">
+    <a href="index.html">← All lessons</a>
+    <a href="../harness/results.html">Results &amp; mastery →</a>
+  </nav>
+
+</div>
+
+<script>
+  const LESSON_ADDRESS = "103.1";
+
+  /* ---------- Visual 1: measurement ladder ---------- */
+  const LEVELS = ["Nominal","Ordinal","Interval","Ratio"];
+  const LEVEL_DESC = {
+    Nominal:"categories only", Ordinal:"+ meaningful order",
+    Interval:"+ equal differences, arbitrary zero", Ratio:"+ true zero, ratios meaningful"
+  };
+  const VARS = [
+    {name:"Region of customer (West/South/East)", level:0,
+     why:"Pure categories — you can count them and find the most common, but “West < South” is meaningless."},
+    {name:"Customer ID number", level:0,
+     why:"Looks numeric, but the digits only identify. Averaging IDs produces nonsense — this is nominal data wearing a number costume."},
+    {name:"Satisfaction rating 1–5", level:1,
+     why:"5 beats 4 beats 3, so order is real — but the gap from 4→5 need not equal 2→3, so means are formally suspect; the median is the safe center."},
+    {name:"Bond credit rating (AAA, AA, A, BBB…)", level:1,
+     why:"Clearly ordered categories with no defined distance between them. Median rating: fine. “Average rating”: undefined without an arbitrary numeric coding."},
+    {name:"Temperature in the store (°F)", level:2,
+     why:"A 1° difference means the same everywhere, so differences and means work. But 0 °F isn't “no temperature,” so 80° is not twice 40°."},
+    {name:"Calendar year a branch opened", level:2,
+     why:"Year 2000 minus 1990 = 10 years is meaningful; but year 0 is an arbitrary origin, so the year 2000 is not “twice” the year 1000."},
+    {name:"Monthly spend ($)", level:3,
+     why:"$0 genuinely means no spending, so $200 really is twice $100. Every statistic — mean, SD, coefficient of variation, ratios — is fair game."},
+    {name:"Delivery time (minutes)", level:3,
+     why:"Zero minutes means no time elapsed: a true zero. 30 minutes is exactly twice 15."},
+    {name:"Number of product returns", level:3,
+     why:"A count with a true zero — ratio level, and discrete (0, 1, 2, …): no customer makes 2.5 returns."}
+  ];
+  const OPS = [
+    {label:"Classify: = / ≠ (count, mode)", min:0},
+    {label:"Order: < / > (median, percentiles)", min:1},
+    {label:"Add & subtract differences (mean, standard deviation)", min:2},
+    {label:"Form ratios: “twice as much” (coefficient of variation)", min:3}
+  ];
+  const varSel = document.getElementById("varSel");
+  VARS.forEach((v,i)=>{ const o=document.createElement("option"); o.value=i; o.textContent=v.name; varSel.appendChild(o); });
+  const rungsDiv = document.getElementById("rungs");
+  // draw the ladder top-down: Ratio at top
+  for (let i=3;i>=0;i--){
+    const d=document.createElement("div"); d.className="rung"; d.dataset.level=i;
+    d.innerHTML = `<b>${LEVELS[i]}</b><small>${LEVEL_DESC[LEVELS[i]]}</small>`;
+    rungsDiv.appendChild(d);
+  }
+  function renderVar(){
+    const v = VARS[+varSel.value];
+    document.querySelectorAll(".rung").forEach(r=>
+      r.classList.toggle("on", +r.dataset.level === v.level));
+    const rows = OPS.map(op=>{
+      const ok = v.level >= op.min;
+      return `<div class="row"><span class="${ok?'ok':'no'}">${ok?'✓':'✗'}</span> ${op.label}</div>`;
+    }).join("");
+    document.getElementById("permRows").innerHTML = rows;
+    document.getElementById("permReason").textContent = v.why;
+  }
+  varSel.addEventListener("change", renderVar);
+  renderVar();
+
+  /* ---------- shared: seeded PRNG so the population is stable ---------- */
+  function mulberry32(a){ return function(){ a|=0; a=a+0x6D2B79F5|0;
+    let t=Math.imul(a^a>>>15,1|a); t=t+Math.imul(t^t>>>7,61|t)^t;
+    return ((t^t>>>14)>>>0)/4294967296; } }
+
+  /* ---------- Visual 2: parameter vs statistic ---------- */
+  (function(){
+    const rng = mulberry32(20261);
+    const N=400, cols=40, rows=10;
+    const pop = [];
+    for(let i=0;i<N;i++){
+      // right-skewed spend: base + lognormal-ish
+      const z = Math.sqrt(-2*Math.log(rng()+1e-12))*Math.cos(2*Math.PI*rng());
+      const spend = Math.max(5, 20 + Math.exp(3.6 + 0.55*z));
+      pop.push({spend, col:i%cols, row:Math.floor(i/cols)});
+    }
+    const mu = pop.reduce((s,p)=>s+p.spend,0)/N;
+    const lo = 40, hi = 130; // strip axis range for x̄
+    const cv = document.getElementById("popCanvas"), cx = cv.getContext("2d");
+    const sv = document.getElementById("stripCanvas"), sx = sv.getContext("2d");
+    const maxSpend = Math.max(...pop.map(p=>p.spend));
+    let lastSample = new Set(), ticks = [];
+
+    function drawPop(){
+      cx.clearRect(0,0,cv.width,cv.height);
+      const cw = cv.width/cols, ch = (cv.height-26)/rows;
+      pop.forEach((p,i)=>{
+        const t = Math.min(1, p.spend/maxSpend*1.6);
+        cx.fillStyle = `rgba(45,106,79,${0.15+0.75*t})`;
+        cx.beginPath();
+        cx.arc(p.col*cw+cw/2, p.row*ch+ch/2+26, Math.min(cw,ch)*0.32, 0, 7);
+        cx.fill();
+        if (lastSample.has(i)){
+          cx.strokeStyle="#b45309"; cx.lineWidth=2;
+          cx.beginPath();
+          cx.arc(p.col*cw+cw/2, p.row*ch+ch/2+26, Math.min(cw,ch)*0.45, 0, 7);
+          cx.stroke();
+        }
+      });
+      cx.fillStyle="#1a1a2e"; cx.font="600 13px system-ui";
+      cx.fillText(`Population: N = ${N} members   ·   μ = $${mu.toFixed(2)} (fixed — it never moves)`, 8, 17);
+    }
+    function drawStrip(){
+      sx.clearRect(0,0,sv.width,sv.height);
+      const X = v => 30 + (v-lo)/(hi-lo)*(sv.width-60);
+      sx.strokeStyle="#9ca3af"; sx.beginPath();
+      sx.moveTo(30, sv.height-28); sx.lineTo(sv.width-30, sv.height-28); sx.stroke();
+      sx.fillStyle="#6b7280"; sx.font="11px system-ui";
+      for(let v=lo; v<=hi; v+=10){
+        sx.fillText("$"+v, X(v)-10, sv.height-12);
+        sx.strokeStyle="#e5e7eb"; sx.beginPath();
+        sx.moveTo(X(v), 18); sx.lineTo(X(v), sv.height-28); sx.stroke();
+      }
+      ticks.forEach(t=>{
+        sx.strokeStyle="rgba(180,83,9,.45)"; sx.lineWidth=2; sx.beginPath();
+        sx.moveTo(X(t), sv.height-30); sx.lineTo(X(t), 26); sx.stroke();
+      });
+      sx.strokeStyle="#2d6a4f"; sx.lineWidth=3; sx.beginPath();
+      sx.moveTo(X(mu), sv.height-28); sx.lineTo(X(mu), 14); sx.stroke();
+      sx.fillStyle="#2d6a4f"; sx.font="600 12px system-ui";
+      sx.fillText("μ", X(mu)+5, 22);
+      sx.fillStyle="#b45309";
+      if (ticks.length) sx.fillText(`each orange tick = one sample's x̄  (${ticks.length} drawn)`, 34, 14);
+    }
+    function sample(){
+      const n = +document.getElementById("nSlider").value;
+      const idx = new Set();
+      while(idx.size<n) idx.add(Math.floor(Math.random()*N));
+      lastSample = idx;
+      const xbar = [...idx].reduce((s,i)=>s+pop[i].spend,0)/n;
+      ticks.push(xbar);
+      document.getElementById("srsReadout").textContent =
+        `Latest sample: n = ${n}, x̄ = $${xbar.toFixed(2)}  ·  off from μ by $${Math.abs(xbar-mu).toFixed(2)} (pure sampling error)`;
+      drawPop(); drawStrip();
+    }
+    document.getElementById("nSlider").addEventListener("input", e=>
+      document.getElementById("nVal").textContent = e.target.value);
+    document.getElementById("drawOne").addEventListener("click", e=>{e.preventDefault(); sample();});
+    document.getElementById("drawFifty").addEventListener("click", e=>{e.preventDefault(); for(let i=0;i<50;i++) sample();});
+    document.getElementById("resetTicks").addEventListener("click", e=>{
+      e.preventDefault(); ticks=[]; lastSample=new Set();
+      document.getElementById("srsReadout").textContent="";
+      drawPop(); drawStrip();
+    });
+    drawPop(); drawStrip();
+  })();
+
+  /* ---------- Visual 3: bias demo ---------- */
+  (function(){
+    const rng = mulberry32(77);
+    const N=400, cols=40, rows=10;
+    const pop=[];
+    for(let i=0;i<N;i++){
+      const col=i%cols, row=Math.floor(i/cols);
+      const z = Math.sqrt(-2*Math.log(rng()+1e-12))*Math.cos(2*Math.PI*rng());
+      // spend rises with column (toward flagship at right)
+      const spend = Math.max(5, 35 + col*1.6 + 14*z);
+      pop.push({spend,col,row});
+    }
+    const mu = pop.reduce((s,p)=>s+p.spend,0)/N;
+    const lo=40, hi=110;
+    const cv=document.getElementById("biasCanvas"), cx=cv.getContext("2d");
+    const sv=document.getElementById("stripCanvas2"), sx=sv.getContext("2d");
+    const maxSpend=Math.max(...pop.map(p=>p.spend));
+    let lastSample=new Set(), ticksSRS=[], ticksConv=[];
+
+    function drawPop(){
+      cx.clearRect(0,0,cv.width,cv.height);
+      const cw=cv.width/cols, ch=(cv.height-26)/rows;
+      // flagship zone shading
+      cx.fillStyle="rgba(180,83,9,.07)";
+      cx.fillRect(cv.width*0.75, 26, cv.width*0.25, cv.height-26);
+      pop.forEach((p,i)=>{
+        const t=Math.min(1,p.spend/maxSpend*1.4);
+        cx.fillStyle=`rgba(45,106,79,${0.12+0.78*t})`;
+        cx.beginPath();
+        cx.arc(p.col*cw+cw/2, p.row*ch+ch/2+26, Math.min(cw,ch)*0.32,0,7);
+        cx.fill();
+        if(lastSample.has(i)){
+          cx.strokeStyle="#b45309"; cx.lineWidth=2;
+          cx.beginPath();
+          cx.arc(p.col*cw+cw/2, p.row*ch+ch/2+26, Math.min(cw,ch)*0.45,0,7);
+          cx.stroke();
+        }
+      });
+      cx.fillStyle="#1a1a2e"; cx.font="600 13px system-ui";
+      cx.fillText(`μ = $${mu.toFixed(2)}   ·   spend rises toward the flagship store →`, 8, 17);
+      cx.fillStyle="#b45309"; cx.font="12px system-ui";
+      cx.fillText("flagship zone", cv.width*0.76, 40);
+    }
+    function drawStrip(){
+      sx.clearRect(0,0,sv.width,sv.height);
+      const X=v=>30+(v-lo)/(hi-lo)*(sv.width-60);
+      sx.strokeStyle="#9ca3af"; sx.beginPath();
+      sx.moveTo(30,sv.height-28); sx.lineTo(sv.width-30,sv.height-28); sx.stroke();
+      sx.fillStyle="#6b7280"; sx.font="11px system-ui";
+      for(let v=lo;v<=hi;v+=10){
+        sx.fillText("$"+v, X(v)-10, sv.height-12);
+        sx.strokeStyle="#e5e7eb"; sx.beginPath();
+        sx.moveTo(X(v),18); sx.lineTo(X(v),sv.height-28); sx.stroke();
+      }
+      ticksSRS.forEach(t=>{
+        sx.strokeStyle="rgba(45,106,79,.5)"; sx.lineWidth=2; sx.beginPath();
+        sx.moveTo(X(t),sv.height-30); sx.lineTo(X(t),60); sx.stroke();
+      });
+      ticksConv.forEach(t=>{
+        sx.strokeStyle="rgba(185,28,28,.5)"; sx.lineWidth=2; sx.beginPath();
+        sx.moveTo(X(t),52); sx.lineTo(X(t),26); sx.stroke();
+      });
+      sx.strokeStyle="#1a1a2e"; sx.lineWidth=3; sx.beginPath();
+      sx.moveTo(X(mu),sv.height-28); sx.lineTo(X(mu),14); sx.stroke();
+      sx.fillStyle="#1a1a2e"; sx.font="600 12px system-ui";
+      sx.fillText("μ", X(mu)+5, 22);
+      sx.fillStyle="#2d6a4f"; sx.fillText(`SRS x̄'s (${ticksSRS.length})`, 34, sv.height-34);
+      sx.fillStyle="#b91c1c"; sx.fillText(`convenience x̄'s (${ticksConv.length})`, 34, 24);
+    }
+    function sample(){
+      const n=+document.getElementById("nSlider2").value;
+      const conv = document.querySelector('input[name="method"]:checked').value==="conv";
+      const eligible = conv ? pop.map((p,i)=>p.col>=cols*0.75?i:-1).filter(i=>i>=0)
+                            : pop.map((_,i)=>i);
+      const idx=new Set();
+      const nEff = Math.min(n, eligible.length);
+      while(idx.size<nEff) idx.add(eligible[Math.floor(Math.random()*eligible.length)]);
+      lastSample=idx;
+      const xbar=[...idx].reduce((s,i)=>s+pop[i].spend,0)/idx.size;
+      (conv?ticksConv:ticksSRS).push(xbar);
+      const errType = conv
+        ? `systematic gap of ~$${(xbar-mu).toFixed(2)} — more samples won't close it`
+        : `random error $${Math.abs(xbar-mu).toFixed(2)} — shrinks as n grows`;
+      document.getElementById("biasReadout").textContent =
+        `${conv?"Convenience":"SRS"}: n = ${idx.size}, x̄ = $${xbar.toFixed(2)} vs μ = $${mu.toFixed(2)} → ${errType}`;
+      drawPop(); drawStrip();
+    }
+    document.getElementById("nSlider2").addEventListener("input",e=>
+      document.getElementById("nVal2").textContent=e.target.value);
+    document.getElementById("drawOne2").addEventListener("click",e=>{e.preventDefault();sample();});
+    document.getElementById("drawFifty2").addEventListener("click",e=>{e.preventDefault();for(let i=0;i<50;i++)sample();});
+    document.getElementById("resetTicks2").addEventListener("click",e=>{
+      e.preventDefault(); ticksSRS=[]; ticksConv=[]; lastSample=new Set();
+      document.getElementById("biasReadout").textContent="";
+      drawPop(); drawStrip();
+    });
+    drawPop(); drawStrip();
+  })();
+
+  /* ---------- quiz submit (server-graded) ---------- */
+  document.getElementById("quizForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const fd = new FormData(e.target);
+    const answers = {};
+    document.querySelectorAll(".q").forEach(q => {
+      const qid = q.dataset.qid;
+      answers[qid] = fd.get(qid);
+    });
+
+    const payload = { address: LESSON_ADDRESS, answers, ts: Date.now() };
+
+    try {
+      const res = await fetch(location.protocol === "file:"
+          ? "http://127.0.0.1:8753/record" : "/record", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (data.error) {
+        document.getElementById("result").textContent = "Recorder error: " + data.error;
+        return;
+      }
+      document.getElementById("result").textContent =
+        `Score: ${data.correct}/${data.total}. ` +
+        (data.weak_topics?.length ? `Review: ${data.weak_topics.join(", ")}` : "Nice work.");
+      (data.results || []).forEach(r => {
+        const q = document.querySelector(`.q[data-qid="${r.qid}"]`);
+        if (!q) return;
+        q.classList.remove("right", "wrong");
+        q.classList.add(r.is_correct ? "right" : "wrong");
+        let fb = q.querySelector(".fb");
+        if (!fb) { fb = document.createElement("div"); fb.className = "fb"; q.appendChild(fb); }
+        fb.textContent = "";
+        const mark = document.createElement("b");
+        mark.textContent = r.is_correct ? "✓ Correct" : "✗ Incorrect";
+        fb.appendChild(mark);
+        if (!r.is_correct && r.explanation) fb.append(" — " + r.explanation);
+      });
+    } catch (err) {
+      const blob = new Blob([JSON.stringify(payload, null, 2)],
+                            {type:"application/json"});
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = `${LESSON_ADDRESS}.attempt.json`;
+      a.click();
+      document.getElementById("result").textContent =
+        "Recorder offline — downloaded attempt JSON. Run scripts/serve.py and import it.";
+    }
+  });
+</script>
+</body>
+</html>

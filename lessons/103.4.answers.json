@@ -1,0 +1,66 @@
+{
+  "address": "103.4",
+  "title": "Probability Fundamentals and Rules",
+  "questions": [
+    {
+      "qid": "q1",
+      "type": "mc",
+      "correct": "b",
+      "topic": "probability approaches",
+      "explanation": "Probability estimated as the relative frequency of an event over many past trials (38 late out of 500) is the empirical approach. Classical requires equally likely outcomes by symmetry (dice, lotteries); subjective is judgment when neither symmetry nor repetition applies. The law of large numbers is what makes the empirical estimate trustworthy as trials accumulate."
+    },
+    {
+      "qid": "q2",
+      "type": "mc",
+      "correct": "b",
+      "topic": "addition rule",
+      "explanation": "P(C ∪ M) = P(C) + P(M) − P(C ∩ M) = 0.55 + 0.30 − 0.20 = 0.65. Adding without subtracting the overlap (0.85) double-counts the 20% of customers who are in both groups — the whole point of the general addition rule."
+    },
+    {
+      "qid": "q3",
+      "type": "num",
+      "correct": 0.429,
+      "tolerance": 0.005,
+      "topic": "conditional probability",
+      "explanation": "Condition on what you know: the part is defective. There are 12 + 16 = 28 defectives total, of which 12 came from X, so P(X | defective) = 12/28 ≈ 0.429. Note this is NOT P(defective | X) = 12/300 = 0.04 — reversing the conditioning is the classic error, and the two answer different questions."
+    },
+    {
+      "qid": "q4",
+      "type": "mc",
+      "correct": "c",
+      "topic": "independence",
+      "explanation": "The test for independence is whether P(A ∩ B) = P(A) · P(B). Here 0.4 × 0.5 = 0.20, exactly the stated overlap, so the events are independent — knowing B occurred leaves P(A|B) = 0.2/0.5 = 0.4 = P(A) unchanged. Overlapping events can perfectly well be independent; mutually exclusive would require zero overlap."
+    },
+    {
+      "qid": "q5",
+      "type": "num",
+      "correct": 0.1426,
+      "tolerance": 0.002,
+      "topic": "complement rule",
+      "explanation": "'At least one late' is the complement of 'none late.' With independence, P(none late) = 0.95³ = 0.857375, so P(at least one late) = 1 − 0.857375 = 0.142625 ≈ 0.1426. The complement trick replaces summing the probabilities of one, two, or three late deliveries with a single subtraction."
+    },
+    {
+      "qid": "q6",
+      "type": "num",
+      "correct": 0.286,
+      "tolerance": 0.005,
+      "topic": "Bayes' theorem",
+      "explanation": "Total probability first: P(flag) = P(flag|def)P(def) + P(flag|good)P(good) = (0.98)(0.02) + (0.05)(0.98) = 0.0196 + 0.049 = 0.0686. Then Bayes: P(def|flag) = 0.0196/0.0686 ≈ 0.286. Defects are rare, so the 5% false-flag rate applied to the huge population of good parts produces more alarms than all the true defects combined — the base rate dominates the test's accuracy."
+    },
+    {
+      "qid": "q7",
+      "type": "num",
+      "correct": 56,
+      "tolerance": 0.5,
+      "topic": "counting",
+      "explanation": "Order doesn't matter, so use combinations: 8C3 = 8!/(3!·5!) = (8·7·6)/(3·2·1) = 336/6 = 56. The 336 is the permutation count 8P3 (ordered rankings); each unordered trio appears 3! = 6 times among them, so divide it out."
+    },
+    {
+      "qid": "q8",
+      "type": "mc",
+      "correct": "b",
+      "topic": "mutually exclusive vs independent",
+      "explanation": "Mutually exclusive and independent are nearly opposites, not synonyms. If A and B can't co-occur and A happens, then B certainly did not: P(B|A) = 0 ≠ P(B). That's maximal information transfer — strong dependence. Independent events must be able to occur together, since P(A ∩ B) = P(A)P(B) > 0 when both probabilities are positive."
+    }
+  ]
+}
